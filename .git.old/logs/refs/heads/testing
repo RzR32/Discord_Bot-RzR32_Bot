@@ -1,0 +1,11 @@
+0000000000000000000000000000000000000000 3ea17a4e6bad5c23868992e7816aff78dc146a42 RzR32 <46526880+RzR32@users.noreply.github.com> 1565807239 +0200	branch: Created from HEAD
+3ea17a4e6bad5c23868992e7816aff78dc146a42 ad55b76e191e3831f05f914016b326be82a3ccf1 RzR32 <46526880+RzR32@users.noreply.github.com> 1565886171 +0200	merge master: Fast-forward
+ad55b76e191e3831f05f914016b326be82a3ccf1 11b30e10de51fc4d6daeaf6637643cb8e0595ddc RzR32 <46526880+RzR32@users.noreply.github.com> 1566639804 +0200	commit: add LogBack
+11b30e10de51fc4d6daeaf6637643cb8e0595ddc 66629357fbb205ef8a9f1d5458072022efb6a72e RzR32 <46526880+RzR32@users.noreply.github.com> 1566678818 +0200	commit: change system prnt... to log...
+66629357fbb205ef8a9f1d5458072022efb6a72e b5fbc6300fe48e0df4260341f136b63198114b29 RzR32 <46526880+RzR32@users.noreply.github.com> 1566679269 +0200	commit: Update logback.xml
+b5fbc6300fe48e0df4260341f136b63198114b29 81c7f3e0e5374ab3236de7a145fd071f7fbfa620 RzR32 <46526880+RzR32@users.noreply.github.com> 1566936131 +0200	merge master: Fast-forward
+81c7f3e0e5374ab3236de7a145fd071f7fbfa620 e2769982a8d944ec6be4afc3092d243669047267 RzR32 <46526880+RzR32@users.noreply.github.com> 1566937471 +0200	commit: fix log (in file)
+e2769982a8d944ec6be4afc3092d243669047267 5ca283d7de377b6052e86c9b8603098b3b72318e RzR32 <46526880+RzR32@users.noreply.github.com> 1567019802 +0200	commit: Update JDA_Events.java
+5ca283d7de377b6052e86c9b8603098b3b72318e bd32bd7660c8e9354bea16d45ed7e6575ffb838a RzR32 <46526880+RzR32@users.noreply.github.com> 1567019818 +0200	commit: Update LogBack.java
+bd32bd7660c8e9354bea16d45ed7e6575ffb838a 01267046ee86f330854f663783efa755244abe85 RzR32 <46526880+RzR32@users.noreply.github.com> 1567019845 +0200	commit: removed guildID from blacklist
+01267046ee86f330854f663783efa755244abe85 8655860f41c6dd03d8b395090c9a9aed295948e4 RzR32 <46526880+RzR32@users.noreply.github.com> 1567020932 +0200	merge master: Fast-forward
