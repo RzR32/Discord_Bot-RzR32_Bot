@@ -10,6 +10,9 @@ public class Name_Change extends ListenerAdapter {
 
     Members m = new Members();
 
+    /*
+    give´s out error, maybe remove...
+     */
     @Override
     public void onUserUpdateName(UserUpdateNameEvent event) {
         for (String id : Members.GetGuildsIDs()) {
