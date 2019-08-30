@@ -54,6 +54,12 @@ public class PropertiesFile {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+
+        /*
+        RzR32 - start the *key* sorter
+         */
+        CheckKey CK = new CheckKey();
+        CK.SortKey();
     }
     /**
      * Checks if File exists

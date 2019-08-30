@@ -42,112 +42,123 @@ public class Counter {
     }
 
     public void getint(Guild guild, String id) {
+        if (PropertiesFile.readsPropertiesFile(">" + id + "_on").equals("true")) {
         /*
         check category
          */
-        CheckCategory C_Category = new CheckCategory();
-        C_Category.checkingCategory(guild, "maincount");
-        C_Category.checkingCategory(guild, "streamcategory");
-        C_Category.checkingCategory(guild, "gamecategory");
+            CheckCategory C_Category = new CheckCategory();
+            C_Category.StartChecking(guild);
         /*
         check channel
          */
-        CheckChannel C_CheckChannel = new CheckChannel();
-        C_CheckChannel.checkingChannel(guild, id);
+            CheckChannel C_CheckChannel = new CheckChannel();
+            C_CheckChannel.checkingChannel(guild, id);
         /*
         size
          */
-        String channel = null;
-        int size = 0;
-        switch (id) {
-            case "membercount":
-                channel = "MemberCount";
-                size = guild.getMembers().size();
+            String channel = null;
+            String category = null;
+            int size = 0;
+            switch (id) {
+                case "membercount":
+                    channel = "MemberCount";
+                    size = guild.getMembers().size();
+                    category = "maincount";
                 /*
                 extra
                  */
-                Members member = new Members();
-                member.Member_CheckMembersOnGuild(guild);
-                break;
-            case "rolecount":
-                channel = "RoleCount";
-                size = guild.getRoles().size();
+                    Members member = new Members();
+                    member.Member_CheckMembersOnGuild(guild);
+                    break;
+                case "rolecount":
+                    channel = "RoleCount";
+                    size = guild.getRoles().size();
+                    category = "maincount";
                 /*
                 extra
                  */
-                try {
-                    BufferedReader br = new BufferedReader(new FileReader("config/games.txt"));
-                    String roles = guild.getRoles().toString();
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        if (roles.contains(line)) {
-                            size--;
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader("config/games.txt"));
+                        String roles = guild.getRoles().toString();
+                        String line = null;
+                        while ((line = br.readLine()) != null) {
+                            if (roles.contains(line)) {
+                                size--;
+                            }
+                        }
+                        br.close();
+                    } catch (IOException e) {
+                        try {
+                            File file = new File("config/games.txt");
+                            boolean b = file.createNewFile();
+                        } catch (IOException e1) {
+                            return;
                         }
                     }
-                    br.close();
-                } catch (IOException e) {
+                    /*
+                    do gamerolecount
+                     */
+                    getint(guild, "gamerolecount");
+                    GameRoleCount(guild, size);
+                    break;
+                case "gamerolecount":
+                    return;
+                case "textchannelcount":
+                    channel = "TextChannelCount";
+                    size = guild.getTextChannels().size();
+                    category = "maincount";
+                    break;
+                case "voicechannelcount":
+                    channel = "VoiceChannelCount";
+                    size = guild.getVoiceChannels().size();
+                    category = "maincount";
+                    break;
+                case "categorycount":
+                    channel = "CategoryCount";
+                    size = guild.getCategories().size();
+                    category = "maincount";
+                    break;
+                case "gamecount":
+                    channel = "GameCount";
+                    category = "gamecategory";
                     try {
-                        File file = new File("config/games.txt");
-                        boolean b = file.createNewFile();
-                    } catch (IOException e1) {
-                        return;
-                    }
-                }
-                /*
-                do gamerolecount
-                 */
-                GameRoleCount(guild, size);
-                break;
-            case "gamerolecount":
-                return;
-            case "textchannelcount":
-                channel = "TextChannelCount";
-                size = guild.getTextChannels().size();
-                break;
-            case "voicechannelcount":
-                channel = "VoiceChannelCount";
-                size = guild.getVoiceChannels().size();
-                break;
-            case "categorycount":
-                channel = "CategoryCount";
-                size = guild.getCategories().size();
-                break;
-            case "gamecount":
-                channel = "GameCount";
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("config/games.txt", StandardCharsets.UTF_8, true));
-                    BufferedReader reader = new BufferedReader(new FileReader("config/games.txt", StandardCharsets.UTF_8));
-                    List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
-                    if (lines.toString().isEmpty()) {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter("config/games.txt", StandardCharsets.UTF_8, true));
+                        BufferedReader reader = new BufferedReader(new FileReader("config/games.txt", StandardCharsets.UTF_8));
+                        List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+                        if (lines.toString().isEmpty()) {
+                            writer.close();
+                            reader.close();
+                            return;
+                        }
                         writer.close();
                         reader.close();
-                        return;
+                        size = lines.size();
+                        break;
+                    } catch (IOException e) {
+                        LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                     }
-                    writer.close();
-                    reader.close();
-                    size = lines.size();
-                    break;
-                } catch (IOException e) {
-                    LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
-                }
-            case "twitchcount":
-                TwitchFollowerCount tfc = new TwitchFollowerCount();
-                tfc.TwitchFollower(guild);
-                return;
+                case "twitchcount":
+                    TwitchFollowerCount tfc = new TwitchFollowerCount();
+                    tfc.TwitchFollower(guild);
+                    return;
+            }
+            if (PropertiesFile.readsPropertiesFile(">" + category + "_on").equals("true")) {
+                change(guild, channel, id, size);
+            }
         }
-        change(guild, channel, id, size);
     }
 
     private void GameRoleCount(Guild guild, int x) {
         /*
         size for gamerolecount
          */
-        int size = guild.getRoles().size() - x;
-        change(guild, "GameRoleCount", "gamerolecount", size);
+        if (PropertiesFile.readsPropertiesFile(">gamerolecount_on").equals("true") && PropertiesFile.readsPropertiesFile(">maincount_on").equals("true")) {
+            int size = guild.getRoles().size() - x;
+            change(guild, "GameRoleCount", "gamerolecount", size);
+        }
     }
 
     public void change(Guild guild, String channel, String id, int size) {
-
         /*
         little pause to securely save the channel id by create channel
          */

@@ -21,31 +21,40 @@ public class Message_Reaction extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-        if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-            if (!event.getMember().getUser().isBot()) {
-                WriteStringToFile WSTF = new WriteStringToFile();
-                WSTF.write(event.getGuild(), "list", event.getMember().getId());
+        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+            if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                if (!event.getMember().getUser().isBot()) {
+                    if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                        WriteStringToFile WSTF = new WriteStringToFile();
+                        WSTF.write(event.getGuild(), "list", event.getMember().getId());
+                    }
+                }
             }
         }
     }
 
     @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event) {
-        if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-            if (!event.getMember().getUser().isBot()) {
-                RemoveStringFromFile WSTF = new RemoveStringFromFile();
-                WSTF.remove(event.getGuild(), "list", event.getMember().getId());
+        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+            if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                if (!event.getMember().getUser().isBot()) {
+                    if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                        RemoveStringFromFile WSTF = new RemoveStringFromFile();
+                        WSTF.remove(event.getGuild(), "list", event.getMember().getId());
+                    }
+                }
             }
         }
     }
 
     @Override
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
-        String channelmention = event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
-
-        if (event.getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-            PropertiesFile.writePropertiesFile("agreement", "");
-            event.getChannel().sendMessage(new EmbedBuilder().setTitle("Warum?!").setColor(Color.RED).setDescription("Warum hast du es gelöscht? Das ist wichtig für " + channelmention).build()).queue();
+        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+            String channelmention = event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
+            if (event.getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                PropertiesFile.writePropertiesFile("agreement", "");
+                event.getChannel().sendMessage(new EmbedBuilder().setTitle("Warum?!").setColor(Color.RED).setDescription("Warum hast du es gelöscht? Das ist wichtig für " + channelmention).build()).queue();
+            }
         }
     }
 
@@ -55,11 +64,13 @@ public class Message_Reaction extends ListenerAdapter {
             if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                 try {
                     if (event.getMessage().getContentRaw().equalsIgnoreCase(">agreement")) {
-                        for (Message message : event.getChannel().getIterableHistory()) {
-                            message.delete().complete();
+                        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                            for (Message message : event.getChannel().getIterableHistory()) {
+                                message.delete().complete();
+                            }
+                            PropertiesFile.writePropertiesFile("agreement", "");
+                            A_M.Message(event.getGuild(), event.getTextChannel());
                         }
-                        PropertiesFile.writePropertiesFile("agreement", "");
-                        A_M.Message(event.getGuild(), event.getTextChannel());
                     }
                 } catch (IllegalArgumentException | NullPointerException e) {
                     A_M.Message(event.getGuild(), event.getTextChannel());
