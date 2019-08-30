@@ -61,6 +61,7 @@ public class Main {
             > commands
              */
             builder.addEventListeners(new GameRole_Command());
+            builder.addEventListeners(new DEactivate_Commands());
             builder.addEventListeners(new Blacklist_Command());
             builder.addEventListeners(new Member_Commands());
             builder.addEventListeners(new Owner_Commands());

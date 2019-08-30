@@ -24,47 +24,49 @@ public class CheckCategory {
     }
 
     public void checkingCategory(Guild guild, String category) {
-        String id = PropertiesFile.readsPropertiesFile(category);
-        if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(category) == null) {
-            LB.log(Thread.currentThread().getName(), "ID in config file for category *" + category + "* is null, search for another or create new", "warn");
-            String s = null;
-            switch (category) {
-                case "maincount":
-                    s = "ServerStats";
-                    break;
-                case "streamcategory":
-                    s = "Stream";
-                    break;
-                case "gamecategory":
-                    s = "Game-Category";
-                    break;
-            }
-            for (Category cat : guild.getCategories()) {
-                if (cat.getName().equals(s)) {
-                    PropertiesFile.writePropertiesFile(category, cat.getId());
-                    LB.log(Thread.currentThread().getName(), "Category found with the name *" + s + "*", "info");
-                    return;
+        if (PropertiesFile.readsPropertiesFile(">" + category + "_on").equals("true")) {
+            String id = PropertiesFile.readsPropertiesFile(category);
+            if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(category) == null) {
+                LB.log(Thread.currentThread().getName(), "ID in config file for category *" + category + "* is null, search for another or create new", "warn");
+                String s = null;
+                switch (category) {
+                    case "maincount":
+                        s = "ServerStats";
+                        break;
+                    case "streamcategory":
+                        s = "Stream";
+                        break;
+                    case "gamecategory":
+                        s = "Game-Category";
+                        break;
                 }
-            }
-            LB.log(Thread.currentThread().getName(), "Create new category *" + s + "*", "info");
-            CreateCategory c = new CreateCategory();
-            switch (s) {
-                case "ServerStats":
-                    c.MainCount(guild);
-                    break;
-                case "Stream":
-                    c.MainStream(guild);
-                    break;
-                case "Game-Category":
-                    c.MainGames(guild);
-                    break;
-            }
-        } else {
-            Category guild_category = guild.getCategoryById(id);
-            if (guild_category == null) {
-                LB.log(Thread.currentThread().getName(), "ID for *" + category + "* is not a category | or dont exists!", "error");
-                PropertiesFile.writePropertiesFile(category, "");
-                checkingCategory(guild, category);
+                for (Category cat : guild.getCategories()) {
+                    if (cat.getName().equals(s)) {
+                        PropertiesFile.writePropertiesFile(category, cat.getId());
+                        LB.log(Thread.currentThread().getName(), "Category found with the name *" + s + "*", "info");
+                        return;
+                    }
+                }
+                LB.log(Thread.currentThread().getName(), "Create new category *" + s + "*", "info");
+                CreateCategory c = new CreateCategory();
+                switch (s) {
+                    case "ServerStats":
+                        c.MainCount(guild);
+                        break;
+                    case "Stream":
+                        c.MainStream(guild);
+                        break;
+                    case "Game-Category":
+                        c.MainGames(guild);
+                        break;
+                }
+            } else {
+                Category guild_category = guild.getCategoryById(id);
+                if (guild_category == null) {
+                    LB.log(Thread.currentThread().getName(), "ID for *" + category + "* is not a category | or dont exists!", "error");
+                    PropertiesFile.writePropertiesFile(category, "");
+                    checkingCategory(guild, category);
+                }
             }
         }
     }

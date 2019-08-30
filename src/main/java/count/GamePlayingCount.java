@@ -22,21 +22,25 @@ public class GamePlayingCount extends Thread {
     CheckChannel C_Channel = new CheckChannel();
 
     public void startCounter(Guild guild) {
-        Runnable runnable = () -> DeleteMessages(guild);
-        new Thread(runnable).start();
+        if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
+            Runnable runnable = () -> DeleteMessages(guild);
+            new Thread(runnable).start();
+        }
     }
 
     public void ForwardPlayingGame(Guild guild, String game, Activity.ActivityType Act_Type) {
-        if (Act_Type.equals(Activity.ActivityType.STREAMING)) {
-            CountGames(guild, "Stream", "stream");
-        } else if (Act_Type.equals(Activity.ActivityType.LISTENING)) {
-            CountGames(guild, game, "listen");
-        } else if (Act_Type.equals(Activity.ActivityType.WATCHING)) {
-            CountGames(guild, game, "watch");
-        } else if (Act_Type.equals(Activity.ActivityType.DEFAULT)) {
-            CountGames(guild, game, "default");
+        if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
+            if (Act_Type.equals(Activity.ActivityType.STREAMING)) {
+                CountGames(guild, "Stream", "stream");
+            } else if (Act_Type.equals(Activity.ActivityType.LISTENING)) {
+                CountGames(guild, game, "listen");
+            } else if (Act_Type.equals(Activity.ActivityType.WATCHING)) {
+                CountGames(guild, game, "watch");
+            } else if (Act_Type.equals(Activity.ActivityType.DEFAULT)) {
+                CountGames(guild, game, "default");
+            }
+            CountNotPlayingGames(guild);
         }
-        CountNotPlayingGames(guild);
     }
 
     private void CountGames(Guild guild, String game, String Color) {
