@@ -196,14 +196,14 @@ public class GamePlayingCount extends Thread {
     delete all messages in the channel > then do CountPlayingCount (below)
      */
     private void DeleteMessages(Guild guild) {
-        LB.log(Thread.currentThread().getName(),ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Delete old Message´s...", "info");
+        LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Delete old Message´s...", "info");
         C_Category.checkingCategory(guild, "gamecategory");
         C_Channel.checkingChannel(guild, "playingcount");
         TextChannel channel = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("playingcount"));
         for (Message message : channel.getIterableHistory()) {
             message.delete().complete();
         }
-        LB.log(Thread.currentThread().getName(),ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
+        LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
         MessageBotGame(guild);
         CountNotPlayingGames(guild);
         CountPlayingGames(guild);

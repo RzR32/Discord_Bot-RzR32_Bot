@@ -28,7 +28,7 @@ public class Owner_Commands extends ListenerAdapter {
                             event.getChannel().sendMessage(new EmbedBuilder().setTitle("HELP for Owner").setColor(Color.YELLOW).setDescription("" +
                                     "Diese Befehle sind nur für den Server Besitzer!\n" +
                                     "\n" +
-                                    "> >twitch <name>\n" +
+                                    "> >twitch <name> (maybe don´t update the counter instantly)\n" +
                                     "\n" +
                                     "> >settings\n" +
                                     "\n").build()).queue();
@@ -50,8 +50,6 @@ public class Owner_Commands extends ListenerAdapter {
                     } else if (argArray[0].equalsIgnoreCase(">twitch")) {
                         if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                             PropertiesFile.writePropertiesFile("twitchname", argArray[1]);
-                            TwitchFollowerCount TFC = new TwitchFollowerCount();
-                            TFC._stop(event.getGuild());
                         } else {
                             event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
                             event.getMessage().addReaction("\u274C").queue();

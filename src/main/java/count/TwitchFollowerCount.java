@@ -19,25 +19,13 @@ public class TwitchFollowerCount extends Thread {
     private String channel = "TwitchFollower";
     private String id = "twitchcount";
 
-    private boolean stop = false;
-
-    public void _stop(Guild guild) {
-        stop = true;
-        timer(guild);
-    }
-
     public void timer(Guild guild) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!stop) {
-                        TimeUnit.MINUTES.sleep(30);
-                        TwitchFollower(guild);
-                    }
-                } catch (Exception e) {
-                    LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
-                }
+        Runnable runnable = () -> {
+            try {
+                TimeUnit.MINUTES.sleep(30);
+                TwitchFollower(guild);
+            } catch (Exception e) {
+                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
         };
         new Thread(runnable).start();
