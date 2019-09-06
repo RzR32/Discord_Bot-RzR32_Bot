@@ -1,5 +1,6 @@
 package listener.other;
 
+import config.PropertiesFile;
 import count.Counter;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
@@ -11,11 +12,15 @@ public class Member_join_leave extends ListenerAdapter {
 
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
-        c.getint(event.getGuild(), "membercount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "membercount");
+        }
     }
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        c.getint(event.getGuild(), "membercount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "membercount");
+        }
     }
 }

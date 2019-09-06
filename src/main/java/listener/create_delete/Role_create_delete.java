@@ -1,5 +1,6 @@
 package listener.create_delete;
 
+import config.PropertiesFile;
 import count.Counter;
 import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
@@ -11,11 +12,15 @@ public class Role_create_delete extends ListenerAdapter {
 
     @Override
     public void onRoleCreate(RoleCreateEvent event) {
-        c.getint(event.getGuild(), "rolecount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "rolecount");
+        }
     }
 
     @Override
     public void onRoleDelete(RoleDeleteEvent event) {
-        c.getint(event.getGuild(), "rolecount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "rolecount");
+        }
     }
 }

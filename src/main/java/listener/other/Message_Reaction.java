@@ -63,13 +63,15 @@ public class Message_Reaction extends ListenerAdapter {
         if (event.isFromType(ChannelType.TEXT)) {
             if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                 try {
-                    if (event.getMessage().getContentRaw().equalsIgnoreCase(">agreement")) {
-                        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-                            for (Message message : event.getChannel().getIterableHistory()) {
-                                message.delete().complete();
+                    if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+                        if (event.getMessage().getContentRaw().equalsIgnoreCase(">agreement")) {
+                            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                                for (Message message : event.getChannel().getIterableHistory()) {
+                                    message.delete().complete();
+                                }
+                                PropertiesFile.writePropertiesFile("agreement", "");
+                                A_M.Message(event.getGuild(), event.getTextChannel());
                             }
-                            PropertiesFile.writePropertiesFile("agreement", "");
-                            A_M.Message(event.getGuild(), event.getTextChannel());
                         }
                     }
                 } catch (IllegalArgumentException | NullPointerException e) {

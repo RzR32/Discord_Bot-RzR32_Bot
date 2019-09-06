@@ -1,9 +1,9 @@
 package check_create;
 
-import other.Agreement_Message;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import other.Agreement_Message;
 
 public class CreateCategory {
 

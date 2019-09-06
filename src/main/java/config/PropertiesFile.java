@@ -61,6 +61,7 @@ public class PropertiesFile {
         CheckKey CK = new CheckKey();
         CK.SortKey();
     }
+
     /**
      * Checks if File exists
      *
@@ -75,6 +76,7 @@ public class PropertiesFile {
         }
         return file.isFile() && file.canWrite() && file.canRead();
     }
+
     /**
      * reads values from .prop(erties) file
      *

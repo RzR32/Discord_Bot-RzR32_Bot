@@ -2,11 +2,11 @@ package count;
 
 import check_create.CheckCategory;
 import check_create.CheckChannel;
+import config.PropertiesFile;
+import net.dv8tion.jda.api.entities.Guild;
 import other.ConsoleColor;
 import other.LogBack;
 import other.Members;
-import config.PropertiesFile;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

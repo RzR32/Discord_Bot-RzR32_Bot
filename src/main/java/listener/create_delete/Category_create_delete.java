@@ -1,5 +1,6 @@
 package listener.create_delete;
 
+import config.PropertiesFile;
 import count.Counter;
 import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
 import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
@@ -11,11 +12,15 @@ public class Category_create_delete extends ListenerAdapter {
 
     @Override
     public void onCategoryCreate(CategoryCreateEvent event) {
-        c.getint(event.getGuild(), "categorycount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "categorycount");
+        }
     }
 
     @Override
     public void onCategoryDelete(CategoryDeleteEvent event) {
-        c.getint(event.getGuild(), "categorycount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "categorycount");
+        }
     }
 }

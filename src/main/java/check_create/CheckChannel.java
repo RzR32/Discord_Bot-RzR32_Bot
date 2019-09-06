@@ -1,7 +1,9 @@
 package check_create;
 
 import config.PropertiesFile;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Category;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import other.LogBack;
 
 import java.util.ArrayList;

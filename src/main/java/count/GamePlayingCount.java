@@ -3,10 +3,10 @@ package count;
 import check_create.CheckCategory;
 import check_create.CheckChannel;
 import config.PropertiesFile;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import other.ConsoleColor;
 import other.LogBack;
 

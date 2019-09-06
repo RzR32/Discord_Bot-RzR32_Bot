@@ -1,9 +1,9 @@
 package listener.commands;
 
 import config.PropertiesFile;
-import count.TwitchFollowerCount;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -47,9 +47,30 @@ public class Owner_Commands extends ListenerAdapter {
                             event.getMessage().addReaction("\u274C").queue();
                         }
                          */
+
+                        /*
+                        set the twitchname
+                         */
                     } else if (argArray[0].equalsIgnoreCase(">twitch")) {
                         if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                             PropertiesFile.writePropertiesFile("twitchname", argArray[1]);
+                        } else {
+                            event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
+                            event.getMessage().addReaction("\u274C").queue();
+                        }
+
+                        /*
+                        set *first-startup* to false
+                         */
+                    } else if (argArray[0].equalsIgnoreCase(">ready")) {
+                        if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                            PropertiesFile.writePropertiesFile("first-startup", "false");
+                            for (TextChannel textChannel : event.getGuild().getTextChannels()) {
+                                if (textChannel.getName().equals(event.getMember().getId())) {
+                                    textChannel.delete().queue();
+                                }
+                            }
+                            System.exit(0);
                         } else {
                             event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
                             event.getMessage().addReaction("\u274C").queue();
