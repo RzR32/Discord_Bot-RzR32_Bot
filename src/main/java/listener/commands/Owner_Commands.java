@@ -1,6 +1,7 @@
 package listener.commands;
 
 import config.PropertiesFile;
+import count.Counter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
@@ -117,6 +118,11 @@ public class Owner_Commands extends ListenerAdapter {
                                                     break;
                                                 }
                                         }
+                                        /*
+                                        call gamecounter
+                                         */
+                                        Counter c = new Counter();
+                                        c.getint(event.getGuild(), "gamecount");
                                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                                     }
                                 }
