@@ -37,7 +37,7 @@ public class RemoveStringFromFile {
              */
             FileWriter writer3 = new FileWriter(file, false);
             for (String string : lines) {
-                if (!string.equals(line)) {
+                if (!string.equalsIgnoreCase(line)) {
                     writer3.write(string + "\n");
                 } else {
                     if (extra.equals("list")) {

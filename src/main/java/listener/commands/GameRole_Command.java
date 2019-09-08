@@ -152,7 +152,7 @@ public class GameRole_Command extends ListenerAdapter {
             if game as role dont exit
              */
             for (Role role : guild.getRoles()) {
-                if (role.getName().equals(Game)) {
+                if (role.getName().equalsIgnoreCase(Game)) {
 
             /*
             add or remove it

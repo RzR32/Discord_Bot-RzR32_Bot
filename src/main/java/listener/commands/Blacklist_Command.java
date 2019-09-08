@@ -302,7 +302,7 @@ public class Blacklist_Command extends ListenerAdapter {
                  */
                 FileWriter writer3 = new FileWriter(user_file, false);
                 for (String string : next) {
-                    if (!string.equals(Game)) {
+                    if (!string.equalsIgnoreCase(Game)) {
                         writer3.write(string + "\n");
                     } else {
                         message.addReaction("\uD83D\uDC4D").queue();
@@ -382,7 +382,7 @@ public class Blacklist_Command extends ListenerAdapter {
                              */
                             FileWriter writer3 = new FileWriter(file, false);
                             for (String string : next) {
-                                if (!string.equals(Game)) {
+                                if (!string.equalsIgnoreCase(Game)) {
                                     writer3.write(string + "\n");
                                 }
                             }
@@ -435,7 +435,7 @@ public class Blacklist_Command extends ListenerAdapter {
                  */
                 FileWriter writer3 = new FileWriter(inputFile, false);
                 for (String string : next) {
-                    if (!string.equals(Game)) {
+                    if (!string.equalsIgnoreCase(Game)) {
                         writer3.write(string + "\n");
                     } else {
                         message.addReaction("\uD83D\uDC4D").queue();
