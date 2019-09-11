@@ -31,7 +31,7 @@ public class Main {
              */
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing config key..." + ConsoleColor.reset, "info");
             CheckKey ck = new CheckKey();
-            ck.checking();
+            ck.StartChecking();
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "key check, done!" + ConsoleColor.reset, "info");
             /*
             Bot Token

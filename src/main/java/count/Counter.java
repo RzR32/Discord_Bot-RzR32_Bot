@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import other.ConsoleColor;
 import other.LogBack;
 import other.Members;
+import other.Pause;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -32,11 +33,8 @@ public class Counter {
 
     public void StartCounter(Guild guild) {
         for (String id : list_ID) {
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException error) {
-                LB.log(Thread.currentThread().getName(), error.getMessage(), "error");
-            }
+            Pause P = new Pause();
+            P.pause(Thread.currentThread(), 250);
             getint(guild, id);
         }
     }
@@ -162,11 +160,8 @@ public class Counter {
         /*
         little pause to securely save the channel id by create channel
          */
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException error) {
-            LB.log(Thread.currentThread().getName(), error.getMessage(), "error");
-        }
+        Pause P = new Pause();
+        P.pause(Thread.currentThread(), 1000);
         /*
         string for new channel name
          */

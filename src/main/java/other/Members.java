@@ -28,6 +28,7 @@ public class Members {
      */
     public void Member_CheckMembersOnGuild(Guild guild) {
         try {
+            C_Channel.checkingChannel(guild, "logs");
             BufferedWriter writer = new BufferedWriter(new FileWriter("config/members.txt", StandardCharsets.UTF_8, true));
             BufferedReader reader = new BufferedReader(new FileReader("config/members.txt", StandardCharsets.UTF_8));
             List<String> lines = Files.readAllLines(Paths.get("config/members.txt"), StandardCharsets.UTF_8);

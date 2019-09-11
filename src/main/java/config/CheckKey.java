@@ -87,16 +87,19 @@ public class CheckKey {
         add("agreement");
     }};
 
-    public void checking() {
+    public void StartChecking() {
+        for (String category : list) {
+            checking(category);
+        }
+    }
 
-        for (String key : list) {
-            if (PropertiesFile.readsPropertiesFile(key) == null || PropertiesFile.readsPropertiesFile(key).isEmpty() || PropertiesFile.readsPropertiesFile(key).isBlank()) {
-                LB.log(Thread.currentThread().getName(), "Missing Key found *" + key + "* !", "warn");
-                if (key.contains("_on") || key.equals("first-startup")) {
-                    PropertiesFile.writePropertiesFile(key, "true");
-                } else {
-                    PropertiesFile.writePropertiesFile(key, "");
-                }
+    public void checking(String key) {
+        if (PropertiesFile.readsPropertiesFile(key) == null || PropertiesFile.readsPropertiesFile(key).isEmpty() || PropertiesFile.readsPropertiesFile(key).isBlank()) {
+            LB.log(Thread.currentThread().getName(), "Missing Key found *" + key + "* !", "warn");
+            if (key.contains("_on") || key.equals("first-startup")) {
+                PropertiesFile.writePropertiesFile(key, "true");
+            } else {
+                PropertiesFile.writePropertiesFile(key, "");
             }
         }
         SortKey();

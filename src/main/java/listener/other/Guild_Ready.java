@@ -8,16 +8,21 @@ import count.Counter;
 import count.GamePlayingCount;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
 import other.LogBack;
 import other.Members;
+import other.Pause;
 
 public class Guild_Ready extends ListenerAdapter {
 
     LogBack LB = new LogBack();
+    Pause P = new Pause();
+
+    private int pause_int = 2500;
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
@@ -31,7 +36,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "file check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        /**
+        /*
          * check *StartUp* key in files...
          */
         if (PropertiesFile.readsPropertiesFile("first-startup").equals("true")) {
@@ -39,6 +44,11 @@ public class Guild_Ready extends ListenerAdapter {
                 if (member.isOwner()) {
                     for (TextChannel textChannel : event.getGuild().getTextChannels()) {
                         if (textChannel.getName().equals(member.getId())) {
+                            for (Message message : textChannel.getIterableHistory()) {
+                                if (message.getContentRaw().startsWith("Hey " + member.getAsMention() + ", here I help you to setup me :D")) {
+                                    message.delete().queue();
+                                }
+                            }
                             Message(textChannel, member);
                             return;
                         }
@@ -62,7 +72,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "category check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        pause();
+        P.pause(Thread.currentThread(), pause_int);
 
         /*
         check for counter channel
@@ -73,7 +83,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "counter Channel check, done!!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        pause();
+        P.pause(Thread.currentThread(), pause_int);
 
         /*
         check the other channel
@@ -84,7 +94,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "other Channel check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        pause();
+        P.pause(Thread.currentThread(), pause_int);
 
         /*
         check for new member or if some member leaved
@@ -95,7 +105,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Member check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        pause();
+        P.pause(Thread.currentThread(), pause_int);
 
         /*
         GamePlayingCount
@@ -103,14 +113,6 @@ public class Guild_Ready extends ListenerAdapter {
         GamePlayingCount GPC = new GamePlayingCount();
         GPC.startCounter(event.getGuild());
         LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Bot gestartet!" + ConsoleColor.reset, "info");
-    }
-
-    private void pause() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException error) {
-            LB.log(Thread.currentThread().getName(), error.getMessage(), "error");
-        }
     }
 
     private void Message(TextChannel textChannel, Member member) {

@@ -21,12 +21,14 @@ public class Message_Reaction extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-            if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-                if (!event.getMember().getUser().isBot()) {
-                    if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-                        WriteStringToFile WSTF = new WriteStringToFile();
-                        WSTF.write(event.getGuild(), "list", event.getMember().getId());
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                    if (!event.getMember().getUser().isBot()) {
+                        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                            WriteStringToFile WSTF = new WriteStringToFile();
+                            WSTF.write(event.getGuild(), "list", event.getMember().getId());
+                        }
                     }
                 }
             }
@@ -35,12 +37,14 @@ public class Message_Reaction extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event) {
-        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-            if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-                if (!event.getMember().getUser().isBot()) {
-                    if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-                        RemoveStringFromFile WSTF = new RemoveStringFromFile();
-                        WSTF.remove(event.getGuild(), "list", event.getMember().getId());
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                    if (!event.getMember().getUser().isBot()) {
+                        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                            RemoveStringFromFile WSTF = new RemoveStringFromFile();
+                            WSTF.remove(event.getGuild(), "list", event.getMember().getId());
+                        }
                     }
                 }
             }
@@ -49,11 +53,13 @@ public class Message_Reaction extends ListenerAdapter {
 
     @Override
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
-            String channelmention = event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
-            if (event.getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
-                PropertiesFile.writePropertiesFile("agreement", "");
-                event.getChannel().sendMessage(new EmbedBuilder().setTitle("Warum?!").setColor(Color.RED).setDescription("Warum hast du es gelöscht? Das ist wichtig für " + channelmention).build()).queue();
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+                String channelmention = event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
+                if (event.getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement"))) {
+                    PropertiesFile.writePropertiesFile("agreement", "");
+                    event.getChannel().sendMessage(new EmbedBuilder().setTitle("Warum?!").setColor(Color.RED).setDescription("Warum hast du es gelöscht? Das ist wichtig für " + channelmention).build()).queue();
+                }
             }
         }
     }
