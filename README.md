@@ -18,7 +18,7 @@ In addition to the main function, the bot has a few **counter**, like ...
     - Game (games in the file)
     - GamePlaying
 - `OTHER`
-    - TwitchFollower
+    - TwitchFollower [The API for this counter is not mine (https://api.crunchprank.net/twitch/followcount/$user), so if its not work, I cant help]
  
 Also indicates when a member...
 + joins / leaves
