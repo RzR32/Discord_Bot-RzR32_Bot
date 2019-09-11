@@ -1,5 +1,6 @@
 package listener.create_delete;
 
+import config.PropertiesFile;
 import count.Counter;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
@@ -11,11 +12,15 @@ public class VoiceChannel_create_delete extends ListenerAdapter {
 
     @Override
     public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
-        c.getint(event.getGuild(), "voicechannelcount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "voicechannelcount");
+        }
     }
 
     @Override
     public void onVoiceChannelDelete(VoiceChannelDeleteEvent event) {
-        c.getint(event.getGuild(), "voicechannelcount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "voicechannelcount");
+        }
     }
 }

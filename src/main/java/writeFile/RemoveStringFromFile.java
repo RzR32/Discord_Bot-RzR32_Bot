@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.entities.User;
 import other.ConsoleColor;
 import other.LogBack;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,7 +37,7 @@ public class RemoveStringFromFile {
              */
             FileWriter writer3 = new FileWriter(file, false);
             for (String string : lines) {
-                if (!string.equals(line)) {
+                if (!string.equalsIgnoreCase(line)) {
                     writer3.write(string + "\n");
                 } else {
                     if (extra.equals("list")) {

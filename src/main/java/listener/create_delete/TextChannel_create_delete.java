@@ -12,14 +12,18 @@ public class TextChannel_create_delete extends ListenerAdapter {
 
     @Override
     public void onTextChannelCreate(TextChannelCreateEvent event) {
-        c.getint(event.getGuild(), "textchannelcount");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            c.getint(event.getGuild(), "textchannelcount");
+        }
     }
 
     @Override
     public void onTextChannelDelete(TextChannelDeleteEvent event) {
-        if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-zustimmung"))) {
-            PropertiesFile.writePropertiesFile("agreement", "");
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-zustimmung"))) {
+                PropertiesFile.writePropertiesFile("agreement", "");
+            }
+            c.getint(event.getGuild(), "textchannelcount");
         }
-        c.getint(event.getGuild(), "textchannelcount");
     }
 }

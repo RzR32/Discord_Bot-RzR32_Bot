@@ -17,6 +17,7 @@ public class CheckKey {
 
     private static ArrayList<String> list = new ArrayList<>() {{
         add("TOKEN");
+        add("first-startup");
         /*
         Category
          */
@@ -86,18 +87,22 @@ public class CheckKey {
         add("agreement");
     }};
 
-    public void checking() {
+    public void StartChecking() {
+        for (String category : list) {
+            checking(category);
+        }
+    }
 
-        for (String key : list) {
-            if (PropertiesFile.readsPropertiesFile(key) == null || PropertiesFile.readsPropertiesFile(key).isEmpty() || PropertiesFile.readsPropertiesFile(key).isBlank()) {
-                LB.log(Thread.currentThread().getName(), "Missing Key found *" + key + "* !", "warn");
-                if (key.contains("_on")) {
-                    PropertiesFile.writePropertiesFile(key, "true");
-                } else {
-                    PropertiesFile.writePropertiesFile(key, "");
-                }
+    public void checking(String key) {
+        if (PropertiesFile.readsPropertiesFile(key) == null || PropertiesFile.readsPropertiesFile(key).isEmpty() || PropertiesFile.readsPropertiesFile(key).isBlank()) {
+            LB.log(Thread.currentThread().getName(), "Missing Key found *" + key + "* !", "warn");
+            if (key.contains("_on") || key.equals("first-startup")) {
+                PropertiesFile.writePropertiesFile(key, "true");
+            } else {
+                PropertiesFile.writePropertiesFile(key, "");
             }
         }
+        SortKey();
     }
 
     public void SortKey() {
@@ -108,7 +113,9 @@ public class CheckKey {
                 for (String token : lines) {
                     if (!token.startsWith("#") && (!token.startsWith("/*"))) {
                         if (token.startsWith(list.get(x))) {
-                            if ((x % 2) != 0) {
+                            if (x == 0) {
+                                file_list.add("/*   Config for the Discord - Bot | Made by RzR32    */");
+                            } else if ((x % 2) == 0) {
                                 file_list.add("/**/");
                             }
                             file_list.add(token);

@@ -22,100 +22,102 @@ public class GameRole_Command extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isFromType(ChannelType.TEXT)) {
-            if (PropertiesFile.readsPropertiesFile("bot-channel") == null || PropertiesFile.readsPropertiesFile("bot-channel").isEmpty()) {
+        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+            if (event.isFromType(ChannelType.TEXT)) {
+                if (PropertiesFile.readsPropertiesFile("bot-channel") == null || PropertiesFile.readsPropertiesFile("bot-channel").isEmpty()) {
 
-                CheckCategory C_Category = new CheckCategory();
-                C_Category.checkingCategory(event.getGuild(), "gamecategory");
+                    CheckCategory C_Category = new CheckCategory();
+                    C_Category.checkingCategory(event.getGuild(), "gamecategory");
 
-                event.getMessage().delete().queue();
-            } else {
-                try {
-                    if (!event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("bot-channel")).toString().isEmpty()) {
-                    }
-                } catch (NullPointerException e) {
+                    event.getMessage().delete().queue();
+                } else {
                     try {
-                        if (!event.getGuild().getTextChannelsByName("bot-channel", false).get(0).getId().isEmpty()) {
-                            PropertiesFile.writePropertiesFile("bot-channel", event.getGuild().getTextChannelsByName("bot-channel", false).get(0).getId());
-                            event.getChannel().sendMessage("Es ist eine Fehler passiert, bitte führe den __Command__ erneut aus!").queue();
+                        if (!event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("bot-channel")).toString().isEmpty()) {
                         }
-                        return;
-                    } catch (IndexOutOfBoundsException e1) {
-                        LB.log(Thread.currentThread().getName(), e1.getMessage(), "error");
+                    } catch (NullPointerException e) {
+                        try {
+                            if (!event.getGuild().getTextChannelsByName("bot-channel", false).get(0).getId().isEmpty()) {
+                                PropertiesFile.writePropertiesFile("bot-channel", event.getGuild().getTextChannelsByName("bot-channel", false).get(0).getId());
+                                event.getChannel().sendMessage("Es ist eine Fehler passiert, bitte führe den __Command__ erneut aus!").queue();
+                            }
+                            return;
+                        } catch (IndexOutOfBoundsException e1) {
+                            LB.log(Thread.currentThread().getName(), e1.getMessage(), "error");
+                        }
                     }
-                }
 
-                if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-channel")) || event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                    if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-channel")) || event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
 
-                    String[] argArray = event.getMessage().getContentRaw().split(" ");
+                        String[] argArray = event.getMessage().getContentRaw().split(" ");
 
-                    try {
-                        /*
-                         * gamerole commands to add / remove a game for the user
-                         */
-                        if (!event.getMember().getUser().isBot()) {
-                            if (argArray[0].equalsIgnoreCase(">gamerole") || (argArray[0].equalsIgnoreCase(">gr"))) {
+                        try {
+                            /*
+                             * gamerole commands to add / remove a game for the user
+                             */
+                            if (!event.getMember().getUser().isBot()) {
+                                if (argArray[0].equalsIgnoreCase(">gamerole") || (argArray[0].equalsIgnoreCase(">gr"))) {
 
-                                if ((argArray[1].equalsIgnoreCase("add") || (argArray[1].equalsIgnoreCase("remove") || (argArray[1].equalsIgnoreCase("list"))))) {
+                                    if ((argArray[1].equalsIgnoreCase("add") || (argArray[1].equalsIgnoreCase("remove") || (argArray[1].equalsIgnoreCase("list"))))) {
 
-                                    if (argArray[1].equalsIgnoreCase("list")) {
-                                        GameRoleList(event.getGuild(), event.getMessage());
-                                        return;
-                                    }
+                                        if (argArray[1].equalsIgnoreCase("list")) {
+                                            GameRoleList(event.getGuild(), event.getMessage());
+                                            return;
+                                        }
 
-                                    /*
-                                     * compine all arguments
-                                     */
-                                    ArrayList<String> list = new ArrayList<>();
+                                        /*
+                                         * compine all arguments
+                                         */
+                                        ArrayList<String> list = new ArrayList<>();
 
-                                    for (int x = 0; x < argArray.length; x++) {
-                                        list.add(argArray[x]);
+                                        for (int x = 0; x < argArray.length; x++) {
+                                            list.add(argArray[x]);
 
-                                        if (list.size() == argArray.length) {
-                                            list.remove(argArray[0]);
-                                            list.remove(argArray[1]);
+                                            if (list.size() == argArray.length) {
+                                                list.remove(argArray[0]);
+                                                list.remove(argArray[1]);
 
-                                            if (list.isEmpty()) {
-                                                return;
-                                            }
-                                            //liststring = game
-                                            String liststring = String.join(" ", list);
-                                            try {
-                                                BufferedWriter writer = new BufferedWriter(new FileWriter("config/games.txt", StandardCharsets.UTF_8, true));
-                                                BufferedReader reader = new BufferedReader(new FileReader("config/games.txt", StandardCharsets.UTF_8));
-                                                List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
-
-                                                if (lines.toString().isEmpty()) {
-                                                    writer.close();
-                                                    reader.close();
+                                                if (list.isEmpty()) {
                                                     return;
                                                 }
+                                                //liststring = game
+                                                String liststring = String.join(" ", list);
+                                                try {
+                                                    BufferedWriter writer = new BufferedWriter(new FileWriter("config/games.txt", StandardCharsets.UTF_8, true));
+                                                    BufferedReader reader = new BufferedReader(new FileReader("config/games.txt", StandardCharsets.UTF_8));
+                                                    List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
 
-                                                for (int z = 0; z < lines.size(); z++) {
-
-                                                    if (lines.get(z).equalsIgnoreCase(liststring)) {
-                                                        GameRole_Add_Remove_From_User(event.getGuild(), event.getMessage(), event.getMember(), event.getMember().getUser(), lines.get(z), argArray[1]);
+                                                    if (lines.toString().isEmpty()) {
+                                                        writer.close();
+                                                        reader.close();
                                                         return;
                                                     }
-                                                    if (lines.size() == z + 1) {
-                                                        event.getMessage().addReaction("\u274C").queue();
-                                                        return;
+
+                                                    for (int z = 0; z < lines.size(); z++) {
+
+                                                        if (lines.get(z).equalsIgnoreCase(liststring)) {
+                                                            GameRole_Add_Remove_From_User(event.getGuild(), event.getMessage(), event.getMember(), event.getMember().getUser(), lines.get(z), argArray[1]);
+                                                            return;
+                                                        }
+                                                        if (lines.size() == z + 1) {
+                                                            event.getMessage().addReaction("\u274C").queue();
+                                                            return;
+                                                        }
                                                     }
+                                                    writer.close();
+                                                    reader.close();
+                                                } catch (IOException e) {
+                                                    LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                                                 }
-                                                writer.close();
-                                                reader.close();
-                                            } catch (IOException e) {
-                                                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                                             }
                                         }
+                                    } else {
+                                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("GameRole").setColor(Color.RED).setDescription(">gamerole add <game>\n>gamerole remove <game>").build()).queue();
                                     }
-                                } else {
-                                    event.getChannel().sendMessage(new EmbedBuilder().setTitle("GameRole").setColor(Color.RED).setDescription(">gamerole add <game>\n>gamerole remove <game>").build()).queue();
                                 }
                             }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            event.getChannel().sendMessage(new EmbedBuilder().setTitle("GameRole").setColor(Color.RED).setDescription(">gamerole add <game>\n>gamerole remove <game>\n>gamerole list").build()).queue();
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        event.getChannel().sendMessage(new EmbedBuilder().setTitle("GameRole").setColor(Color.RED).setDescription(">gamerole add <game>\n>gamerole remove <game>\n>gamerole list").build()).queue();
                     }
                 }
             }
@@ -150,7 +152,7 @@ public class GameRole_Command extends ListenerAdapter {
             if game as role dont exit
              */
             for (Role role : guild.getRoles()) {
-                if (role.getName().equals(Game)) {
+                if (role.getName().equalsIgnoreCase(Game)) {
 
             /*
             add or remove it

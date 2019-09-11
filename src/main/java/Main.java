@@ -1,18 +1,22 @@
 import config.CheckKey;
 import config.PropertiesFile;
+import listener.commands.*;
+import listener.create_delete.Category_create_delete;
+import listener.create_delete.Role_create_delete;
+import listener.create_delete.TextChannel_create_delete;
+import listener.create_delete.VoiceChannel_create_delete;
+import listener.other.*;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import other.ConsoleColor;
 import other.LogBack;
+
+import javax.security.auth.login.LoginException;
+
 /*
 import listener
  */
-import listener.commands.*;
-import listener.create_delete.*;
-import listener.other.*;
-
-import javax.security.auth.login.LoginException;
 
 public class Main {
 
@@ -27,7 +31,7 @@ public class Main {
              */
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing config key..." + ConsoleColor.reset, "info");
             CheckKey ck = new CheckKey();
-            ck.checking();
+            ck.StartChecking();
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "key check, done!" + ConsoleColor.reset, "info");
             /*
             Bot Token
@@ -70,9 +74,14 @@ public class Main {
              */
             builder.setActivity(Activity.listening(">help"));
             /*
+            I don´t know...
+             */
+            builder.setAutoReconnect(true);
+            /*
             finaly, create the Bot
              */
             builder.build();
+
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");
         } catch (LoginException e) {
