@@ -24,8 +24,8 @@ public class Owner_Commands extends ListenerAdapter {
 
     LogBack LB = new LogBack();
 
-    public boolean bool_timer = false;
-    public boolean bool_is_confirmed = false;
+    private boolean bool_timer = false;
+    private boolean bool_is_confirmed = false;
 
     /**
      * Listener for Commands
@@ -49,6 +49,8 @@ public class Owner_Commands extends ListenerAdapter {
                                 "\n" +
                                 "> >settings\n" +
                                 "\n" +
+                                "> >dm (**D**elete **M**essage´s)\n" +
+                                "\n" +
                                 "> >del <game>\n" +
                                 "\n" +
                                 "> >delete-bot (!Need to be confirm!!)\n" +
@@ -64,7 +66,14 @@ public class Owner_Commands extends ListenerAdapter {
                          */
                 } else if (argArray[0].equalsIgnoreCase(">twitch")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
-                        PropertiesFile.writePropertiesFile("twitchname", argArray[1]);
+                        try {
+                            if (argArray[1] == null) {
+                            } else {
+                                PropertiesFile.writePropertiesFile("twitchname", argArray[1]);
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            event.getChannel().sendMessage("Error: It´s look that you forgot the name of the Twitch User").queue();
+                        }
                     } else {
                         event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
                         event.getMessage().addReaction("\u274C").queue();
@@ -93,65 +102,68 @@ public class Owner_Commands extends ListenerAdapter {
                         > delete the ONE message in #games
                          */
                 } else if (argArray[0].equalsIgnoreCase(">del")) {
-                    if (argArray[1] == null) {
-                        event.getChannel().sendMessage("Hey, you forgot the game name!").queue();
-                    } else {
-                        if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
-                            ArrayList<String> list = new ArrayList<>();
-                            for (int x = 0; x < argArray.length; x++) {
-                                list.add(argArray[x]);
-                                if (list.size() == argArray.length) {
-                                    list.remove(argArray[0]);
-                                    if (list.isEmpty()) {
-                                        return;
-                                    }
-                                    /*
-                                    liststring = game
-                                     */
-                                    String liststring = String.join(" ", list);
-                                    /*
-                                    remove game from file
-                                     */
-                                    RemoveStringFromFile RSFF = new RemoveStringFromFile();
-                                    RSFF.remove(event.getGuild(), "games", liststring);
-                                    /*
-                                    delete the gamerole
-                                    */
-                                    for (Role role : event.getGuild().getRoles()) {
-                                        try {
-                                            List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
-                                            if (lines.contains(liststring)) {
-                                                if (role.getName().equalsIgnoreCase(liststring)) {
-                                                    role.delete().queue();
-                                                    break;
-                                                }
-                                            }
-                                        } catch (IOException e) {
-                                            LB.log(Thread.currentThread().getName(), e.getMessage(), "info");
-                                        }
-                                    }
-                                    /*
-                                    delete the ONE message in #games
-                                     */
-                                    for (Message message : event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
-                                        if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase(liststring)) {
-                                            message.delete().queue();
-                                            break;
-                                        }
-                                    }
-                                    /*
-                                    call gamecounter
-                                     */
-                                    Counter c = new Counter();
-                                    c.getint(event.getGuild(), "gamecount");
-                                    LB.log(Thread.currentThread().getName(), "The game *" + liststring + "* wurde aus der Liste entfern!", "info");
-                                    event.getMessage().addReaction("\uD83D\uDC4D").queue();
-                                }
-                            }
+                    try {
+                        if (argArray[1] == null) {
                         } else {
-                            event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
-                            event.getMessage().addReaction("\u274C").queue();
+                            if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                                ArrayList<String> list = new ArrayList<>();
+                                for (int x = 0; x < argArray.length; x++) {
+                                    list.add(argArray[x]);
+                                    if (list.size() == argArray.length) {
+                                        list.remove(argArray[0]);
+                                        if (list.isEmpty()) {
+                                            return;
+                                        }
+                                        /*
+                                        liststring = game
+                                         */
+                                        String liststring = String.join(" ", list);
+                                        /*
+                                        remove game from file
+                                         */
+                                        RemoveStringFromFile RSFF = new RemoveStringFromFile();
+                                        RSFF.remove(event.getGuild(), "games", liststring);
+                                        /*
+                                        delete the gamerole
+                                         */
+                                        for (Role role : event.getGuild().getRoles()) {
+                                            try {
+                                                List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+                                                if (lines.contains(liststring)) {
+                                                    if (role.getName().equalsIgnoreCase(liststring)) {
+                                                        role.delete().queue();
+                                                        break;
+                                                    }
+                                                }
+                                            } catch (IOException e) {
+                                                LB.log(Thread.currentThread().getName(), e.getMessage(), "info");
+                                            }
+                                        }
+                                        /*
+                                        delete the ONE message in #games
+                                         */
+                                        for (Message message : event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+                                            if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase(liststring)) {
+                                                message.delete().queue();
+                                                break;
+                                            }
+                                        }
+                                        /*
+                                        call gamecounter
+                                         */
+                                        Counter c = new Counter();
+                                        c.getint(event.getGuild(), "gamecount");
+                                        LB.log(Thread.currentThread().getName(), "The game *" + liststring + "* wurde aus der Liste entfern!", "info");
+                                        event.getMessage().addReaction("\uD83D\uDC4D").queue();
+                                    }
+                                }
+                            } else {
+                                event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
+                                event.getMessage().addReaction("\u274C").queue();
+                            }
                         }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        event.getChannel().sendMessage("Hey, you forgot the game name!").queue();
                     }
                     /*
                     delete the bot - need a second confirm (!)
