@@ -173,13 +173,13 @@ public class DeleteMessage_Command extends ListenerAdapter {
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             event.getChannel().sendMessage(new EmbedBuilder().setTitle("Message-Del").setDescription("\n" +
-                                    "```(Category)\n-c <category ID> | set the category as targeg```" +
-                                    "```(Texchannel)\n-t <textchannel ID> | set the textchannel as target```" +
-                                    "```(Date)\n-d <date> | (DD-MM-YY) delete all messages with the date```" +
-                                    "```(Role)\n-r <role ID> | delete all messages from the role```" +
-                                    "```(User)\n -u <user ID> | delete all messages from the user```" +
-                                    "```(Number)\n-n <int> | deletes as many messages as the number```" +
-                                    "```(String)\n-s <string> | delete ever message with the string```").build()).queue();
+                                    "```(Category)\n-c <category ID> | one category as target```" +
+                                    "```(Texchannel)\n-t <textchannel ID> | one textchannel as target```" +
+                                    "```(Date)\n-d <date> | (DD-MM-YY) | filter, all messages with this date```" +
+                                    "```(Role)\n-r <role ID> | fitler, for one role```" +
+                                    "```(User)\n -u <user ID> | filter, for one user```" +
+                                    "```(Number)\n-n <int> | filter, within x messages```" +
+                                    "```(String)\n-s <string> | filter, if message contain the string```").build()).queue();
                         } catch (NumberFormatException e) {
                             event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is wrong, or was not found!").queue();
                         }
