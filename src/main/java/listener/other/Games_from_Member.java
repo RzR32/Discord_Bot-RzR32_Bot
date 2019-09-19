@@ -46,7 +46,7 @@ public class Games_from_Member extends ListenerAdapter {
     }
 
     private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, String oldgame, String newgame) {
-            String username = member.getEffectiveName();
+        String username = member.getEffectiveName();
         if (short_type == Activity.ActivityType.DEFAULT) {
             if (start_end.equals("start")) {
                 WriteStringToFile WSTF = new WriteStringToFile();

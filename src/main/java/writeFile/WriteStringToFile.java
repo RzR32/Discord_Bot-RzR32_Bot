@@ -34,11 +34,14 @@ public class WriteStringToFile {
                 writer.close();
                 reader.close();
                 if (extra.equals("games")) {
-                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
-                            " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
-                    Counter c = new Counter();
-                    c.getint(guild, "gamecount");
+                    List<String> lines_BL = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
+                    if (!lines_BL.contains(line)) {
+                        guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
+                                " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
+                        Counter c = new Counter();
+                        c.getint(guild, "gamecount");
+                    }
                 } else if (extra.equals("list")) {
                     Member member = guild.getMemberById(line);
                     User user = member.getUser();
