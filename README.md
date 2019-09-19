@@ -20,8 +20,10 @@ In addition to the main function, the bot has a few **counter**, like ...
 - `OTHER`
     - TwitchFollower [The API for this counter is not mine (https://api.crunchprank.net/twitch/followcount/$user), so if its not work, I cant help for the moment]
  
-Also indicates when a member...
+indicates when a member...
 + joins / leaves
 + change his nickname
+
+and you can delete messages (with good filter)
 
 (needs 11 java to start!)
