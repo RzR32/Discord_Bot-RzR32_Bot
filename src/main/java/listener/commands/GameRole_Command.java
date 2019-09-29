@@ -191,7 +191,6 @@ public class GameRole_Command extends ListenerAdapter {
 
             List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
 
-
             if (lines.toString() == null || lines.isEmpty()) {
                 builder.setDescription("Es sind aktuell noch keine Rollen vorhanden!");
                 message.getChannel().sendMessage(builder.build()).queue();
