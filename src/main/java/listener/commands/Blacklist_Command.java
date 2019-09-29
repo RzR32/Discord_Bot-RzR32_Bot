@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.LogBack;
+import writeFile.RemoveStringFromFile;
 
 import java.awt.*;
 import java.io.*;
@@ -116,7 +117,9 @@ public class Blacklist_Command extends ListenerAdapter {
                                         event.getChannel().sendMessage(new EmbedBuilder().setTitle("Blacklist").setColor(Color.RED).setDescription(">blacklist add <game>\n>blacklist remove <game>\n>blacklist list").build()).queue();
                                     }
 
-                                    //Command for Server Owner - removed a *Game* completly
+                                    /*
+                                    Command for Server Owner - removed a *Game* completly
+                                     */
                                 } else if (argArray[0].equalsIgnoreCase(">blacklist+") || (argArray[0].equalsIgnoreCase(">bl+"))) {
                                     if (event.getMember().isOwner()) {
                                         if ((argArray[1].equalsIgnoreCase("add") || (argArray[1].equalsIgnoreCase("remove")) || (argArray[1].equalsIgnoreCase("list")))) {
@@ -127,7 +130,7 @@ public class Blacklist_Command extends ListenerAdapter {
                                             }
 
                                             /*
-                                             * compine all arguments
+                                            compine all arguments
                                              */
                                             ArrayList<String> list = new ArrayList<>();
 
@@ -146,23 +149,25 @@ public class Blacklist_Command extends ListenerAdapter {
                                                     try {
                                                         BufferedWriter writer = new BufferedWriter(new FileWriter("config/games.txt", StandardCharsets.UTF_8, true));
                                                         BufferedReader reader = new BufferedReader(new FileReader("config/games.txt", StandardCharsets.UTF_8));
-                                                        List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
 
-                                                        if (lines.toString().isEmpty()) {
-                                                            writer.close();
-                                                            reader.close();
-                                                            return;
+                                                        List<String> lines = null;
+                                                        if (argArray[1].equalsIgnoreCase("add")) {
+                                                            lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+
+                                                        } else if (argArray[1].equalsIgnoreCase("remove")) {
+                                                            lines = Files.readAllLines(Paths.get("config/blacklist/GuildBlackList.txt"), StandardCharsets.UTF_8);
                                                         }
 
-                                                        for (int z = 0; z < lines.size(); z++) {
-
-                                                            if (lines.get(z).equalsIgnoreCase(liststring)) {
-                                                                RemoveGameRoleFromGuild(event.getGuild(), event.getMessage(), lines.get(z), argArray[1]);
-                                                                return;
-                                                            }
-                                                            if (lines.size() == z + 1) {
-                                                                event.getMessage().addReaction("\u274C").queue();
-                                                                return;
+                                                        if (!lines.isEmpty()) {
+                                                            for (int z = 0; z < lines.size(); z++) {
+                                                                if (lines.get(z).equalsIgnoreCase(liststring)) {
+                                                                    RemoveGameFromGuild(event.getGuild(), event.getMessage(), lines.get(z), argArray[1]);
+                                                                    return;
+                                                                }
+                                                                if (lines.size() == z + 1) {
+                                                                    event.getMessage().addReaction("\u274C").queue();
+                                                                    return;
+                                                                }
                                                             }
                                                         }
                                                         writer.close();
@@ -317,7 +322,7 @@ public class Blacklist_Command extends ListenerAdapter {
         }
     }
 
-    private void RemoveGameRoleFromGuild(Guild guild, Message message, String Game, String operator) {
+    private void RemoveGameFromGuild(Guild guild, Message message, String Game, String operator) {
 
         File dir = new File("config/blacklist/");
         boolean a = dir.mkdir();
@@ -328,12 +333,26 @@ public class Blacklist_Command extends ListenerAdapter {
                 remove the role from the guild
                  */
                 guild.getRolesByName(Game, false).get(0).delete().queue();
+                /*
+                remove the game from the file
+                 */
+                RemoveStringFromFile RSFF = new RemoveStringFromFile();
+                RSFF.remove(guild, "games", Game);
+                /*
+                delete the ONE message in #games
+                 */
+                for (Message message_D : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+                    if (message_D.getEmbeds().get(0).getTitle().equalsIgnoreCase(Game)) {
+                        message_D.delete().queue();
+                        break;
+                    }
+                }
             } catch (IndexOutOfBoundsException ignored) {
             }
             try {
-            /*
-            add the game to the guild blacklist
-             */
+                /*
+                add the game to the guild blacklist
+                 */
                 String filename = "config/blacklist/GuildBlackList.txt";
                 File inputFile = new File("config/blacklist/GuildBlackList.txt");
 
@@ -355,9 +374,9 @@ public class Blacklist_Command extends ListenerAdapter {
                 writer.close();
                 reader.close();
 
-            /*
-            remove the game from the user blacklist´s
-             */
+                /*
+                remove the game from the user blacklist´s
+                 */
                 File folder = new File("config/blacklist/");
                 File[] listOfFiles = folder.listFiles();
 
