@@ -153,7 +153,7 @@ public class Owner_Commands extends ListenerAdapter {
                                          */
                                         Counter c = new Counter();
                                         c.getint(event.getGuild(), "gamecount");
-                                        LB.log(Thread.currentThread().getName(), "The game *" + liststring + "* wurde aus der Liste entfern!", "info");
+                                        LB.log(Thread.currentThread().getName(), "Das Spiel *" + liststring + "* wurde aus der Liste entfern!", "info");
                                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                                     }
                                 }
