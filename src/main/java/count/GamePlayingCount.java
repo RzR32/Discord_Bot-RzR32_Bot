@@ -5,12 +5,12 @@ import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities .*;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import other.ConsoleColor;
 import other.LogBack;
 
-import java.awt .*;
+import java.awt.*;
 import java.util.HashMap;
 
 public class GamePlayingCount {
@@ -63,37 +63,73 @@ public class GamePlayingCount {
      */
     public void CountNotPlayingGames(Guild guild) {
         try {
-            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 255, 255)).setTitle("Online");
-            int x = 0;
+            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 255, 255)).setTitle("Online").setDescription("");
+            int x = 0;  /*if member is not offline AND has no activity´s*/
+            int y = 0;  /*if member is not offline IGNORE activity´s*/
             TextChannel channel = guild.getTextChannelById(channel_id);
             for (Message message : channel.getIterableHistory()) {
                 if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Online")) {
                     for (Member member : guild.getMembers()) {
+                        if (member.getOnlineStatus() != OnlineStatus.OFFLINE) {
+                            y++;
+                        }
                         if (member.getOnlineStatus() != OnlineStatus.OFFLINE && member.getActivities().isEmpty()) {
                             x++;
                         }
                     }
+                    if (y == 0) {
+                        message.delete().complete();
+                    } else if (y == 1) {
+                        builder.getDescriptionBuilder().append("**" + y + "** Member, ist Online\n");
+                    } else {
+                        builder.getDescriptionBuilder().append("**" + y + "** Member, sind Online\n");
+                    }
                     if (x == 0) {
                         message.delete().complete();
                     } else if (x == 1) {
-                        message.editMessage(builder.setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
+                        builder.getDescriptionBuilder().append("**" + x + "** Member, macht gerade nichts\n");
                     } else {
-                        message.editMessage(builder.setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
+                        builder.getDescriptionBuilder().append("**" + x + "** Member, machen gerade nichts\n");
                     }
+                    int z =  y - x;
+                    if (z == 0) {
+                    } else if (z == 1) {
+                        builder.getDescriptionBuilder().append("**" + z + "** Member, macht gerade etwas");
+                    } else if (z > 1) {
+                        builder.getDescriptionBuilder().append("**" + z + "** Member, machen gerade etwas");
+                    }
+                    message.editMessage(builder.build()).complete();
                     return;
                 }
             }
             for (Member member : guild.getMembers()) {
+                if (member.getOnlineStatus() != OnlineStatus.OFFLINE) {
+                    y++;
+                }
                 if (member.getOnlineStatus() != OnlineStatus.OFFLINE && member.getActivities().isEmpty()) {
                     x++;
                 }
             }
+            if (y == 0) {
+            } else if (y == 1) {
+                builder.getDescriptionBuilder().append("**" + y + "** Member, ist Online\n");
+            } else {
+                builder.getDescriptionBuilder().append("**" + y + "** Member, sind Online\n");
+            }
             if (x == 0) {
             } else if (x == 1) {
-                channel.sendMessage(builder.setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
+                builder.getDescriptionBuilder().append("**" + x + "** Member, macht gerade nichts\n");
             } else {
-                channel.sendMessage(builder.setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
+                builder.getDescriptionBuilder().append("**" + x + "** Member, machen gerade nichts\n");
             }
+            int z =  y - x;
+            if (z == 0) {
+            } else if (z == 1) {
+                builder.getDescriptionBuilder().append("**" + z + "** Member, macht gerade etwas");
+            } else if (z > 1) {
+                builder.getDescriptionBuilder().append("**" + z + "** Member, machen gerade etwas");
+            }
+            channel.sendMessage(builder.build()).complete();
         } catch (ErrorResponseException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
