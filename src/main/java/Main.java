@@ -9,6 +9,7 @@ import listener.other.*;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import other.BackUp;
 import other.ConsoleColor;
 import other.LogBack;
 
@@ -78,6 +79,11 @@ public class Main {
             I don´t know...
              */
             builder.setAutoReconnect(true);
+            /*
+            create Backup
+            */
+            BackUp BU = new BackUp();
+            BU.timer();
             /*
             finaly, create the Bot
              */
