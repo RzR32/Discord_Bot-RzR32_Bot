@@ -31,6 +31,7 @@ public class Status_from_Member extends ListenerAdapter {
                     " ist nun offline" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
         }
         GamePlayingCount GPC = new GamePlayingCount();
+        GPC.CountOfflineMember(event.getGuild());
         GPC.CountNotPlayingGames(event.getGuild());
     }
 }

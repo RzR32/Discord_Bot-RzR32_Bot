@@ -12,7 +12,6 @@ import other.LogBack;
 
 import java.awt .*;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class GamePlayingCount {
 
@@ -43,6 +42,7 @@ public class GamePlayingCount {
         }
         LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
         MessageBotGame(guild);
+        CountOfflineMember(guild);
         CountNotPlayingGames(guild);
         CountPlayingGames(guild);
         LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Finish!", "info");
@@ -59,15 +59,15 @@ public class GamePlayingCount {
     }
 
     /*
-    for each member, that is not playing, streaming ... etc > count
+    for each member, that is no activity´s > count
      */
     public void CountNotPlayingGames(Guild guild) {
         try {
-            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 255, 255));
+            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 255, 255)).setTitle("Online");
             int x = 0;
             TextChannel channel = guild.getTextChannelById(channel_id);
             for (Message message : channel.getIterableHistory()) {
-                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Not Ingame")) {
+                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Online")) {
                     for (Member member : guild.getMembers()) {
                         if (member.getOnlineStatus() != OnlineStatus.OFFLINE && member.getActivities().isEmpty()) {
                             x++;
@@ -76,9 +76,9 @@ public class GamePlayingCount {
                     if (x == 0) {
                         message.delete().complete();
                     } else if (x == 1) {
-                        message.editMessage(builder.setTitle("Not Ingame").setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
+                        message.editMessage(builder.setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
                     } else {
-                        message.editMessage(builder.setTitle("Not Ingame").setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
+                        message.editMessage(builder.setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
                     }
                     return;
                 }
@@ -90,9 +90,50 @@ public class GamePlayingCount {
             }
             if (x == 0) {
             } else if (x == 1) {
-                channel.sendMessage(builder.setTitle("Not Ingame").setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
+                channel.sendMessage(builder.setDescription("**" + x + "** Member, macht gerade nichts").build()).complete();
             } else {
-                channel.sendMessage(builder.setTitle("Not Ingame").setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
+                channel.sendMessage(builder.setDescription("**" + x + "** Member, machen gerade nichts").build()).complete();
+            }
+        } catch (ErrorResponseException e) {
+            LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
+        }
+    }
+
+    /*
+    for each member that is offline > count
+     */
+    public void CountOfflineMember(Guild guild) {
+        try {
+            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 0, 0)).setTitle("Offline");
+            int x = 0;
+            TextChannel channel = guild.getTextChannelById(channel_id);
+            for (Message message : channel.getIterableHistory()) {
+                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Offline")) {
+                    for (Member member : guild.getMembers()) {
+                        if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
+                            x++;
+                        }
+                    }
+                    if (x == 0) {
+                        message.delete().complete();
+                    } else if (x == 1) {
+                        message.editMessage(builder.setDescription("**" + x + "** Member, ist Offline").build()).complete();
+                    } else {
+                        message.editMessage(builder.setDescription("**" + x + "** Member, sind Offline").build()).complete();
+                    }
+                    return;
+                }
+            }
+            for (Member member : guild.getMembers()) {
+                if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
+                    x++;
+                }
+            }
+            if (x == 0) {
+            } else if (x == 1) {
+                channel.sendMessage(builder.setDescription("**" + x + "** Member, ist Offline").build()).complete();
+            } else {
+                channel.sendMessage(builder.setDescription("**" + x + "** Member, sind Offline").build()).complete();
             }
         } catch (ErrorResponseException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
@@ -256,54 +297,53 @@ public class GamePlayingCount {
                                     }
                                 } catch (NullPointerException ignored) {
                                 }
-                                /*setup message | for one or more - member*/
-                                if (x_count == 1) {
-                                    if (Color.equals("default")) {
-                                        builder.setDescription("**" + x_count + "** Member, spielt gerade dieses Spiel");
-                                    } else if (Color.equals("stream")) {
-                                        builder.setDescription("**" + x_count + "** Member, streamt");
-                                    } else if (Color.equals("listen")) {
-                                        builder.setDescription("**" + x_count + "** Member, hört Musik");
-                                    } else if (Color.equals("watch")) {
-                                        builder.setDescription("**" + x_count + "** Member, schaut ein Film");
-                                    }
-                                } else if (x_count > 1) {
-                                    if (Color.equals("default")) {
-                                        builder.setDescription("**" + x_count + "** Member, spielen gerade dieses Spiel");
-                                    } else if (Color.equals("stream")) {
-                                        builder.setDescription("**" + x_count + "** Member, streamen");
-                                    } else if (Color.equals("listen")) {
-                                        builder.setDescription("**" + x_count + "** Member, hören Musik");
-                                    } else if (Color.equals("watch")) {
-                                        builder.setDescription("**" + x_count + "** Member, schauen Filme");
-                                    }
-                                }
-                                /*add everything from the list to the builder*/
-                                if (Color.equals("default") || Color.equals("stream")) {
-                                    builder.getDescriptionBuilder().append("\n\n");
-                                    if (list_string_detail.get(0) != null && list_integer_detail.get(0) != null && !list_string_detail.toString().contains("null")) {
-                                        if (list_string_detail.size() != 0) {
-                                            for (int _int = 0; _int < list_string_detail.size(); _int++) {
-                                                builder.getDescriptionBuilder().append("**" + list_integer_detail.get(_int) + "** - " + list_string_detail.get(_int) + "\n");
-                                            }
-                                        }
-                                        builder.getDescriptionBuilder().append("\n");
-                                        if (list_string_state.size() != 0 && list_integer_state.get(0) != null && !list_string_state.toString().contains("null")) {
-                                            for (int _int = 0; _int < list_string_state.size(); _int++) {
-                                                builder.getDescriptionBuilder().append("**" + list_integer_state.get(_int) + "** - " + list_string_state.get(_int) + "\n");
-                                            }
-                                        }
-                                        builder.getDescriptionBuilder().append("\n");
-                                        if (list_string_largeimg.size() != 0 && list_integer_largeimg.get(0) != null && !list_string_largeimg.toString().contains("null")) {
-                                            for (int _int = 0; _int < list_string_largeimg.size(); _int++) {
-                                                builder.getDescriptionBuilder().append("**" + list_integer_largeimg.get(_int) + "** - " + list_string_largeimg.get(_int) + "\n");
-                                            }
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
+                }
+            }
+        }
+        /*setup message | for one or more - member*/
+        if (x_count == 1) {
+            if (Color.equals("default")) {
+                builder.setDescription("**" + x_count + "** Member, spielt gerade dieses Spiel");
+            } else if (Color.equals("stream")) {
+                builder.setDescription("**" + x_count + "** Member, streamt");
+            } else if (Color.equals("listen")) {
+                builder.setDescription("**" + x_count + "** Member, hört Musik");
+            } else if (Color.equals("watch")) {
+                builder.setDescription("**" + x_count + "** Member, schaut ein Film");
+            }
+        } else if (x_count > 1) {
+            if (Color.equals("default")) {
+                builder.setDescription("**" + x_count + "** Member, spielen gerade dieses Spiel");
+            } else if (Color.equals("stream")) {
+                builder.setDescription("**" + x_count + "** Member, streamen");
+            } else if (Color.equals("listen")) {
+                builder.setDescription("**" + x_count + "** Member, hören Musik");
+            } else if (Color.equals("watch")) {
+                builder.setDescription("**" + x_count + "** Member, schauen Filme");
+            }
+        }
+        /*add everything from the list to the builder*/
+        if (Color.equals("default") || Color.equals("stream")) {
+            builder.getDescriptionBuilder().append("\n");
+            if (list_string_detail.get(0) != null && list_integer_detail.get(0) != null && !list_string_detail.toString().contains("null")) {
+                builder.getDescriptionBuilder().append("\n");
+                for (int _int = 0; _int < list_string_detail.size(); _int++) {
+                    builder.getDescriptionBuilder().append("**" + list_integer_detail.get(_int) + "** - " + list_string_detail.get(_int) + "\n");
+                }
+            }
+            if (list_string_state.size() != 0 && list_integer_state.get(0) != null && !list_string_state.toString().contains("null")) {
+                builder.getDescriptionBuilder().append("\n");
+                for (int _int = 0; _int < list_string_state.size(); _int++) {
+                    builder.getDescriptionBuilder().append("**" + list_integer_state.get(_int) + "** - " + list_string_state.get(_int) + "\n");
+                }
+            }
+            if (list_string_largeimg.size() != 0 && list_integer_largeimg.get(0) != null && !list_string_largeimg.toString().contains("null")) {
+                builder.getDescriptionBuilder().append("\n");
+                for (int _int = 0; _int < list_string_largeimg.size(); _int++) {
+                    builder.getDescriptionBuilder().append("**" + list_integer_largeimg.get(_int) + "** - " + list_string_largeimg.get(_int) + "\n");
                 }
             }
         }
