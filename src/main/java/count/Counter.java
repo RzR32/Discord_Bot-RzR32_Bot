@@ -4,6 +4,7 @@ import check_create.CheckCategory;
 import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import other.ConsoleColor;
 import other.LogBack;
 import other.Members;
@@ -76,15 +77,19 @@ public class Counter {
                 extra
                  */
                     try {
-                        BufferedReader br = new BufferedReader(new FileReader("config/games.txt"));
-                        String roles = guild.getRoles().toString();
-                        String line = null;
-                        while ((line = br.readLine()) != null) {
-                            if (roles.contains(line)) {
-                                size--;
+                        List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+
+                        if (lines.toString() == null || lines.isEmpty()) {
+                            size = 0;
+                        }
+
+                        for (String string : lines) {
+                            for (Role role : guild.getRoles()) {
+                                if (string.equalsIgnoreCase(role.getName())) {
+                                    size--;
+                                }
                             }
                         }
-                        br.close();
                     } catch (IOException e) {
                         try {
                             File file = new File("config/games.txt");

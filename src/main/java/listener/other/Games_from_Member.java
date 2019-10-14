@@ -29,7 +29,7 @@ public class Games_from_Member extends ListenerAdapter {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
-                Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), null, event.getNewActivity().getName());
+                Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), null, event.getNewActivity());
             }
         }
     }
@@ -40,13 +40,26 @@ public class Games_from_Member extends ListenerAdapter {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
-                Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity().getName(), null);
+                Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity(), null);
             }
         }
     }
 
-    private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, String oldgame, String newgame) {
+    private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity old_game, Activity new_game) {
         String username = member.getEffectiveName();
+        String newgame;
+        String oldgame;
+        if (new_game == null) {
+            newgame = null;
+        } else {
+            newgame = new_game.getName();
+        }
+        if (old_game == null) {
+            oldgame = null;
+        } else {
+            oldgame = old_game.getName();
+        }
+
         if (short_type == Activity.ActivityType.DEFAULT) {
             if (start_end.equals("start")) {
                 WriteStringToFile WSTF = new WriteStringToFile();
@@ -85,9 +98,9 @@ public class Games_from_Member extends ListenerAdapter {
         }
         GamePlayingCount gamePlayingCount = new GamePlayingCount();
         if (start_end.equals("start")) {
-            gamePlayingCount.ForwardPlayingGame(guild, newgame, short_type);
+            gamePlayingCount.ForwardPlayingGame(guild, new_game);
         } else {
-            gamePlayingCount.ForwardPlayingGame(guild, oldgame, short_type);
+            gamePlayingCount.ForwardPlayingGame(guild, old_game);
         }
     }
 

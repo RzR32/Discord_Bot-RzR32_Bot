@@ -29,19 +29,29 @@ public class WriteStringToFile {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, true));
             BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
             List<String> lines = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
+
             if (!lines.contains(line)) {
                 writer.write(line + "\n");
                 writer.close();
                 reader.close();
+
                 if (extra.equals("games")) {
-                    List<String> lines_BL = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
-                    if (!lines_BL.contains(line)) {
-                        guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
-                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
-                                " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
-                        Counter c = new Counter();
-                        c.getint(guild, "gamecount");
+
+                    /*check, if "line" is in the blacklist*/
+                    File file_bl = new File("config/blacklist/GuildBlackList.txt");
+                    if (file_bl.exists()) {
+                        List<String> lines_BL = Files.readAllLines(Paths.get(file_bl + ""), StandardCharsets.UTF_8);
+                        if (lines_BL.contains(line)) {
+                            return;
+                        }
                     }
+
+                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
+                            " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
+                    Counter c = new Counter();
+                    c.getint(guild, "gamecount");
+
                 } else if (extra.equals("list")) {
                     Member member = guild.getMemberById(line);
                     User user = member.getUser();

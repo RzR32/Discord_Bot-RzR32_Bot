@@ -2,6 +2,7 @@ package listener.commands;
 
 import config.PropertiesFile;
 import count.Counter;
+import count.GamePlayingCount;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -43,7 +44,9 @@ public class Owner_Commands extends ListenerAdapter {
                         event.getChannel().sendMessage(new EmbedBuilder().setTitle("HELP for Owner").setColor(Color.YELLOW).setDescription("" +
                                 "Diese Befehle sind nur für den Server Besitzer!\n" +
                                 "\n" +
-                                "> >twitch <name> (maybe don´t update the counter instantly)\n" +
+                                "> >twitch <name> (don´t update the counter instantly)\n" +
+                                "\n" +
+                                ">playingcount\n" +
                                 "\n" +
                                 "> >agreement\n" +
                                 "\n" +
@@ -74,6 +77,15 @@ public class Owner_Commands extends ListenerAdapter {
                         } catch (ArrayIndexOutOfBoundsException e) {
                             event.getChannel().sendMessage("Error: It´s look that you forgot the name of the Twitch User").queue();
                         }
+                    } else {
+                        event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
+                        event.getMessage().addReaction("\u274C").queue();
+                    }
+
+                } else if (argArray[0].equalsIgnoreCase(">playingcount") || argArray[0].equalsIgnoreCase(">pc")) {
+                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                        GamePlayingCount GPC = new GamePlayingCount();
+                        GPC.startCounter(event.getGuild());
                     } else {
                         event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
                         event.getMessage().addReaction("\u274C").queue();
@@ -153,7 +165,7 @@ public class Owner_Commands extends ListenerAdapter {
                                          */
                                         Counter c = new Counter();
                                         c.getint(event.getGuild(), "gamecount");
-                                        LB.log(Thread.currentThread().getName(), "The game *" + liststring + "* wurde aus der Liste entfern!", "info");
+                                        LB.log(Thread.currentThread().getName(), "Das Spiel *" + liststring + "* wurde aus der Liste entfern!", "info");
                                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                                     }
                                 }
