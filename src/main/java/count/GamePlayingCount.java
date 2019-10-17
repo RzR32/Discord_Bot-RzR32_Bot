@@ -193,39 +193,36 @@ public class GamePlayingCount {
 
     public void ForwardPlayingGame(Guild guild, Activity activity) {
         if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
+            Color color = null;
+            String Color = null;
             if (activity.getType().equals(Activity.ActivityType.STREAMING)) {
-                GetMessage(guild, activity, "stream");
+                Color = "stream";
+                color = new Color(255, 0, 255);
             } else if (activity.getType().equals(Activity.ActivityType.LISTENING)) {
-                GetMessage(guild, activity, "listen");
+                Color = "listen";
+                color = new Color(0, 255, 0);
             } else if (activity.getType().equals(Activity.ActivityType.WATCHING)) {
-                GetMessage(guild, activity, "watch");
+                Color = "watch";
+                color = new Color(255, 255, 0);
             } else if (activity.getType().equals(Activity.ActivityType.DEFAULT)) {
-                GetMessage(guild, activity, "default");
+                Color = "default";
+                color = new Color(0, 240, 255);
             }
-            CountNotPlayingGames(guild);
-        }
-    }
-
-    private void GetMessage(Guild guild, Activity A_game, String Color) {
-        /*set color´s*/
-        Color color = null;
-        if (Color.equals("stream")) {
-            color = new Color(255, 0, 255);
-        } else if (Color.equals("listen")) {
-            color = new Color(0, 255, 0);
-        } else if (Color.equals("watch")) {
-            color = new Color(255, 255, 0);
-        } else if (Color.equals("default")) {
-            color = new Color(0, 240, 255);
-        }
-        /*get messages | if found*/
-        for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
-            if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase(A_game.getName())) {
-                _Message(guild, A_game, color, Color, message);
-                return;
+            /*get messages | if found*/
+            for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
+                boolean bool;
+                if (Color.equals("stream")) {
+                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Stream");
+                } else {
+                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
+                }
+                if (bool) {
+                    _Message(guild, activity, color, Color, message);
+                    return;
+                }
             }
+            _Message(guild, activity, color, Color, null);
         }
-        _Message(guild, A_game, color, Color, null);
     }
 
     private void _Message(Guild guild, Activity A_game, Color color, String Color, Message message) {
@@ -247,11 +244,11 @@ public class GamePlayingCount {
         list_integer_largeimg.put(0, 0);
         /*setup builder to send/edit message*/
         TextChannel channel = guild.getTextChannelById(channel_id);
-        EmbedBuilder builder;
+        EmbedBuilder builder = new EmbedBuilder().setColor(color);
         if (Color.equals("stream")) {
-            builder = new EmbedBuilder().setTitle("Stream").setColor(color);
+            builder.setTitle("Stream");
         } else {
-            builder = new EmbedBuilder().setTitle(A_game.getName()).setColor(color);
+            builder.setTitle(A_game.getName());
         }
         /*get int / count */
         for (Member member : guild.getMembers()) {
@@ -395,6 +392,7 @@ public class GamePlayingCount {
                 message.editMessage(builder.build()).complete();
             }
         }
+        CountNotPlayingGames(guild);
         list_string_detail.clear();
         list_integer_detail.clear();
         list_string_state.clear();
