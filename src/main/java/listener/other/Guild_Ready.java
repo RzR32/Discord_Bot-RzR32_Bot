@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
 import other.LogBack;
-import other.Members;
 import other.Pause;
 
 public class Guild_Ready extends ListenerAdapter {
@@ -92,17 +91,6 @@ public class Guild_Ready extends ListenerAdapter {
         CheckChannel C_Channel = new CheckChannel();
         C_Channel.StartChecking(event.getGuild());
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "other Channel check, done!" + ConsoleColor.reset, "info");
-        LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
-
-        P.pause(Thread.currentThread(), pause_int);
-
-        /*
-        check for new member or if some member leaved
-         */
-        LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for new Member or leaved Member..." + ConsoleColor.reset, "info");
-        Members members = new Members();
-        members.Member_CheckMembersOnGuild(event.getGuild());
-        LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Member check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
         P.pause(Thread.currentThread(), pause_int);
