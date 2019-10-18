@@ -210,12 +210,13 @@ public class GamePlayingCount {
                 Color = "default";
                 color = new Color(0, 240, 255);
             }
-            /*get messages | if found*/
+            /*check if the default message it print*/
             for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
-                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Offline")) {
+                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Online")) {
                     bool_check_message = true;
                 }
             }
+            /*get messages | if found*/
             if (bool_check_message) {
                 for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
                     if (Color.equals("stream")) {
