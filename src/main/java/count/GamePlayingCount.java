@@ -195,6 +195,8 @@ public class GamePlayingCount {
         if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
             Color color = null;
             String Color = null;
+            boolean bool_check_message = false;
+            boolean bool_title;
             if (activity.getType().equals(Activity.ActivityType.STREAMING)) {
                 Color = "stream";
                 color = new Color(255, 0, 255);
@@ -210,18 +212,26 @@ public class GamePlayingCount {
             }
             /*get messages | if found*/
             for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
-                boolean bool;
-                if (Color.equals("stream")) {
-                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Stream");
-                } else {
-                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
-                }
-                if (bool) {
-                    _Message(guild, activity, color, Color, message);
-                    return;
+                if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Offline")) {
+                    bool_check_message = true;
                 }
             }
-            _Message(guild, activity, color, Color, null);
+            if (bool_check_message) {
+                for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
+                    if (Color.equals("stream")) {
+                        bool_title = message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Stream");
+                    } else {
+                        bool_title = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
+                    }
+                    if (bool_title) {
+                        _Message(guild, activity, color, Color, message);
+                        return;
+                    }
+                }
+                _Message(guild, activity, color, Color, null);
+            } else {
+                ForwardPlayingGame(guild, activity);
+            }
         }
     }
 
