@@ -1,6 +1,8 @@
 package listener.other;
 
 import config.PropertiesFile;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,18 +13,14 @@ public class Name_Change extends ListenerAdapter {
 
     Members m = new Members();
 
-    /*
-    give´s out error, maybe remove...
-     */
     @Override
     public void onUserUpdateName(UserUpdateNameEvent event) {
         if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
-            for (String id : Members.GetGuildsIDs()) {
-                if (event.getJDA().getGuildById(id).getMemberById(event.getUser().getId()) != null) {
-                /*
-                member is on one guild > change name!
-                 */
-                    m.Member_CheckMemberOnFile(event.getJDA().getGuildById(id));
+            for (Guild guild : event.getJDA().getGuilds()) {
+                for (Member member : guild.getMembers()) {
+                    if (member.getId().equals(event.getUser().getId())) {
+                        m.Member_CheckMemberOnFile(guild);
+                    }
                 }
             }
         }
