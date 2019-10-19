@@ -4,8 +4,8 @@ import check_create.CheckCategory;
 import config.PropertiesFile;
 import listener.other.Games_from_Member;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class Member_Commands extends ListenerAdapter {
@@ -52,9 +53,10 @@ public class Member_Commands extends ListenerAdapter {
                                 }
                             }
                             if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-channel")) || (event.getGuild().getMember(event.getMember().getUser()).isOwner())) {
-                            /*
-                            help command
-                             */
+
+                                /*
+                                HELP COMMAND
+                                 */
                                 if (event.getMessage().getContentRaw().equalsIgnoreCase(">help")) {
                                     event.getChannel().sendMessage(new EmbedBuilder().setTitle("HELP").setColor(Color.YELLOW).setDescription("" +
                                             "> >ping - Bot macht 'Pong!'\n" +
@@ -67,24 +69,28 @@ public class Member_Commands extends ListenerAdapter {
                                             "\n" +
                                             "> >blacklist - zeigt 'Menü' für die Spiele Blacklist\n" +
                                             "\n" +
+                                            "> >userinfo\n" +
+                                            "\n" +
+                                            "> >rolesinfo\n" +
+                                            "\n" +
                                             "> >credits\n" +
                                             "\n" +
                                             "> >help+ - Commands für den Server Owner").build()).queue();
 
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                /*
-                                ping command
-                                 */
+                                    /*
+                                    PING COMMAND
+                                     */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">ping")) {
                                     event.getChannel().sendMessage("Pong!").queue();
 
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                /*
-                                amg command
-                                (Add My Game)
-                                 */
+                                    /*
+                                    AMG COMMAND
+                                    (Add My Game)
+                                     */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">amg")) {
                                     if (!event.getMember().getActivities().isEmpty()) {
                                         Activity game = event.getMember().getActivities().get(0);
@@ -111,16 +117,16 @@ public class Member_Commands extends ListenerAdapter {
                                         }
                                     }
 
-                                /*
-                                credits command
-                                 */
+                                    /*
+                                    CREDITS COMMAND
+                                     */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">credits")) {
                                     event.getChannel().sendMessage("Dieser Bot wurde erstellt von RzR32\nmit der Hilfe von HannesGames").queue();
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                /*
-                                check if member is in the *gamelist*
-                                 */
+                                    /*
+                                    PRINT OUT, IF THE MEMBER IS IN THE GAMELIST
+                                     */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">gamelist")) {
                                     try {
                                         List<String> lines = Files.readAllLines(Paths.get("config/list.txt"), StandardCharsets.UTF_8);
@@ -132,7 +138,87 @@ public class Member_Commands extends ListenerAdapter {
                                     } catch (IOException e) {
                                         LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                                     }
+
+                                    /*
+                                    USER INFO
+                                     */
+                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">userinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ui")) {
+                                    EmbedBuilder builder = new EmbedBuilder();
+                                    /*Title*/
+                                    builder.setTitle("USER INFO " + event.getMember().getEffectiveName());
+                                    /*Color*/
+                                    builder.setColor(event.getMember().getColorRaw());
+                                    /*Create Date*/
+                                    OffsetDateTime create = event.getMember().getTimeCreated();
+                                    builder.getDescriptionBuilder().append("User Acc Create Date: " + create.getDayOfMonth() + "." + create.getMonthValue() + "." + create.getYear() + "\n");
+                                    /*JOIN DATE*/
+                                    OffsetDateTime join = event.getMember().getTimeJoined();
+                                    builder.getDescriptionBuilder().append("User Join Date on this Server: " + join.getDayOfMonth() + "." + join.getMonthValue() + "." + join.getYear() + "\n");
+                                    /*USERID*/
+                                    builder.getDescriptionBuilder().append("UserID: " + event.getMember().getId() + "\n");
+                                    /*UserName*/
+                                    builder.getDescriptionBuilder().append("UserName: " + event.getMember().getUser().getName() + "\n");
+                                    /*NickName - if set*/
+                                    if (event.getMember().getNickname() != null) {
+                                        builder.getDescriptionBuilder().append("NickName: " + event.getMember().getNickname() + "\n");
+                                    }
+                                    /*Roles*/
+                                    builder.getDescriptionBuilder().append("Roles: ");
+                                    for (Role role : event.getMember().getRoles()) {
+                                        builder.getDescriptionBuilder().append("'" + role.getName() + "' ");
+                                    }
+                                    builder.getDescriptionBuilder().append("\n");
+                                    /*Activities*/
+                                    if (!event.getMember().getActivities().isEmpty()) {
+                                        builder.getDescriptionBuilder().append("Activities: " + event.getMember().getActivities() + "\n");
+                                    } else {
+                                        builder.getDescriptionBuilder().append("Activities: 'untätig'\n");
+                                    }
+                                    /*Message send*/
+                                    int message_count = 0;
+                                    for (TextChannel textChannel : event.getGuild().getTextChannels()) {
+                                        if (event.getGuild().getSelfMember().hasPermission(textChannel, Permission.MESSAGE_HISTORY)) {
+                                            for (Message message : textChannel.getIterableHistory()) {
+                                                if (message.getAuthor().getName().equals(event.getMember().getUser().getName())) {
+                                                    message_count++;
+                                                }
+                                            }
+                                        } else {
+                                            LB.log(Thread.currentThread().getName(), "No Permission to see the channel " + textChannel.getName(), "error");
+                                        }
+                                    }
+                                    builder.getDescriptionBuilder().append("Message count: " + message_count + "\n");
+                                    /*build & send builder*/
+                                    event.getChannel().sendMessage(builder.build()).queue();
+
+                                    /*
+                                    Roles INFO
+                                     */
+                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">rolesinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ri")) {
+                                    EmbedBuilder builder = new EmbedBuilder();
+                                    /*Title*/
+                                    builder.setTitle("ROLES INFO");
+                                    /*Roles*/
+                                    for (Role role : event.getGuild().getRoles()) {
+                                        int role_count = 0;
+                                        for (Member member : event.getGuild().getMembers()) {
+                                            if (role.getName().equals("@everyone")) {
+                                                break;
+                                            }
+                                            if (member.getRoles().toString().contains(role.getName()))
+                                                role_count++;
+                                        }
+                                        if (role.getName().equals("@everyone")) {
+                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + event.getGuild().getMembers().size() + " Member haben diese Rolle\n");
+                                        } else {
+                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + role_count + " Member haben diese Rolle\n");
+                                        }
+                                    }
+                                    builder.getDescriptionBuilder().append("\n");
+                                    /*build & send builder*/
+                                    event.getChannel().sendMessage(builder.build()).queue();
                                 }
+
                             } else {
                                 event.getMessage().delete().queue();
                             }
