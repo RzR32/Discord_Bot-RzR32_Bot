@@ -122,7 +122,6 @@ public class BackUp {
             LB.log(Thread.currentThread().getName(), "ZIP Backup *" + list.get(x).getAbsoluteFile().getName() + "* to Backup.zip", "info");
             /*DELETE*/
             deleteFolder(list.get(x));
-            LB.log(Thread.currentThread().getName(), "", "info");
         }
         boolean a = file_temp.delete();
         boolean b = file_original.delete();
