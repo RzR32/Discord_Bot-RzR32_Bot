@@ -58,9 +58,7 @@ public class Members {
             List<String> lines = Files.readAllLines(Paths.get("config/members.txt"), StandardCharsets.UTF_8);
             List<Member> members = guild.getMembers();
 
-            /*
-            clear file
-             */
+            /*clear file*/
             if (!lines.isEmpty()) {
                 FileWriter writer1 = new FileWriter("config/members.txt", StandardCharsets.UTF_8, false);
                 PrintWriter writer2 = new PrintWriter(writer1, false);
@@ -70,9 +68,7 @@ public class Members {
                 return;
             }
 
-            /*
-            write file new > WITH the old but remove ONE line
-             */
+            /*write file new > WITH the old but remove ONE line*/
             FileWriter writer3 = new FileWriter("config/members.txt", StandardCharsets.UTF_8, false);
 
             for (String string : lines) {
@@ -89,26 +85,37 @@ public class Members {
                     if (MemberID.getNickname() == null) {
                         user_nickname = " <no nickname>";
                     } else {
-                        user_nickname = " " + MemberID.getNickname();
+                        user_nickname = MemberID.getNickname();
                     }
 
-                    /*compare nickname with file*/
-                    if (user_nickname.equals(" <no nickname>")) {
-                        if (!string.substring(string.lastIndexOf("█") + 1).equals(user_nickname)) {
-                            String trim = string.substring(string.lastIndexOf("█") + 1).trim();
-                            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " hat sein Nickname entfernt (" + ConsoleColor.cyan + trim + ConsoleColor.reset + ")" + ConsoleColor.reset, "info");
-                            if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
-                                String channel = PropertiesFile.readsPropertiesFile("logs");
-                                guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** hat sein Nickname entfernt (**" + trim + "**)").queue();
-                            }
+                    /*check if member has ANOTHER name*/
+                    if (!MemberID.getUser().getName().equals(user_name)) {
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NAMECHANGE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " hat sein Namen geändert zu " + ConsoleColor.reset + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
+                        if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
+                            String channel = PropertiesFile.readsPropertiesFile("logs");
+                            guild.getTextChannelById(channel).sendMessage("NameChange: **" + user_name + "** hat sein Namen geändert zu **" + MemberID.getEffectiveName() + "**").queue();
                         }
+
                     } else {
-                        if (!lines.toString().contains(MemberID.getEffectiveName())) {
-                            if (!MemberID.getEffectiveName().equals(user_name)) {
-                                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " heißt nun " + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
+
+                        /*check if member has ANOTHER nickname*/
+                        if (user_nickname.equals(" <no nickname>")) {
+                            if (!string.substring(string.lastIndexOf("█") + 1).equals(user_nickname)) {
+                                String trim = string.substring(string.lastIndexOf("█") + 1).trim();
+                                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " hat sein Nickname entfernt (" + ConsoleColor.cyan + trim + ConsoleColor.reset + ")" + ConsoleColor.reset, "info");
                                 if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                                     String channel = PropertiesFile.readsPropertiesFile("logs");
-                                    guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** heißt nun **" + MemberID.getEffectiveName() + "**").queue();
+                                    guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** hat sein Nickname entfernt (**" + trim + "**)").queue();
+                                }
+                            }
+                        } else {
+                            if (!lines.toString().contains(MemberID.getEffectiveName())) {
+                                if (!MemberID.getEffectiveName().equals(user_name)) {
+                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " heißt nun " + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
+                                    if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
+                                        String channel = PropertiesFile.readsPropertiesFile("logs");
+                                        guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** heißt nun **" + MemberID.getEffectiveName() + "**").queue();
+                                    }
                                 }
                             }
                         }
@@ -116,9 +123,9 @@ public class Members {
 
                     /*write file*/
                     if (MemberID.getNickname() == null) {
-                        writer3.write(MemberID.getUser().getId() + " █ " + user_name + " █ <no nickname>\n");
+                        writer3.write(MemberID.getUser().getId() + " █ " + MemberID.getUser().getName() + " █ <no nickname>\n");
                     } else {
-                        writer3.write(MemberID.getUser().getId() + " █ " + user_name + " █ " + MemberID.getEffectiveName() + "\n");
+                        writer3.write(MemberID.getUser().getId() + " █ " + MemberID.getUser().getName() + " █ " + user_nickname + "\n");
                     }
                 } else {
                     String s_between = string;
