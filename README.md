@@ -22,8 +22,8 @@ In addition to the main function, the bot has a few **counter**, like ...
  
 indicates when a member...
 + joins / leaves
-+ change his nickname
++ change his User- & Nickname
 
-and you can delete messages (with good filter)
+and you can delete messages (with filter like: categoryID, texthchannelID, roleID, UserID, ...)
 
 (needs 11 java to start!)
