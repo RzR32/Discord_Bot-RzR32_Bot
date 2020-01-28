@@ -180,13 +180,18 @@ public class Counter {
          */
         String string2 = string1.replaceAll("[\\D]", "");
         int string3 = Integer.parseInt(string2);
+
+        String wert;
+        String farbe;
         if (size == string3) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + channel + ConsoleColor.reset + " > " + ConsoleColor.backcyan + ConsoleColor.Byellow + "Guild = " + size +
-                    " │ Counter = " + string3 + " - " + ConsoleColor.bold + ConsoleColor.green + "unverändert!" + ConsoleColor.reset, "info");
+            wert = "unverändert";
+            farbe = ConsoleColor.green;
         } else {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + channel + ConsoleColor.reset + " > " + ConsoleColor.backcyan + ConsoleColor.Byellow + "Guild = " + size +
-                    " │ Counter = " + string3 + " - " + ConsoleColor.bold + ConsoleColor.red + "verändert!" + ConsoleColor.reset, "info");
+            wert = "verändert";
+            farbe = ConsoleColor.red;
             guild.getVoiceChannelById(PropertiesFile.readsPropertiesFile(id)).getManager().setName(nameIsize).queue();
         }
+        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + channel + " > " + ConsoleColor.Byellow + "Guild = " + size +
+                " │ Counter = " + string3 + " - " + ConsoleColor.bold + farbe + wert + ConsoleColor.reset, "info");
     }
 }

@@ -1,4 +1,4 @@
-package listener.other;
+package listener.member;
 
 import check_create.CheckChannel;
 import config.PropertiesFile;

@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import other.ConsoleColor;
 import other.LogBack;
 import writeFile.RemoveStringFromFile;
 
@@ -166,8 +165,7 @@ public class Owner_Commands extends ListenerAdapter {
                                          */
                                         Counter c = new Counter();
                                         c.getint(event.getGuild(), "gamecount");
-                                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
-                                                " > " + ConsoleColor.reset + ConsoleColor.white + liststring + ConsoleColor.reset + ConsoleColor.red + " ist nichtmehr in der Liste!" + ConsoleColor.reset, "info");
+                                        LB.log(Thread.currentThread().getName(), "Das Spiel *" + liststring + "* wurde aus der Liste entfern!", "info");
                                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                                     }
                                 }

@@ -2,9 +2,8 @@ package listener.commands;
 
 import check_create.CheckCategory;
 import config.PropertiesFile;
-import listener.other.Games_from_Member;
+import listener.member.Games_from_Member;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -70,6 +69,8 @@ public class Member_Commands extends ListenerAdapter {
                                             "> >blacklist - zeigt 'Menü' für die Spiele Blacklist\n" +
                                             "\n" +
                                             "> >userinfo\n" +
+                                            "\n" +
+                                            "> >league <Summoner Name>\n" +
                                             "\n" +
                                             "> >rolesinfo\n" +
                                             "\n" +
@@ -142,7 +143,7 @@ public class Member_Commands extends ListenerAdapter {
                                     /*
                                     USER INFO
                                      */
-                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">userinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ui")) {
+                            } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">userinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ui")) {
                                     EmbedBuilder builder = new EmbedBuilder();
                                     /*Title*/
                                     builder.setTitle("USER INFO " + event.getMember().getEffectiveName());
@@ -177,14 +178,10 @@ public class Member_Commands extends ListenerAdapter {
                                     /*Message send*/
                                     int message_count = 0;
                                     for (TextChannel textChannel : event.getGuild().getTextChannels()) {
-                                        if (event.getGuild().getSelfMember().hasPermission(textChannel, Permission.MESSAGE_HISTORY)) {
-                                            for (Message message : textChannel.getIterableHistory()) {
-                                                if (message.getAuthor().getName().equals(event.getMember().getUser().getName())) {
-                                                    message_count++;
-                                                }
+                                        for (Message message : textChannel.getIterableHistory()) {
+                                            if (message.getMember().equals(event.getMember())) {
+                                                message_count++;
                                             }
-                                        } else {
-                                            LB.log(Thread.currentThread().getName(), "No Permission to see the channel " + textChannel.getName(), "error");
                                         }
                                     }
                                     builder.getDescriptionBuilder().append("Message count: " + message_count + "\n");
@@ -194,30 +191,30 @@ public class Member_Commands extends ListenerAdapter {
                                     /*
                                     Roles INFO
                                      */
-                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">rolesinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ri")) {
-                                    EmbedBuilder builder = new EmbedBuilder();
-                                    /*Title*/
-                                    builder.setTitle("ROLES INFO");
-                                    /*Roles*/
-                                    for (Role role : event.getGuild().getRoles()) {
-                                        int role_count = 0;
-                                        for (Member member : event.getGuild().getMembers()) {
-                                            if (role.getName().equals("@everyone")) {
-                                                break;
-                                            }
-                                            if (member.getRoles().toString().contains(role.getName()))
-                                                role_count++;
-                                        }
+                            } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">rolesinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ri")) {
+                                EmbedBuilder builder = new EmbedBuilder();
+                                /*Title*/
+                                builder.setTitle("ROLES INFO");
+                                /*Roles*/
+                                for (Role role : event.getGuild().getRoles()) {
+                                    int role_count = 0;
+                                    for (Member member : event.getGuild().getMembers()) {
                                         if (role.getName().equals("@everyone")) {
-                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + event.getGuild().getMembers().size() + " Member haben diese Rolle\n");
-                                        } else {
-                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + role_count + " Member haben diese Rolle\n");
+                                            break;
                                         }
+                                        if (member.getRoles().toString().contains(role.getName()))
+                                            role_count++;
                                     }
-                                    builder.getDescriptionBuilder().append("\n");
-                                    /*build & send builder*/
-                                    event.getChannel().sendMessage(builder.build()).queue();
+                                    if (role.getName().equals("@everyone")) {
+                                        builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + event.getGuild().getMembers().size() + " Member haben diese Rolle\n");
+                                    } else {
+                                        builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + role_count + " Member haben diese Rolle\n");
+                                    }
                                 }
+                                builder.getDescriptionBuilder().append("\n");
+                                /*build & send builder*/
+                                event.getChannel().sendMessage(builder.build()).queue();
+                            }
 
                             } else {
                                 event.getMessage().delete().queue();
