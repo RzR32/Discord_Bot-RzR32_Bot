@@ -221,11 +221,15 @@ public class GamePlayingCount {
                 color = new Color(255, 251, 255);
             }
             /**/
-            for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
-                if (message.getEmbeds().get(0).getTitle().equals("Online")) {
-                    found = true;
-                    break;
+            try {
+                for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
+                    if (message.getEmbeds().get(0).getTitle().equals("Online")) {
+                        found = true;
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
             /**/
             if (found) {
@@ -449,13 +453,45 @@ public class GamePlayingCount {
         /*send/edit message*/
         if (message == null) {
             if (x_count != 0) {
-                channel.sendMessage(builder.build()).complete();
+                try {
+                    if (!A_game.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getLargeImage().getText() == null) {
+                        channel.sendMessage(builder.setThumbnail(A_game.asRichPresence().getLargeImage().getUrl()).build()).complete();
+                    } else {
+                        channel.sendMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                    }
+                } catch (NullPointerException e) {
+                    try {
+                        if (!A_game.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getSmallImage().getText() == null) {
+                            channel.sendMessage(builder.setThumbnail(A_game.asRichPresence().getSmallImage().getUrl()).build()).complete();
+                        } else {
+                            channel.sendMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                        }
+                    } catch (NullPointerException e1) {
+                        channel.sendMessage(builder.build()).queue();
+                    }
+                }
             }
         } else {
             if (x_count == 0) {
                 message.delete().queue();
             } else {
-                message.editMessage(builder.build()).complete();
+                try {
+                    if (!A_game.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getLargeImage().getText() == null) {
+                        message.editMessage(builder.setThumbnail(A_game.asRichPresence().getLargeImage().getUrl()).build()).complete();
+                    } else {
+                        message.editMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                    }
+                } catch (NullPointerException e) {
+                    try {
+                        if (!A_game.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getSmallImage().getText() == null) {
+                            message.editMessage(builder.setThumbnail(A_game.asRichPresence().getSmallImage().getUrl()).build()).complete();
+                        } else {
+                            message.editMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                        }
+                    } catch (NullPointerException e1) {
+                        message.editMessage(builder.build()).queue();
+                    }
+                }
             }
         }
         CountNotPlayingGames(guild);

@@ -178,6 +178,6 @@ public class Members {
         } else if (type.equals("betreten!")) {
             LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + ConsoleColor.cyan + " > " + out + ConsoleColor.reset + ConsoleColor.green + " hat den Server betreten!" + ConsoleColor.reset, "info");
         }
-        guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs")).sendMessage(out + " hat den Server " + type).queue();
+        guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs")).sendMessage("Guild > " + out + " hat den Server " + type).queue();
     }
 }
