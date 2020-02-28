@@ -46,7 +46,7 @@ public class Owner_Commands extends ListenerAdapter {
                                 "\n" +
                                 "> >twitch <name> (don´t update the counter instantly)\n" +
                                 "\n" +
-                                ">playingcount\n" +
+                                "> >playingcount\n" +
                                 "\n" +
                                 "> >agreement\n" +
                                 "\n" +

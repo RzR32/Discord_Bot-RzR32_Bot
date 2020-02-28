@@ -1,11 +1,10 @@
-package listener.other;
+package listener.member;
 
 import check_create.CheckChannel;
 import config.PropertiesFile;
 import count.GamePlayingCount;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -30,6 +29,7 @@ public class Games_from_Member extends ListenerAdapter {
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
                 Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), null, event.getNewActivity());
+                EditMessagesFromGames(event.getGuild(), event.getNewActivity());
             }
         }
     }
@@ -41,6 +41,7 @@ public class Games_from_Member extends ListenerAdapter {
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
                 Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity(), null);
+                EditMessagesFromGames(event.getGuild(), event.getOldActivity());
             }
         }
     }
@@ -106,10 +107,11 @@ public class Games_from_Member extends ListenerAdapter {
 
     /**
      * create a Role from the Game, if the user agreed
-     * @param guild Name from guild
+     *
+     * @param guild  Name from guild
      * @param userid ID from user
      * @param member get the member
-     * @param game Name of the game
+     * @param game   Name of the game
      */
     public void GameRole(Guild guild, String userid, Member member, String game) {
         try {
@@ -160,6 +162,38 @@ public class Games_from_Member extends ListenerAdapter {
                     guild.addRoleToMember(member, role).queue());
             LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.white + member.getUser().getName() +
                     ConsoleColor.reset + " hat die Rolle = " + ConsoleColor.white + game + ConsoleColor.reset + " erstellt", "info");
+        }
+    }
+
+    /*edit existing message, to add new thinks > like thumbnail*/
+    private void EditMessagesFromGames(Guild guild, Activity activity) {
+        for (Message message : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+            MessageEmbed mes = message.getEmbeds().get(0);
+            if (mes.getTitle().equals(activity.getName())) {
+                EmbedBuilder builder = new EmbedBuilder();
+                try {
+                    if (!activity.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getLargeImage().getText() == null) {
+                        message.editMessage(builder
+                                .setTitle(mes.getTitle())
+                                .setDescription(mes.getDescription())
+                                .setColor(mes.getColor())
+                                .setThumbnail(activity.asRichPresence().getLargeImage().getUrl())
+                                .build()).queue();
+                    }
+                } catch (NullPointerException e) {
+                    try {
+                        if (!activity.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getSmallImage().getText() == null) {
+                            message.editMessage(builder
+                                    .setTitle(mes.getTitle())
+                                    .setDescription(mes.getDescription())
+                                    .setColor(mes.getColor())
+                                    .setThumbnail(activity.asRichPresence().getSmallImage().getUrl())
+                                    .build()).queue();
+                        }
+                    } catch (NullPointerException ignored) {
+                    }
+                }
+            }
         }
     }
 }

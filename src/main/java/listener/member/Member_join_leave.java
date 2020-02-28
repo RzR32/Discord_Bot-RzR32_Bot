@@ -1,4 +1,4 @@
-package listener.other;
+package listener.member;
 
 import config.PropertiesFile;
 import count.Counter;

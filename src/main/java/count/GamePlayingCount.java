@@ -9,9 +9,11 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import other.ConsoleColor;
 import other.LogBack;
+import other.Pause;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GamePlayingCount {
 
@@ -40,6 +42,8 @@ public class GamePlayingCount {
         for (Message message : channel.getIterableHistory()) {
             message.delete().complete();
         }
+        Pause P = new Pause();
+        P.pause(Thread.currentThread(), 1000);
         LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
         MessageBotGame(guild);
         CountOfflineMember(guild);
@@ -63,7 +67,7 @@ public class GamePlayingCount {
      */
     public void CountNotPlayingGames(Guild guild) {
         try {
-            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(255, 255, 255)).setTitle("Online").setDescription("");
+            EmbedBuilder builder = new EmbedBuilder().setColor(new Color(0, 0, 255)).setTitle("Online").setDescription("");
             int x = 0;  /*if member is not offline AND has no activity´s*/
             int y = 0;  /*if member is not offline IGNORE activity´s*/
             TextChannel channel = guild.getTextChannelById(channel_id);
@@ -77,22 +81,25 @@ public class GamePlayingCount {
                             x++;
                         }
                     }
+
                     if (y == 0) {
-                        message.delete().complete();
+                        /*should not be triggered, cause the bot also count as 1*/
+                        builder.getDescriptionBuilder().append("kein Member ist Online\n");
                     } else if (y == 1) {
                         builder.getDescriptionBuilder().append("**" + y + "** Member, ist Online\n");
                     } else {
                         builder.getDescriptionBuilder().append("**" + y + "** Member, sind Online\n");
                     }
                     if (x == 0) {
-                        message.delete().complete();
+                        builder.getDescriptionBuilder().append("Niemand der Online ist, macht etwas\n");
                     } else if (x == 1) {
                         builder.getDescriptionBuilder().append("**" + x + "** Member, macht gerade nichts\n");
                     } else {
                         builder.getDescriptionBuilder().append("**" + x + "** Member, machen gerade nichts\n");
                     }
-                    int z =  y - x;
+                    int z = y - x;
                     if (z == 0) {
+                        builder.getDescriptionBuilder().append("Alle die Online sind, machen etwas\n");
                     } else if (z == 1) {
                         builder.getDescriptionBuilder().append("**" + z + "** Member, macht gerade etwas");
                     } else if (z > 1) {
@@ -122,7 +129,7 @@ public class GamePlayingCount {
             } else {
                 builder.getDescriptionBuilder().append("**" + x + "** Member, machen gerade nichts\n");
             }
-            int z =  y - x;
+            int z = y - x;
             if (z == 0) {
             } else if (z == 1) {
                 builder.getDescriptionBuilder().append("**" + z + "** Member, macht gerade etwas");
@@ -195,6 +202,8 @@ public class GamePlayingCount {
         if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
             Color color = null;
             String Color = null;
+            boolean bool_title;
+            boolean found = false;
             if (activity.getType().equals(Activity.ActivityType.STREAMING)) {
                 Color = "stream";
                 color = new Color(255, 0, 255);
@@ -207,21 +216,38 @@ public class GamePlayingCount {
             } else if (activity.getType().equals(Activity.ActivityType.DEFAULT)) {
                 Color = "default";
                 color = new Color(0, 240, 255);
+            } else {
+                Color = "custom";
+                color = new Color(255, 251, 255);
             }
-            /*get messages | if found*/
-            for (Message message : guild.getTextChannelById(channel_id).getIterableHistory()) {
-                boolean bool;
-                if (Color.equals("stream")) {
-                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase("Stream");
-                } else {
-                    bool = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
+            /**/
+            try {
+                for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
+                    if (message.getEmbeds().get(0).getTitle().equals("Online")) {
+                        found = true;
+                        break;
+                    }
                 }
-                if (bool) {
-                    _Message(guild, activity, color, Color, message);
-                    return;
-                }
+            } catch (Exception e) {
+                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
-            _Message(guild, activity, color, Color, null);
+            /**/
+            if (found) {
+                for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
+                    if (Color.equals("stream")) {
+                        bool_title = message.getEmbeds().get(0).getTitle().equals("Stream");
+                    } else {
+                        bool_title = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
+                    }
+                    if (bool_title) {
+                        _Message(guild, activity, color, Color, message);
+                        return;
+                    }
+                }
+                _Message(guild, activity, color, Color, null);
+            } else {
+                ForwardPlayingGame(guild, activity);
+            }
         }
     }
 
@@ -259,6 +285,7 @@ public class GamePlayingCount {
                     for (Activity activity : member.getActivities()) {
                         /*if game == activity | count*/
                         boolean bool;
+                        String s = "<keine Daten>";
                         if (Color.equals("stream")) {
                             bool = activity.getType() == Activity.ActivityType.STREAMING;
                         } else {
@@ -285,6 +312,18 @@ public class GamePlayingCount {
                                                 break;
                                             }
                                         }
+                                    } else {
+                                        if (!list_string_detail.toString().contains(s)) {
+                                            list_string_detail.put(list_string_detail.size(), s);
+                                            list_integer_detail.put(list_integer_detail.size(), 1);
+                                        } else {
+                                            for (int a = 0; a <= list_string_detail.size(); a++) {
+                                                if (list_string_detail.get(a).equalsIgnoreCase(s)) {
+                                                    list_integer_detail.put(a, list_integer_detail.get(a) + 1);
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
                                 } catch (NullPointerException ignored) {
                                 }
@@ -304,6 +343,18 @@ public class GamePlayingCount {
                                                 list_string_state.put(a, activity.asRichPresence().getState());
                                                 list_integer_state.put(a, 1);
                                                 break;
+                                            }
+                                        }
+                                    } else {
+                                        if (!list_string_state.toString().contains(s)) {
+                                            list_string_state.put(list_string_state.size(), s);
+                                            list_integer_state.put(list_integer_state.size(), 1);
+                                        } else {
+                                            for (int a = 0; a <= list_string_state.size(); a++) {
+                                                if (list_string_state.get(a).equalsIgnoreCase(s)) {
+                                                    list_integer_state.put(a, list_integer_state.get(a) + 1);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -327,6 +378,18 @@ public class GamePlayingCount {
                                                 break;
                                             }
                                         }
+                                    } else {
+                                        if (!list_string_largeimg.toString().contains(s)) {
+                                            list_string_largeimg.put(list_string_largeimg.size(), s);
+                                            list_integer_largeimg.put(list_integer_largeimg.size(), 1);
+                                        } else {
+                                            for (int a = 0; a <= list_string_largeimg.size(); a++) {
+                                                if (list_string_largeimg.get(a).equalsIgnoreCase(s)) {
+                                                    list_integer_largeimg.put(a, list_integer_largeimg.get(a) + 1);
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
                                 } catch (NullPointerException ignored) {
                                 }
@@ -346,6 +409,8 @@ public class GamePlayingCount {
                 builder.setDescription("**" + x_count + "** Member, hört Musik");
             } else if (Color.equals("watch")) {
                 builder.setDescription("**" + x_count + "** Member, schaut ein Film");
+            } else if (Color.equals("custom")) {
+                builder.setDescription("**" + x_count + "** Member, hat dies als Status");
             }
         } else if (x_count > 1) {
             if (Color.equals("default")) {
@@ -356,25 +421,30 @@ public class GamePlayingCount {
                 builder.setDescription("**" + x_count + "** Member, hören Musik");
             } else if (Color.equals("watch")) {
                 builder.setDescription("**" + x_count + "** Member, schauen Filme");
+            } else if (Color.equals("custom")) {
+                builder.setDescription("**" + x_count + "** Member, haben dies als Status");
             }
         }
         /*add everything from the list to the builder*/
         if (Color.equals("default") || Color.equals("stream")) {
             builder.getDescriptionBuilder().append("\n");
+            /*list detail*/
             if (list_string_detail.get(0) != null && list_integer_detail.get(0) != null && !list_string_detail.toString().contains("null")) {
-                builder.getDescriptionBuilder().append("\n");
+                builder.getDescriptionBuilder().append("\n__Detail:__\n");
                 for (int _int = 0; _int < list_string_detail.size(); _int++) {
                     builder.getDescriptionBuilder().append("**" + list_integer_detail.get(_int) + "** - " + list_string_detail.get(_int) + "\n");
                 }
             }
+            /*list state*/
             if (list_string_state.size() != 0 && list_integer_state.get(0) != null && !list_string_state.toString().contains("null")) {
-                builder.getDescriptionBuilder().append("\n");
+                builder.getDescriptionBuilder().append("\n__State:__\n");
                 for (int _int = 0; _int < list_string_state.size(); _int++) {
                     builder.getDescriptionBuilder().append("**" + list_integer_state.get(_int) + "** - " + list_string_state.get(_int) + "\n");
                 }
             }
+            /*list largeimg*/
             if (list_string_largeimg.size() != 0 && list_integer_largeimg.get(0) != null && !list_string_largeimg.toString().contains("null")) {
-                builder.getDescriptionBuilder().append("\n");
+                builder.getDescriptionBuilder().append("\n__Largeimg:__\n");
                 for (int _int = 0; _int < list_string_largeimg.size(); _int++) {
                     builder.getDescriptionBuilder().append("**" + list_integer_largeimg.get(_int) + "** - " + list_string_largeimg.get(_int) + "\n");
                 }
@@ -383,13 +453,45 @@ public class GamePlayingCount {
         /*send/edit message*/
         if (message == null) {
             if (x_count != 0) {
-                channel.sendMessage(builder.build()).complete();
+                try {
+                    if (!A_game.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getLargeImage().getText() == null) {
+                        channel.sendMessage(builder.setThumbnail(A_game.asRichPresence().getLargeImage().getUrl()).build()).complete();
+                    } else {
+                        channel.sendMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                    }
+                } catch (NullPointerException e) {
+                    try {
+                        if (!A_game.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getSmallImage().getText() == null) {
+                            channel.sendMessage(builder.setThumbnail(A_game.asRichPresence().getSmallImage().getUrl()).build()).complete();
+                        } else {
+                            channel.sendMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                        }
+                    } catch (NullPointerException e1) {
+                        channel.sendMessage(builder.build()).queue();
+                    }
+                }
             }
         } else {
             if (x_count == 0) {
                 message.delete().queue();
             } else {
-                message.editMessage(builder.build()).complete();
+                try {
+                    if (!A_game.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getLargeImage().getText() == null) {
+                        message.editMessage(builder.setThumbnail(A_game.asRichPresence().getLargeImage().getUrl()).build()).complete();
+                    } else {
+                        message.editMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                    }
+                } catch (NullPointerException e) {
+                    try {
+                        if (!A_game.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && A_game.asRichPresence().getSmallImage().getText() == null) {
+                            message.editMessage(builder.setThumbnail(A_game.asRichPresence().getSmallImage().getUrl()).build()).complete();
+                        } else {
+                            message.editMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
+                        }
+                    } catch (NullPointerException e1) {
+                        message.editMessage(builder.build()).queue();
+                    }
+                }
             }
         }
         CountNotPlayingGames(guild);

@@ -1,4 +1,4 @@
-package listener.other;
+package listener.member;
 
 import count.GamePlayingCount;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -21,13 +21,13 @@ public class Status_from_Member extends ListenerAdapter {
             LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.green +
                     " ist nun online" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
         } else if (event.getNewOnlineStatus() == OnlineStatus.IDLE) {
-            LB.log(Thread.currentThread().getName(),ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.yellow +
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.yellow +
                     " ist nun abwesend" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
         } else if (event.getNewOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
-            LB.log(Thread.currentThread().getName(),ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bred +
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bred +
                     " ist nun beschäftigt" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
         } else if (event.getNewOnlineStatus() == OnlineStatus.OFFLINE) {
-            LB.log(Thread.currentThread().getName(),ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblack +
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblack +
                     " ist nun offline" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
         }
         GamePlayingCount GPC = new GamePlayingCount();

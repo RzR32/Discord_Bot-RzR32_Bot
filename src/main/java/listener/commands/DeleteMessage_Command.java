@@ -488,6 +488,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                 message.addReaction("U+3" + finalX + "U+20e3").queue();
                             }
                             if (finalX == 0) {
+                                bool_timer = false;
                                 message.addReaction("\u274C").queue();
                                 return;
                             }

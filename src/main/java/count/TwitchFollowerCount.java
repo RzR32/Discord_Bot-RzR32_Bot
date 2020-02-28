@@ -5,6 +5,7 @@ import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import other.LogBack;
+import other.Members;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +24,11 @@ public class TwitchFollowerCount extends Thread {
         Runnable runnable = () -> {
             try {
                 TimeUnit.MINUTES.sleep(30);
+
+                /*also a timer for Members - Check Member name*/
+                Members m = new Members();
+                m.Member_CheckMemberOnFile(guild);
+
                 TwitchFollower(guild);
             } catch (Exception e) {
                 LB.log(Thread.currentThread().getName(), e.getMessage(), "error");

@@ -1,23 +1,23 @@
 import config.CheckKey;
 import config.PropertiesFile;
 import listener.commands.*;
-import listener.create_delete.Category_create_delete;
-import listener.create_delete.Role_create_delete;
-import listener.create_delete.TextChannel_create_delete;
-import listener.create_delete.VoiceChannel_create_delete;
-import listener.other.*;
+import listener.guild._Category;
+import listener.guild._Role;
+import listener.guild._TextChannel;
+import listener.guild._VoiceChannel;
+import listener.member.Games_from_Member;
+import listener.member.Member_join_leave;
+import listener.member.Name_Change;
+import listener.member.Status_from_Member;
+import listener.other.Guild_Ready;
+import listener.other.JDA_Events;
+import listener.other.Message_Reaction;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import other.BackUp;
 import other.ConsoleColor;
 import other.LogBack;
-
-import javax.security.auth.login.LoginException;
-
-/*
-import listener
- */
 
 public class Main {
 
@@ -56,12 +56,12 @@ public class Main {
             builder.addEventListeners(new Name_Change());
             builder.addEventListeners(new Status_from_Member());
             /*
-            > create_delete
+            > guild listener
              */
-            builder.addEventListeners(new Category_create_delete());
-            builder.addEventListeners(new Role_create_delete());
-            builder.addEventListeners(new TextChannel_create_delete());
-            builder.addEventListeners(new VoiceChannel_create_delete());
+            builder.addEventListeners(new _Category());
+            builder.addEventListeners(new _Role());
+            builder.addEventListeners(new _TextChannel());
+            builder.addEventListeners(new _VoiceChannel());
             /*
             > commands
              */
@@ -69,6 +69,7 @@ public class Main {
             builder.addEventListeners(new DEactivate_Commands());
             builder.addEventListeners(new DeleteMessage_Command());
             builder.addEventListeners(new GameRole_Command());
+            builder.addEventListeners(new League_Command());
             builder.addEventListeners(new Member_Commands());
             builder.addEventListeners(new Owner_Commands());
             /*
@@ -91,7 +92,7 @@ public class Main {
 
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");
-        } catch (LoginException e) {
+        } catch (Exception e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
     }

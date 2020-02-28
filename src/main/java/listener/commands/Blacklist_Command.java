@@ -2,11 +2,9 @@ package listener.commands;
 
 import check_create.CheckCategory;
 import config.PropertiesFile;
+import count.Counter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.LogBack;
@@ -98,7 +96,7 @@ public class Blacklist_Command extends ListenerAdapter {
                                                     for (int z = 0; z < lines.size(); z++) {
 
                                                         if (lines.get(z).equalsIgnoreCase(liststring)) {
-                                                            GameToUserBlackList(event.getGuild(), event.getMessage(), event.getMember().getUser(), lines.get(z), argArray[1]);
+                                                            User_BlackList(event.getGuild(), event.getMessage(), event.getMember().getUser(), lines.get(z), argArray[1]);
                                                             return;
                                                         }
                                                         if (lines.size() == z + 1) {
@@ -161,7 +159,7 @@ public class Blacklist_Command extends ListenerAdapter {
                                                         if (!lines.isEmpty()) {
                                                             for (int z = 0; z < lines.size(); z++) {
                                                                 if (lines.get(z).equalsIgnoreCase(liststring)) {
-                                                                    RemoveGameFromGuild(event.getGuild(), event.getMessage(), lines.get(z), argArray[1]);
+                                                                    Guild_Blacklist(event.getGuild(), event.getMessage(), lines.get(z), argArray[1]);
                                                                     return;
                                                                 }
                                                                 if (lines.size() == z + 1) {
@@ -194,6 +192,11 @@ public class Blacklist_Command extends ListenerAdapter {
         }
     }
 
+    /**
+     * List for a specific User
+     * @param message
+     * @param user
+     */
     private void UserBlackList_list(Message message, User user) {
         try {
             File dir = new File("config/blacklist/");
@@ -218,6 +221,11 @@ public class Blacklist_Command extends ListenerAdapter {
         }
     }
 
+    /**
+     * List for a whole Server / Guild
+     * @param message
+     * @param user
+     */
     private void GuildBlacklist_list(Message message, User user) {
         try {
             File dir = new File("config/blacklist/");
@@ -242,7 +250,15 @@ public class Blacklist_Command extends ListenerAdapter {
         }
     }
 
-    private void GameToUserBlackList(Guild guild, Message message, User user, String Game, String operator) {
+    /**
+     * Add / Remove a Game from a specific User list
+     * @param guild
+     * @param message
+     * @param user
+     * @param Game
+     * @param operator
+     */
+    private void User_BlackList(Guild guild, Message message, User user, String Game, String operator) {
         try {
             File dir = new File("config/blacklist/");
             boolean a = dir.mkdir();
@@ -322,33 +338,57 @@ public class Blacklist_Command extends ListenerAdapter {
         }
     }
 
-    private void RemoveGameFromGuild(Guild guild, Message message, String Game, String operator) {
+    /**
+     * Add / Remove a Game from a whole Server/Guild list
+     * @param guild
+     * @param message
+     * @param Game
+     * @param operator
+     */
+    private void Guild_Blacklist(Guild guild, Message message, String Game, String operator) {
 
         File dir = new File("config/blacklist/");
         boolean a = dir.mkdir();
 
         if (operator.equalsIgnoreCase("add")) {
-            try {
-                /*
-                remove the role from the guild
-                 */
-                guild.getRolesByName(Game, false).get(0).delete().queue();
-                /*
-                remove the game from the file
-                 */
-                RemoveStringFromFile RSFF = new RemoveStringFromFile();
-                RSFF.remove(guild, "games", Game);
-                /*
-                delete the ONE message in #games
-                 */
-                for (Message message_D : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
-                    if (message_D.getEmbeds().get(0).getTitle().equalsIgnoreCase(Game)) {
-                        message_D.delete().queue();
-                        break;
+            /*
+            remove game from file
+             */
+            RemoveStringFromFile RSFF = new RemoveStringFromFile();
+            RSFF.remove(guild, "games", Game);
+            /*
+            delete the gamerole
+            */
+            for (Role role : guild.getRoles()) {
+                try {
+                    List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+                    if (lines.contains(Game)) {
+                        if (role.getName().equalsIgnoreCase(Game)) {
+                            role.delete().queue();
+                            break;
+                        }
                     }
+                } catch (IOException e) {
+                    LB.log(Thread.currentThread().getName(), e.getMessage(), "info");
                 }
-            } catch (IndexOutOfBoundsException ignored) {
             }
+            /*
+            delete the ONE message in #games
+             */
+            for (Message message_s : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+                if (message_s.getEmbeds().get(0).getTitle().equalsIgnoreCase(Game)) {
+                    message_s.delete().queue();
+                    break;
+                }
+            }
+            /*
+            call gamecounter
+             */
+            Counter c = new Counter();
+            c.getint(guild, "gamecount");
+            LB.log(Thread.currentThread().getName(), "Das Spiel *" + Game + "* wurde aus der Liste entfern!", "info");
+            message.addReaction("\uD83D\uDC4D").queue();
+
             try {
                 /*
                 add the game to the guild blacklist
