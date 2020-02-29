@@ -16,6 +16,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Games_from_Member extends ListenerAdapter {
@@ -61,32 +63,41 @@ public class Games_from_Member extends ListenerAdapter {
             oldgame = old_game.getName();
         }
 
+        SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
+        Date D = new Date();
+        String date = SDF.format(D);
+
+        String s_prefix = ConsoleColor.red + date + " " + ConsoleColor.green + "[" + Thread.currentThread().getName() + "] " + ConsoleColor.yellow + "INFO - ";
+        String s_mid = ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue;
+        String s_suffix_new = ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset;
+        String s_suffix_old = ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset;
+
         if (short_type == Activity.ActivityType.DEFAULT) {
             if (start_end.equals("start")) {
                 WriteStringToFile WSTF = new WriteStringToFile();
                 WSTF.write(guild, "games", newgame);
                 GameRole(guild, member.getId(), member, newgame);
-                System.out.println(ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " spielt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "GAME" + ConsoleColor.reset + s_mid + " spielt nun " + s_suffix_new);
             } else {
-                System.out.println(ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " spielt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "GAME" + ConsoleColor.reset + s_mid + " spielt nichtmehr " + s_suffix_old);
             }
         } else if (short_type == Activity.ActivityType.LISTENING) {
             if (start_end.equals("start")) {
-                System.out.println(ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " hört nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + s_mid + " hört nun " + s_suffix_new);
             } else {
-                System.out.println(ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " hört nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + s_mid + " hört nichtmehr " + s_suffix_old);
             }
         } else if (short_type == Activity.ActivityType.STREAMING) {
             if (start_end.equals("start")) {
-                System.out.println(ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bmagenta + " streamt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + s_mid + " streamt nun " + s_suffix_new);
             } else {
-                System.out.println(ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bmagenta + " streamt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + s_mid + " streamt nichtmehr " + s_suffix_old);
             }
         } else if (short_type == Activity.ActivityType.WATCHING) {
             if (start_end.equals("start")) {
-                System.out.println(ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " schaut nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + s_mid + " schaut nun " + s_suffix_new);
             } else {
-                System.out.println(ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " schaut nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
+                System.out.println(s_prefix + ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + s_mid + " schaut nichtmehr " + s_suffix_old);
             }
         }
         GamePlayingCount gamePlayingCount = new GamePlayingCount();
