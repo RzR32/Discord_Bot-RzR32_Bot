@@ -24,10 +24,6 @@ public class BackUp {
     private Date D = new Date();
     private String date = SDF.format(D);
 
-    private SimpleDateFormat SDF_m = new SimpleDateFormat("MM");
-    private Date D_m = new Date();
-    private String date_m = SDF_m.format(D_m);
-
     private static ArrayList<File> list = new ArrayList<>() {{
         add(new File("config/"));
         add(new File("logs/"));
