@@ -66,35 +66,27 @@ public class Games_from_Member extends ListenerAdapter {
                 WriteStringToFile WSTF = new WriteStringToFile();
                 WSTF.write(guild, "games", newgame);
                 GameRole(guild, member.getId(), member, newgame);
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " spielt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " spielt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
             } else {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " spielt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "GAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " spielt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
             }
         } else if (short_type == Activity.ActivityType.LISTENING) {
             if (start_end.equals("start")) {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " hört nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " hört nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
             } else {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " hört nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "LISTEN" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " hört nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
             }
         } else if (short_type == Activity.ActivityType.STREAMING) {
             if (start_end.equals("start")) {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bmagenta + " streamt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bmagenta + " streamt nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
             } else {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bmagenta + " streamt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "STREAM" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bmagenta + " streamt nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
             }
         } else if (short_type == Activity.ActivityType.WATCHING) {
             if (start_end.equals("start")) {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " schaut nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " schaut nun " + ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset);
             } else {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset +
-                        ConsoleColor.Bblue + " schaut nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset, "info");
+                System.out.println(ConsoleColor.backblue + "WATCH" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " schaut nichtmehr " + ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset);
             }
         }
         GamePlayingCount gamePlayingCount = new GamePlayingCount();
@@ -117,27 +109,27 @@ public class Games_from_Member extends ListenerAdapter {
         try {
             if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
                 File dir = new File("config/blacklist/");
-            /*
-            Check if user is in the "agree" list
-             */
+                /*
+                Check if user is in the "agree" list
+                */
                 BufferedWriter writer = new BufferedWriter(new FileWriter("config/list.txt", StandardCharsets.UTF_8, true));
                 BufferedReader reader = new BufferedReader(new FileReader("config/list.txt", StandardCharsets.UTF_8));
                 reader.close();
                 writer.close();
                 List<String> lines = Files.readAllLines(Paths.get("config/list.txt"), StandardCharsets.UTF_8);
                 if (lines.contains(userid)) {
-                /*
-                Check if the game is blacklisted or not
-                 */
+                    /*
+                    Check if the game is blacklisted or not
+                    */
                     BufferedWriter writer1 = new BufferedWriter(new FileWriter("config/blacklist/GuildBlackList.txt", StandardCharsets.UTF_8, true));
                     BufferedReader reader1 = new BufferedReader(new FileReader("config/blacklist/GuildBlackList.txt", StandardCharsets.UTF_8));
                     reader1.close();
                     writer1.close();
                     List<String> lines1 = Files.readAllLines(Paths.get("config/blacklist/GuildBlackList.txt"), StandardCharsets.UTF_8);
                     if (!lines1.contains(game)) {
-                    /*
-                    Check if the game is not in the userblacklist
-                     */
+                        /*
+                        Check if the game is not in the userblacklist
+                        */
                         BufferedWriter writer2 = new BufferedWriter(new FileWriter("config/blacklist/" + userid + ".txt", StandardCharsets.UTF_8, true));
                         BufferedReader reader2 = new BufferedReader(new FileReader("config/blacklist/" + userid + ".txt", StandardCharsets.UTF_8));
                         reader2.close();
@@ -147,8 +139,7 @@ public class Games_from_Member extends ListenerAdapter {
                             if (guild.getRolesByName(game, true).get(0) != null) {
                                 if (!member.getRoles().toString().contains(game)) {
                                     guild.addRoleToMember(member, guild.getRolesByName(game, true).get(0)).queue();
-                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.white +
-                                            member.getUser().getName() + ConsoleColor.reset + " hat nun die Rolle = " + ConsoleColor.white + game + ConsoleColor.reset, "info");
+                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.white + " Ein User wurde eine Gamerole hinzugefügt", "info");
                                 }
                             }
                         }
@@ -160,8 +151,7 @@ public class Games_from_Member extends ListenerAdapter {
         } catch (IndexOutOfBoundsException e1) {
             guild.createRole().setName(game).setMentionable(true).queue(role ->
                     guild.addRoleToMember(member, role).queue());
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.white + member.getUser().getName() +
-                    ConsoleColor.reset + " hat die Rolle = " + ConsoleColor.white + game + ConsoleColor.reset + " erstellt", "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + "Für das Spiel *" + game + " wurde eine Rolle erstellt", "info");
         }
     }
 
