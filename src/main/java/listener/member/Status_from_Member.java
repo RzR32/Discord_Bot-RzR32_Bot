@@ -7,6 +7,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
 import other.LogBack;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Status_from_Member extends ListenerAdapter {
 
     LogBack LB = new LogBack();
@@ -17,18 +20,22 @@ public class Status_from_Member extends ListenerAdapter {
     @Override
     public void onUserUpdateOnlineStatus(UserUpdateOnlineStatusEvent event) {
         String username = event.getMember().getEffectiveName();
+
+        SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
+        Date D = new Date();
+        String date = SDF.format(D);
+
+        String s_prefix = ConsoleColor.red + date + " " + ConsoleColor.green + "[" + Thread.currentThread().getName() + "] " + ConsoleColor.yellow + "INFO - " + ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset;
+        String s_suffix = ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")";
+
         if (event.getNewOnlineStatus() == OnlineStatus.ONLINE) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.green +
-                    " ist nun online" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
+            System.out.println(s_prefix + ConsoleColor.green + " ist nun online" + s_suffix);
         } else if (event.getNewOnlineStatus() == OnlineStatus.IDLE) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.yellow +
-                    " ist nun abwesend" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
+            System.out.println(s_prefix + ConsoleColor.yellow + " ist nun abwesend" + s_suffix);
         } else if (event.getNewOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bred +
-                    " ist nun beschäftigt" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
+            System.out.println(s_prefix + ConsoleColor.Bred + " ist nun beschäftigt" + s_suffix);
         } else if (event.getNewOnlineStatus() == OnlineStatus.OFFLINE) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblack +
-                    " ist nun offline" + ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")","info");
+            System.out.println(s_prefix + ConsoleColor.Bblack + " ist nun offline" + s_suffix);
         }
         GamePlayingCount GPC = new GamePlayingCount();
         GPC.CountOfflineMember(event.getGuild());
