@@ -26,7 +26,7 @@ public class Status_from_Member extends ListenerAdapter {
         String date = SDF.format(D);
 
         String s_prefix = ConsoleColor.red + date + " " + ConsoleColor.green + "[" + Thread.currentThread().getName() + "] " + ConsoleColor.yellow + "INFO - " + ConsoleColor.backblue + "STATUS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + username + ConsoleColor.reset;
-        String s_suffix = " (davor " + event.getOldOnlineStatus() + ")" + ConsoleColor.reset;
+        String s_suffix = ConsoleColor.reset + " (davor " + event.getOldOnlineStatus() + ")";
 
         if (event.getNewOnlineStatus() == OnlineStatus.ONLINE) {
             System.out.println(s_prefix + ConsoleColor.green + " ist nun online" + s_suffix);
