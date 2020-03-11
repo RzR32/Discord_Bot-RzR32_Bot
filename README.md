@@ -25,5 +25,3 @@ indicates when a member...
 + change his User- & Nickname
 
 and you can delete messages (with filter like: categoryID, texthchannelID, roleID, UserID, ...)
-
-(needs 11 java to start!)
