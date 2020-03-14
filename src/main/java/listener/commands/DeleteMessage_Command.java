@@ -371,7 +371,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
                     E_builder.getDescriptionBuilder().append("String = " + string + "\n\n");
                 }
                 E_builder.getDescriptionBuilder().append("Anzahl = " + count);
-                main_channel.sendMessage(E_builder.build()).queue(message1 -> timer(message1, 31, guild, string_long, "delete"));
+                main_channel.sendMessage(E_builder.build()).queue(message1 -> timer_deletemessage(message1, 31, guild, string_long, "delete"));
                 if (bool_is_confirmed) {
                     control(guild, list_out, "delete");
                 }
@@ -465,7 +465,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
         }
     }
 
-    private void timer(Message message, int x, Guild guild, HashMap<Integer, String> string_long, String cmd) {
+    private void timer_deletemessage(Message message, int x, Guild guild, HashMap<Integer, String> string_long, String cmd) {
         final int finalX = x;
         Runnable runnable = () -> {
             if (bool_is_confirmed) {
@@ -494,7 +494,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
                             }
                         }
                     }
-                    timer(message, finalX - 1, guild, string_long, cmd);
+                    timer_deletemessage(message, finalX - 1, guild, string_long, cmd);
                 } catch (InterruptedException e) {
                     LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                 }

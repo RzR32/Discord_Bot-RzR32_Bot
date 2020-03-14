@@ -20,7 +20,7 @@ public class TwitchFollowerCount extends Thread {
     private String channel = "TwitchFollower";
     private String id = "twitchcount";
 
-    public void timer(Guild guild) {
+    public void timer_twitch_member(Guild guild) {
         Runnable runnable = () -> {
             try {
                 TimeUnit.MINUTES.sleep(30);
@@ -63,7 +63,7 @@ public class TwitchFollowerCount extends Thread {
                  */
                     Counter c = new Counter();
                     c.change(guild, channel, id, size);
-                    timer(guild);
+                    timer_twitch_member(guild);
                 }
             }
         } catch (IOException e) {

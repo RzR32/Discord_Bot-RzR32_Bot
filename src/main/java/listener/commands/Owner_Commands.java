@@ -183,7 +183,7 @@ public class Owner_Commands extends ListenerAdapter {
                 } else if (argArray[0].equalsIgnoreCase(">delete-bot")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                         if (!bool_timer) {
-                            timer(event.getGuild(), event.getMessage(), 11);
+                            timer_ownercommands(event.getGuild(), event.getMessage(), 11);
                         } else {
                             event.getMessage().addReaction("\uD83D\uDC4D").queue();
                             bool_is_confirmed = true;
@@ -196,7 +196,7 @@ public class Owner_Commands extends ListenerAdapter {
         }
     }
 
-    private void timer(Guild guild, Message message, int x) {
+    private void timer_ownercommands(Guild guild, Message message, int x) {
         final int f_x = x - 1;
         if (f_x >= 0) {
             bool_timer = true;
@@ -213,7 +213,7 @@ public class Owner_Commands extends ListenerAdapter {
                     } else {
                         message.addReaction("U+3" + f_x + "U+20e3").queue();
                     }
-                    timer(guild, message, f_x);
+                    timer_ownercommands(guild, message, f_x);
                 } catch (Exception e) {
                     LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                 }
