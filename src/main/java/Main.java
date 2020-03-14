@@ -84,7 +84,7 @@ public class Main {
             create Backup
             */
             BackUp BU = new BackUp();
-            BU.timer();
+            BU.timer_backup();
             /*
             finaly, create the Bot
              */

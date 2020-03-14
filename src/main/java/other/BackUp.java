@@ -20,21 +20,18 @@ public class BackUp {
     private File file_temp = new File("backup_temp.zip");
     private File file_final = new File("backup_final.zip");
 
-    private SimpleDateFormat SDF = new SimpleDateFormat("YYYY-MM-dd_HH-mm");
-    private Date D = new Date();
-    private String date = SDF.format(D);
-
     private static ArrayList<File> list = new ArrayList<>() {{
         add(new File("config/"));
         add(new File("logs/"));
     }};
 
-    public void timer() {
+    public void timer_backup() {
         Runnable runnable = () -> {
             try {
-                getFiles();
-                OldBackUp();
+                CreateNewBackUp();
+                ZipOldBackUp();
                 TimeUnit.HOURS.sleep(24);
+                timer_backup();
             } catch (Exception e) {
                 LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
@@ -42,19 +39,24 @@ public class BackUp {
         new Thread(runnable).start();
     }
 
-    private void getFiles() {
+    /*
+    * creates a new backuu
+    */
+    private void CreateNewBackUp() {
         try {
-            if (new File("backup/" + "/" + date + "/").exists()) {
-                return;
-            }
+            SimpleDateFormat SDF_file = new SimpleDateFormat("YYYY-MM-dd_HH-mm");
+            Date D_file = new Date();
+            String date_file = SDF_file.format(D_file);
+
+            File b_backup = new File("backup/");
+            boolean bool_backup = b_backup.mkdir();
+
+            File b_date = new File(b_backup + "/" + date_file + "/");
+            boolean bool_date = b_date.mkdir();
+
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + b_date + " wurde erstellt!","info");
 
             for (File file_list : list) {
-
-                File b_backup = new File("backup/");
-                boolean bool_backup = b_backup.mkdir();
-
-                File b_date = new File(b_backup + "/" + date + "/");
-                boolean bool_date = b_date.mkdir();
 
                 File b_folder = new File(b_date.getPath() + "/" + file_list + "/");
                 boolean bool_folder = b_folder.mkdir();
@@ -66,16 +68,16 @@ public class BackUp {
                             boolean b = file_out.mkdir();
                             if (b) {
                                 for (File file1 : file.listFiles()) {
-                                    copyFile(file1, "config", file1.getParentFile().getName());
+                                    copyFile(file1, "config", file1.getParentFile().getName(), date_file);
                                 }
                             }
                         } else if (file.isFile()) {
                             if (file.getName().contains(".log")) {
-                                if (file.getName().contains(date.substring(0, 10))) {
-                                    copyFile(file, "logs", null);
+                                if (file.getName().contains(date_file.substring(0, 10))) {
+                                    copyFile(file, "logs", null, date_file);
                                 }
                             } else {
-                                copyFile(file, "config", null);
+                                copyFile(file, "config", null, date_file);
                             }
                         }
                     }
@@ -86,13 +88,13 @@ public class BackUp {
         }
     }
 
-    private void copyFile(File file, String MainFolder, String Parent) {
+    private void copyFile(File file, String MainFolder, String Parent, String date_file) {
         try {
             File file_out;
             if (Parent != null) {
-                file_out = new File("backup/" + date + "/" + MainFolder + "/" + Parent + "/" + file.getName());
+                file_out = new File("backup/" + date_file + "/" + MainFolder + "/" + Parent + "/" + file.getName());
             } else {
-                file_out = new File("backup/" + date + "/" + MainFolder + "/" + file.getName());
+                file_out = new File("backup/" + date_file + "/" + MainFolder + "/" + file.getName());
             }
             boolean b = file_out.createNewFile();
             if (b) {
@@ -110,7 +112,10 @@ public class BackUp {
         }
     }
 
-    private void OldBackUp() throws Exception {
+    /*
+    * if the int "backup_count" == folder number/count > create a zip file from the old backups
+    */
+    private void ZipOldBackUp() throws Exception {
         File backup = new File("backup/");
         if (backup.listFiles().length > 0) {
             boolean bool_backup = backup.mkdir();
@@ -130,6 +135,8 @@ public class BackUp {
                 if (!file_final.exists()) {
                     file_final.createNewFile();
                 }
+
+                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + "Älteres Backup wurde zur ZIP verschoben!","info");
 
                 File[] file = new File("backup/").listFiles();
 
