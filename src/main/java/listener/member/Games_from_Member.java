@@ -63,6 +63,7 @@ public class Games_from_Member extends ListenerAdapter {
             oldgame = old_game.getName();
         }
 
+        /*Console OutPut like Logback*/
         SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
         Date D = new Date();
         String date = SDF.format(D);
