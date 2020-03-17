@@ -49,6 +49,7 @@ public class Games_from_Member extends ListenerAdapter {
     }
 
     private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity old_game, Activity new_game) {
+        /*if the string "start_end == end BUT member has activity, return*/
         if (member.getActivities().size() != 0 && start_end.equals("end")) {
             return;
         }
