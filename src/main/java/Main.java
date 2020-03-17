@@ -12,7 +12,7 @@ import listener.member.Status_from_Member;
 import listener.other.Guild_Ready;
 import listener.other.JDA_Events;
 import listener.other.Message_Reaction;
-import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import other.BackUp;
@@ -26,7 +26,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             LB.log(Thread.currentThread().getName(), "--------------------------------------------------", "info");
-            JDABuilder builder = new JDABuilder(AccountType.BOT);
             /*
             check key in config file
              */
@@ -40,42 +39,38 @@ public class Main {
             if (PropertiesFile.readsPropertiesFile("TOKEN") == null || PropertiesFile.readsPropertiesFile("TOKEN").isEmpty()) {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
-            } else {
-                builder.setToken(PropertiesFile.readsPropertiesFile("TOKEN"));
             }
+            //https://github.com/DV8FromTheWorld/JDA/wiki/3%29-Getting-Started#connecting-to-discord-with-a-bot-account
+            JDA builder = JDABuilder.createDefault(PropertiesFile.readsPropertiesFile("TOKEN")).setActivity(Activity.listening(">help")).build();
             /*
             ADD LISTENER
 
             > other
              */
-            builder.addEventListeners(new Games_from_Member());
-            builder.addEventListeners(new Guild_Ready());
-            builder.addEventListeners(new JDA_Events());
-            builder.addEventListeners(new Member_join_leave());
-            builder.addEventListeners(new Message_Reaction());
-            builder.addEventListeners(new Name_Change());
-            builder.addEventListeners(new Status_from_Member());
+            builder.addEventListener(new Games_from_Member());
+            builder.addEventListener(new Guild_Ready());
+            builder.addEventListener(new JDA_Events());
+            builder.addEventListener(new Member_join_leave());
+            builder.addEventListener(new Message_Reaction());
+            builder.addEventListener(new Name_Change());
+            builder.addEventListener(new Status_from_Member());
             /*
             > guild listener
              */
-            builder.addEventListeners(new _Category());
-            builder.addEventListeners(new _Role());
-            builder.addEventListeners(new _TextChannel());
-            builder.addEventListeners(new _VoiceChannel());
+            builder.addEventListener(new _Category());
+            builder.addEventListener(new _Role());
+            builder.addEventListener(new _TextChannel());
+            builder.addEventListener(new _VoiceChannel());
             /*
             > commands
              */
-            builder.addEventListeners(new Blacklist_Command());
-            builder.addEventListeners(new DEactivate_Commands());
-            builder.addEventListeners(new DeleteMessage_Command());
-            builder.addEventListeners(new GameRole_Command());
-            builder.addEventListeners(new League_Command());
-            builder.addEventListeners(new Member_Commands());
-            builder.addEventListeners(new Owner_Commands());
-            /*
-            set status "listen" to ">help"
-             */
-            builder.setActivity(Activity.listening(">help"));
+            builder.addEventListener(new Blacklist_Command());
+            builder.addEventListener(new DEactivate_Commands());
+            builder.addEventListener(new DeleteMessage_Command());
+            builder.addEventListener(new GameRole_Command());
+            builder.addEventListener(new League_Command());
+            builder.addEventListener(new Member_Commands());
+            builder.addEventListener(new Owner_Commands());
             /*
             I don´t know...
              */
@@ -85,10 +80,6 @@ public class Main {
             */
             BackUp BU = new BackUp();
             BU.timer_backup();
-            /*
-            finaly, create the Bot
-             */
-            builder.build();
 
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");
