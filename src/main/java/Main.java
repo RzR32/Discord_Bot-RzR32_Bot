@@ -12,7 +12,6 @@ import listener.member.Status_from_Member;
 import listener.other.Guild_Ready;
 import listener.other.JDA_Events;
 import listener.other.Message_Reaction;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import other.BackUp;
@@ -40,41 +39,42 @@ public class Main {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
             }
-            //https://github.com/DV8FromTheWorld/JDA/wiki/3%29-Getting-Started#connecting-to-discord-with-a-bot-account
-            JDA builder = JDABuilder.createDefault(PropertiesFile.readsPropertiesFile("TOKEN")).setActivity(Activity.listening(">help")).build();
-            /*
-            ADD LISTENER
 
-            > other
-             */
-            builder.addEventListener(new Games_from_Member());
-            builder.addEventListener(new Guild_Ready());
-            builder.addEventListener(new JDA_Events());
-            builder.addEventListener(new Member_join_leave());
-            builder.addEventListener(new Message_Reaction());
-            builder.addEventListener(new Name_Change());
-            builder.addEventListener(new Status_from_Member());
-            /*
-            > guild listener
-             */
-            builder.addEventListener(new _Category());
-            builder.addEventListener(new _Role());
-            builder.addEventListener(new _TextChannel());
-            builder.addEventListener(new _VoiceChannel());
-            /*
-            > commands
-             */
-            builder.addEventListener(new Blacklist_Command());
-            builder.addEventListener(new DEactivate_Commands());
-            builder.addEventListener(new DeleteMessage_Command());
-            builder.addEventListener(new GameRole_Command());
-            builder.addEventListener(new League_Command());
-            builder.addEventListener(new Member_Commands());
-            builder.addEventListener(new Owner_Commands());
-            /*
-            I don´t know...
-             */
-            builder.setAutoReconnect(true);
+            JDABuilder.createDefault(PropertiesFile.readsPropertiesFile("TOKEN"))
+                    /*
+                    add LISTENER
+
+                    > other
+                     */
+                    .addEventListeners(new Games_from_Member())
+                    .addEventListeners(new Guild_Ready())
+                    .addEventListeners(new JDA_Events())
+                    .addEventListeners(new Member_join_leave())
+                    .addEventListeners(new Message_Reaction())
+                    .addEventListeners(new Name_Change())
+                    .addEventListeners(new Status_from_Member())
+                    /*
+                    > guild listener
+                    */
+                    .addEventListeners(new _Category())
+                    .addEventListeners(new _Role())
+                    .addEventListeners(new _TextChannel())
+                    .addEventListeners(new _VoiceChannel())
+                    /*
+                    > commands
+                    */
+                    .addEventListeners(new Blacklist_Command())
+                    .addEventListeners(new DEactivate_Commands())
+                    .addEventListeners(new DeleteMessage_Command())
+                    .addEventListeners(new GameRole_Command())
+                    .addEventListeners(new League_Command())
+                    .addEventListeners(new Member_Commands())
+                    .addEventListeners(new Owner_Commands())
+                    /*
+                    set Activity
+                     */
+                    .setActivity(Activity.listening(">help")
+            ).build();
             /*
             create Backup
             */
