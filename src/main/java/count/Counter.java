@@ -61,11 +61,11 @@ public class Counter {
             switch (id) {
                 case "membercount":
                     channel = "MemberCount";
-                    size = guild.getMembers().size();
+                    size = guild.getMemberCount();
                     category = "maincount";
-                /*
-                extra
-                 */
+                    /*
+                    extra
+                     */
                     Members member = new Members();
                     member.Member_CheckMembersOnGuild(guild);
                     break;
@@ -73,9 +73,9 @@ public class Counter {
                     channel = "RoleCount";
                     size = guild.getRoles().size();
                     category = "maincount";
-                /*
-                extra
-                 */
+                    /*
+                    extra
+                     */
                     try {
                         List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
 
