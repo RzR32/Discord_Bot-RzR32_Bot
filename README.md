@@ -8,6 +8,7 @@ if desired a role is added to each game and can then be mentioned.
 ## Overview
 <a href="#Features">Features</a><br>
 <a href="#how-to-start">How to Start</a><br>
+<a href="#what-can-i-edit">What can I edit</a>
 
 ## Features
 In addition to the main function, the bot has a few **counter**, like ...
