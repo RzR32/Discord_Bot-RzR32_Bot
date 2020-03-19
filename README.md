@@ -46,6 +46,7 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
     - Send Messages
     - Menage Messages
     - Embed Links
+    - Attach Files
     - Read Message History
     - Add Reactions
     <!-- here for later add
