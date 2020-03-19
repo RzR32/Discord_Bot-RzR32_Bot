@@ -38,3 +38,25 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
 - start the latest release (if available) or build your own jar-file
 - start the jar with `java -jar <jar-file-name>.jar`
 - follow the instructions at your discord server
+    ## What can I edit
+    - You can deactivate the following features
+    ```
+    >maincount_on=true
+    >gamecategory_on=true 
+    >streamcategory_on=true
+    >twitchname_on=true
+    >twitchcount_on=true
+    >membercount_on=true
+    >rolecount_on=true
+    >gamerolecount_on=true
+    >categorycount_on=true
+    >textchannelcount_on=true
+    >voicechannelcount_on=true
+    >gamecount_on=true
+    >playingcount_on=true
+    >games_on=true
+    >logs_on=true
+    >bot-channel_on=true
+    >bot-zustimmung_on=true
+    ```
+    - to edit the configuration you can use the command `>settings set <festure> <true/false>`
