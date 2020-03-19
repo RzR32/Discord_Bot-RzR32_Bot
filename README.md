@@ -5,6 +5,9 @@ The main function of the bot is it, to capture and save the activities of the me
 if desired a role is added to each game and can then be mentioned.
 ```
 
+## Overview
+<a href="#Features">Features</a><br>
+
 ## Features
 In addition to the main function, the bot has a few **counter**, like ...
 
