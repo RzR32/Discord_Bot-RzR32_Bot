@@ -7,6 +7,7 @@ if desired a role is added to each game and can then be mentioned.
 
 ## Overview
 <a href="#Features">Features</a><br>
+<a href="#how-to-start">How to Start</a><br>
 
 ## Features
 In addition to the main function, the bot has a few **counter**, like ...
@@ -28,3 +29,12 @@ indicates when a member...
 + change his User- & Nickname
 
 and you can delete messages (with filter like: categoryID, texthchannelID, roleID, UserID, ...)
+
+## How to start
+- Create [Bot Account](https://discordapp.com/developers/applications/me)
+- Add following Permissions and invite it to your Server, you can use [this](https://discordapi.com/permissions.html) tool:
+    ### Permissions
+    - `add permissions here`
+- start the latest release (if available) or build your own jar-file
+- start the jar with `java -jar <jar-file-name>.jar`
+- follow the instructions at your discord server
