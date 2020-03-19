@@ -386,6 +386,7 @@ public class Blacklist_Command extends ListenerAdapter {
              */
             Counter c = new Counter();
             c.getint(guild, "gamecount");
+
             LB.log(Thread.currentThread().getName(), "Das Spiel *" + Game + "* wurde aus der Liste entfernt!", "info");
             message.addReaction("\uD83D\uDC4D").queue();
 
