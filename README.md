@@ -8,7 +8,8 @@ if desired a role is added to each game and can then be mentioned.
 ## Overview
 <a href="#Features">Features</a><br>
 <a href="#how-to-start">How to Start</a><br>
-<a href="#what-can-i-edit">What can I edit</a>
+<a href="#what-can-i-edit">What can I edit</a><br>
+<a href="#permissions">Permissions</a>
 
 ## Features
 In addition to the main function, the bot has a few **counter**, like ...
@@ -34,8 +35,23 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
 ## How to start
 - Create [Bot Account](https://discordapp.com/developers/applications/me)
 - Add following Permissions and invite it to your Server, you can use [this](https://discordapi.com/permissions.html) tool:
+(Permissions Integer = 268561616)
     ### Permissions
-    - `add permissions here`
+    #### General Permissions
+    - View Audit Log
+    - Manage Roles
+    - Manage Chanels
+    - View Channels
+    #### Text Permissions
+    - Send Messages
+    - Menage Messages
+    - Embed Links
+    - Read Message History
+    - Add Reactions
+    <!-- here for later add
+    #### Voice Permissions
+    - 
+    --->
 - start the latest release (if available) or build your own jar-file
 - start the jar with `java -jar <jar-file-name>.jar`
 - follow the instructions at your discord server
@@ -61,3 +77,4 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
     >bot-zustimmung_on=true
     ```
     - to edit the configuration you can use the command `>settings set <festure> <true/false>`
+    
