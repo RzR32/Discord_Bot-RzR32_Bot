@@ -77,5 +77,5 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
     >bot-channel_on=true
     >bot-zustimmung_on=true
     ```
-    - to edit the configuration you can use the command `>settings set <festure> <true/false>`
+    - to edit the configuration you can use the command `>settings set <feature> <true/false>`
     
