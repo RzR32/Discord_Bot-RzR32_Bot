@@ -14,6 +14,7 @@ import listener.other.JDA_Events;
 import listener.other.Message_Reaction;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import other.BackUp;
 import other.ConsoleColor;
 import other.LogBack;
@@ -39,12 +40,24 @@ public class Main {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
             }
+            JDABuilder.create(
+                    PropertiesFile.readsPropertiesFile("TOKEN"),
+                    //GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                    //GatewayIntent.DIRECT_MESSAGE_TYPING,
+                    GatewayIntent.DIRECT_MESSAGES,
+                    //GatewayIntent.GUILD_BANS,
+                    GatewayIntent.GUILD_EMOJIS,
+                    //GatewayIntent.GUILD_INVITES,
+                    GatewayIntent.GUILD_MEMBERS,
+                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                    //GatewayIntent.GUILD_MESSAGE_TYPING,
+                    GatewayIntent.GUILD_MESSAGES,
+                    GatewayIntent.GUILD_PRESENCES,
+                    GatewayIntent.GUILD_VOICE_STATES)
 
-            JDABuilder.createDefault(PropertiesFile.readsPropertiesFile("TOKEN"))
                     /*
-                    add LISTENER
-
-                    > other
+                     * import listener
+                     * other
                      */
                     .addEventListeners(new Games_from_Member())
                     .addEventListeners(new Guild_Ready())
@@ -54,15 +67,15 @@ public class Main {
                     .addEventListeners(new Name_Change())
                     .addEventListeners(new Status_from_Member())
                     /*
-                    > guild listener
-                    */
+                     * guild listener
+                     */
                     .addEventListeners(new _Category())
                     .addEventListeners(new _Role())
                     .addEventListeners(new _TextChannel())
                     .addEventListeners(new _VoiceChannel())
                     /*
-                    > commands
-                    */
+                     * commands
+                     */
                     .addEventListeners(new Blacklist_Command())
                     .addEventListeners(new DEactivate_Commands())
                     .addEventListeners(new DeleteMessage_Command())
@@ -71,10 +84,14 @@ public class Main {
                     .addEventListeners(new Member_Commands())
                     .addEventListeners(new Owner_Commands())
                     /*
-                    set Activity
+                     * set status/activity
                      */
-                    .setActivity(Activity.listening(">help")
-            ).build();
+                    .setActivity(Activity.listening(">help"))
+                    /*
+                     * build the bot
+                     */
+                    .build();
+
             /*
             create Backup
             */
