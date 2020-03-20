@@ -78,4 +78,3 @@ and you can delete messages (with filter like: categoryID, texthchannelID, roleI
     >bot-zustimmung_on=true
     ```
     - to edit the configuration you can use the command `>settings set <feature> <true/false>`
-    
