@@ -29,6 +29,8 @@ public class RemoveStringFromFile {
             if (!lines.isEmpty()) {
                 FileWriter writer1 = new FileWriter(file, false);
                 PrintWriter writer2 = new PrintWriter(writer1, false);
+                writer1.flush();
+                writer1.close();
                 writer2.flush();
                 writer2.close();
             }
@@ -57,6 +59,7 @@ public class RemoveStringFromFile {
                                 }
                             }
                         } catch (IndexOutOfBoundsException e) {
+                            writer3.close();
                             System.out.print("");
                         }
                     }
