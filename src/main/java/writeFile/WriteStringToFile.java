@@ -31,12 +31,8 @@ public class WriteStringToFile {
             List<String> lines = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
 
             if (!lines.contains(line)) {
-                writer.write(line + "\n");
-                writer.close();
-                reader.close();
 
                 if (extra.equals("games")) {
-
                     /*check, if "line" is in the blacklist*/
                     File file_bl = new File("config/blacklist/GuildBlackList.txt");
                     if (file_bl.exists()) {
@@ -45,12 +41,12 @@ public class WriteStringToFile {
                             return;
                         }
                     }
-
                     guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
                     LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
                             " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
                     Counter c = new Counter();
                     c.getint(guild, "gamecount");
+                    writer.write(line + "\n");
 
                 } else if (extra.equals("list")) {
                     Member member = guild.getMemberById(line);
@@ -62,11 +58,11 @@ public class WriteStringToFile {
                         user.openPrivateChannel().queue(privateChannel ->
                                 privateChannel.sendMessage("Hiermit wird bestätigt, dass du die 'Zustimmung' angenommen hast! :grinning:").queue());
                     }
+                    writer.write(line + "\n");
                 }
-            } else {
-                writer.close();
-                reader.close();
             }
+            writer.close();
+            reader.close();
         } catch (IOException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
