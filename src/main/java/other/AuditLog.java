@@ -34,22 +34,22 @@ public class AuditLog {
                     if (entry.getType().toString().contains("MEMBER")) {
                         if (entry.getChanges().toString().contains("add")) {
                             art = "hinzugefügt";
-                            color = ConsoleColor.green;
+                            color = ConsoleColor.backgreen;
                             list.add("*" + name + "* von " + guild.getMemberById(TargetID).getEffectiveName());
 
                         } else if (entry.getChanges().toString().contains("remove")) {
                             art = "entfernt";
-                            color = ConsoleColor.red;
+                            color = ConsoleColor.backred;
                             list.add("*" + name + "* von " + guild.getMemberById(TargetID).getEffectiveName());
 
                         } else {
-                            System.err.println("Error");
+                            System.err.println("Error, AuditLog");
                             return;
                         }
 
                     } else {
                         art = "aktualisiert";
-                        color = ConsoleColor.yellow;
+                        color = ConsoleColor.backyellow;
                         entry.getChanges().forEach((s, auditLogChange) -> {
                             list.add(s + " >>> '" + auditLogChange.getOldValue() + "' -> '" + auditLogChange.getNewValue() + "'");
                         });
@@ -57,16 +57,16 @@ public class AuditLog {
 
                 } else if (entry.getType().toString().contains("CREATE")) {
                     art = "erstellt";
-                    color = ConsoleColor.green;
+                    color = ConsoleColor.backgreen;
                     list.add(name);
 
                 } else if (entry.getType().toString().contains("DELETE")) {
                     art = "gelöscht";
-                    color = ConsoleColor.red;
+                    color = ConsoleColor.backred;
                     list.add(name);
 
                 } else {
-                    System.err.println("Error");
+                    System.err.println("Error, AuditLog");
                     return;
                 }
 
@@ -78,7 +78,7 @@ public class AuditLog {
                     } else {
                         return;
                     }
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "AuditLog" + ConsoleColor.reset + " > " + ConsoleColor.cyan + entry.getUser().getName() + ConsoleColor.Bblue + " hat " + suffix + " " + ConsoleColor.white + type + " *" + name + "* " + color + art + ConsoleColor.reset + " | " + list.toString(), "info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "AuditLog" + ConsoleColor.reset + " > " + ConsoleColor.cyan + entry.getUser().getName() + ConsoleColor.Bblue + " hat " + suffix + " " + type + " *" + name + "* " + color + art + ConsoleColor.reset + " | " + list.toString(), "info");
                     if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                         String channel = PropertiesFile.readsPropertiesFile("logs");
                         guild.getTextChannelById(channel).sendMessage(message).queue();

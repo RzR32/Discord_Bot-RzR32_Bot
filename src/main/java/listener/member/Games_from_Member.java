@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import other.CheckGameOnWebsite;
 import other.ConsoleColor;
 import other.LogBack;
 import writeFile.WriteStringToFile;
@@ -30,8 +31,8 @@ public class Games_from_Member extends ListenerAdapter {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
-                Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), null, event.getNewActivity());
-                EditMessagesFromGames(event.getGuild(), event.getNewActivity());
+
+                Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), event.getNewActivity());
             }
         }
     }
@@ -42,36 +43,29 @@ public class Games_from_Member extends ListenerAdapter {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
-                Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity(), null);
-                EditMessagesFromGames(event.getGuild(), event.getOldActivity());
+
+                Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity());
             }
         }
     }
 
-    private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity old_game, Activity new_game) {
-        /*if the string "start_end == end BUT member has activity, return*/
-        if (member.getActivities().size() != 0 && start_end.equals("end")) {
-            return;
+    public void checkAllMembersActivity(Guild guild) {
+        for (Member member : guild.getMembers()) {
+            if (member.getActivities().size() > 0) {
+                for (Activity activity : member.getActivities()) {
+                    Forwarded(guild, "start", activity.getType(), member, activity);
+                }
+            }
         }
+    }
+
+    private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity game) {
+        GamePlayingCount gamePlayingCount = new GamePlayingCount();
 
         String username = member.getEffectiveName();
-        String newgame;
-        String oldgame;
-        if (new_game == null) {
-            newgame = null;
-        } else {
-            newgame = new_game.getName();
-        }
-        if (old_game == null) {
-            oldgame = null;
-        } else {
-            oldgame = old_game.getName();
-        }
-
-        /*beginning*/
-        String name = null;
-        /*mid*/
-        String type = null;
+        String game_name = game.getName();
+        String name;
+        String type;
 
         if (short_type == Activity.ActivityType.DEFAULT) {
             name = "GAME";
@@ -89,32 +83,41 @@ public class Games_from_Member extends ListenerAdapter {
             name = "STATUS";
             type = "Status ist";
         } else {
-            LB.log(Thread.currentThread().getName(), "Error: Games_from_Member, ActivityType", "error");
+            LB.log(Thread.currentThread().getName(), "Error: Games_from_Member, ActivityType " + game_name, "error");
+            return;
         }
 
-        /*Console OutPut like Logback*/
+        /*
+        Console OutPut like Logback
+        */
         SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
         Date D = new Date();
         String date = SDF.format(D);
 
         String s_prefix = ConsoleColor.red + date + " " + ConsoleColor.green + "[" + Thread.currentThread().getName() + "] " + ConsoleColor.yellow + "INFO - ";
-        String s_mid = ConsoleColor.cyan + " > " + username + ConsoleColor.reset + ConsoleColor.Bblue + " ";
-        String s_suffix_new = ConsoleColor.reset + ConsoleColor.white + newgame + ConsoleColor.reset;
-        String s_suffix_old = ConsoleColor.reset + ConsoleColor.white + oldgame + ConsoleColor.reset;
+        String s_mid = " > " + ConsoleColor.cyan + username + ConsoleColor.reset + ConsoleColor.Bblue + " ";
+        String s_suffix_game = ConsoleColor.reset + ConsoleColor.white + game_name + ConsoleColor.reset;
 
-        GamePlayingCount gamePlayingCount = new GamePlayingCount();
-        if (start_end.equals("start")) {
+        /*
+        if the string "start_end == end BUT member has activity > member still playing
+        */
+        if (member.getActivities().size() != 0 && start_end.equals("end")) {
+        /*
+        if the string "start_end == end BUT member has NO activity > member dont playing
+        */
+        } else if (member.getActivities().size() == 0 && start_end.equals("end")) {
+            System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nicht mehr " + s_suffix_game);
+
+        } else if (start_end.equals("start")) {
             if (short_type == Activity.ActivityType.DEFAULT) {
                 WriteStringToFile WSTF = new WriteStringToFile();
-                WSTF.write(guild, "games", newgame);
-                GameRole(guild, member.getId(), member, newgame);
+                WSTF.write(guild, "games", game_name);
+                GameRole(guild, member.getId(), member, game_name);
             }
-            System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nun " + s_suffix_new);
-            gamePlayingCount.ForwardPlayingGame(guild, new_game);
-        } else {
-            System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nicht mehr " + s_suffix_old);
-            gamePlayingCount.ForwardPlayingGame(guild, old_game);
+            System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nun " + s_suffix_game);
         }
+        gamePlayingCount.ForwardPlayingGame(guild, game);
+        EditMessagesFromGames(guild, game);
     }
 
     /**
@@ -159,7 +162,7 @@ public class Games_from_Member extends ListenerAdapter {
                             if (guild.getRolesByName(game, true).get(0) != null) {
                                 if (!member.getRoles().toString().contains(game)) {
                                     guild.addRoleToMember(member, guild.getRolesByName(game, true).get(0)).queue();
-                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.white + " Ein User wurde eine Gamerole hinzugefügt", "info");
+                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.white + " Ein User wurde eine Gamerole hinzugefügt", "info");
                                 }
                             }
                         }
@@ -170,39 +173,82 @@ public class Games_from_Member extends ListenerAdapter {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         } catch (IndexOutOfBoundsException e1) {
             guild.createRole().setName(game).setMentionable(true).queue(role -> guild.addRoleToMember(member, role).queue());
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + "Für das Spiel *" + game + " wurde eine Rolle erstellt", "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.reset + "Für das Spiel *" + game + " wurde eine Rolle erstellt", "info");
         }
     }
 
-    /*edit existing message, to add new thinks > like thumbnail*/
+    /*
+    edit existing message, to add new thinks > like thumbnail, Shop URL
+    */
     private void EditMessagesFromGames(Guild guild, Activity activity) {
-        for (Message message : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
-            MessageEmbed mes = message.getEmbeds().get(0);
-            if (mes.getTitle().equals(activity.getName())) {
-                EmbedBuilder builder = new EmbedBuilder();
-                try {
-                    if (!activity.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getLargeImage().getText() == null) {
-                        message.editMessage(builder
-                                .setTitle(mes.getTitle())
-                                .setDescription(mes.getDescription())
-                                .setColor(mes.getColor())
-                                .setThumbnail(activity.asRichPresence().getLargeImage().getUrl())
-                                .build()).queue();
+        try {
+            CheckGameOnWebsite GIS = new CheckGameOnWebsite();
+
+            for (Message message : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+                MessageEmbed mes = message.getEmbeds().get(0);
+                if (mes.getTitle().equals(activity.getName())) {
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.setTitle(mes.getTitle()).setColor(mes.getColor());
+
+                    String[] lines = mes.getDescription().split("\\r?\\n");
+                    builder.setDescription(lines[0] + "\n\n");
+                    String[] new_lines = {"null", "null", "null", "null", "null"};
+
+                    String _steam = GIS.Steam(activity.getName());
+                    String _epic = GIS.EpicGames(activity.getName());
+                    String _blizzard = GIS.Blizzard(activity.getName());
+                    String _origin = GIS.Origin(activity.getName());
+                    String _uplay = GIS.Uplay(activity.getName());
+
+                    if (!_steam.contains("null")) {
+                        new_lines[0] = _steam;
                     }
-                } catch (NullPointerException e) {
-                    try {
-                        if (!activity.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getSmallImage().getText() == null) {
-                            message.editMessage(builder
-                                    .setTitle(mes.getTitle())
-                                    .setDescription(mes.getDescription())
-                                    .setColor(mes.getColor())
-                                    .setThumbnail(activity.asRichPresence().getSmallImage().getUrl())
-                                    .build()).queue();
+                    if (!_epic.contains("null")) {
+                        new_lines[1] = _epic;
+                    }
+                    if (!_blizzard.contains("null")) {
+                        new_lines[2] = _blizzard;
+                    }
+                    if (!_origin.contains("null")) {
+                        new_lines[3] = _origin;
+                    }
+                    if (!_origin.contains("null")) {
+                        new_lines[4] = _uplay;
+                    }
+
+                    for (String string : new_lines) {
+                        if (!string.equals("null")) {
+                            builder.appendDescription(string + "\n");
                         }
-                    } catch (NullPointerException ignored) {
                     }
+                    /*
+                    largeIMG
+                    */
+                    try {
+                        if (!activity.asRichPresence().getLargeImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getLargeImage().getText() == null) {
+                            builder.setThumbnail(activity.asRichPresence().getLargeImage().getUrl());
+                            message.editMessage(builder.build()).queue();
+                        }
+                    } catch (NullPointerException e) {
+                        /*
+                        smallIMG
+                         */
+                        try {
+                            if (!activity.asRichPresence().getSmallImage().equals(message.getEmbeds().get(0).getThumbnail()) && activity.asRichPresence().getSmallImage().getText() == null) {
+                                builder.setThumbnail(activity.asRichPresence().getSmallImage().getUrl());
+                                message.editMessage(builder.build()).queue();
+                            }
+                        /*
+                        else - no img
+                        */
+                        } catch (NullPointerException ex) {
+                            message.editMessage(builder.build()).queue();
+                        }
+                    }
+                    break;
                 }
             }
+        } catch (Exception ignored) {
         }
     }
 }

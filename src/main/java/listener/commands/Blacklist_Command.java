@@ -53,7 +53,7 @@ public class Blacklist_Command extends ListenerAdapter {
 
                         try {
                             /*
-                             * blacklist commands to add / remove a game for the user
+                            blacklist commands to add / remove a game for the user
                              */
                             if (!event.getMember().getUser().isBot()) {
                                 if (argArray[0].equalsIgnoreCase(">blacklist") || (argArray[0].equalsIgnoreCase(">bl"))) {
@@ -66,7 +66,7 @@ public class Blacklist_Command extends ListenerAdapter {
                                         }
 
                                         /*
-                                         * compine all arguments
+                                        compine all arguments
                                          */
                                         ArrayList<String> list = new ArrayList<>();
 
@@ -194,6 +194,7 @@ public class Blacklist_Command extends ListenerAdapter {
 
     /**
      * List for a specific User
+     *
      * @param message
      * @param user
      */
@@ -223,6 +224,7 @@ public class Blacklist_Command extends ListenerAdapter {
 
     /**
      * List for a whole Server / Guild
+     *
      * @param message
      * @param user
      */
@@ -252,6 +254,7 @@ public class Blacklist_Command extends ListenerAdapter {
 
     /**
      * Add / Remove a Game from a specific User list
+     *
      * @param guild
      * @param message
      * @param user
@@ -290,11 +293,15 @@ public class Blacklist_Command extends ListenerAdapter {
                     reader.close();
                     return;
                 }
-                //game already in the blacklist
+                /*
+                game already in the blacklist
+                 */
                 if (lines.toString().contains(Game)) {
                     check_if_file_is_empty(user_file);
                     message.addReaction("\u274C").queue();
-                    //game now added to the blacklist
+                    /*
+                    game now add to the blacklist
+                     */
                 } else {
                     writer.write(Game + "\n");
                     message.addReaction("\uD83D\uDC4D").queue();
@@ -340,6 +347,7 @@ public class Blacklist_Command extends ListenerAdapter {
 
     /**
      * Add / Remove a Game from a whole Server/Guild list
+     *
      * @param guild
      * @param message
      * @param Game

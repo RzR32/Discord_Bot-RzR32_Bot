@@ -125,9 +125,10 @@ public class CheckKey {
             }
             FileWriter writer = new FileWriter("config/config.prop", false);
             for (String s : file_list) {
-                    writer.write(s + "\n");
+                writer.write(s + "\n");
             }
             writer.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 }

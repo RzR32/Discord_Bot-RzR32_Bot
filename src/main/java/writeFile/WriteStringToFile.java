@@ -33,7 +33,9 @@ public class WriteStringToFile {
             if (!lines.contains(line)) {
 
                 if (extra.equals("games")) {
-                    /*check, if "line" is in the blacklist*/
+                    /*
+                    check, if "line" is in the blacklist
+                    */
                     File file_bl = new File("config/blacklist/GuildBlackList.txt");
                     if (file_bl.exists()) {
                         List<String> lines_BL = Files.readAllLines(Paths.get(file_bl + ""), StandardCharsets.UTF_8);
@@ -41,28 +43,34 @@ public class WriteStringToFile {
                             return;
                         }
                     }
-                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder().setTitle(line).setColor(Color.GREEN).setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime())).build()).queue();
+                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder()
+                            .setTitle(line)
+                            .setColor(Color.GREEN)
+                            .setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime()) + "\n\n")
+                            .build()).queue();
                     LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
-                            " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste!" + ConsoleColor.reset, "info");
+                            " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.Bgreen + " ist nun in der Liste!" + ConsoleColor.reset, "info");
+                    writer.write(line + "\n");
+                    writer.close();
+                    reader.close();
                     Counter c = new Counter();
                     c.getint(guild, "gamecount");
-                    writer.write(line + "\n");
 
                 } else if (extra.equals("list")) {
                     Member member = guild.getMemberById(line);
                     User user = member.getUser();
                     LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LIST for GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
-                            " > " + user.getName() + ConsoleColor.reset + ConsoleColor.green + " ist nun in der Liste" + ConsoleColor.reset, "info");
+                            " > " + user.getName() + ConsoleColor.reset + ConsoleColor.Bgreen + " ist nun in der Liste" + ConsoleColor.reset, "info");
                     if (!member.equals(guild.getSelfMember())) {
                         guild.addRoleToMember(member, guild.getRolesByName("GameRole", false).get(0)).queue();
                         user.openPrivateChannel().queue(privateChannel ->
                                 privateChannel.sendMessage("Hiermit wird bestätigt, dass du die 'Zustimmung' angenommen hast! :grinning:").queue());
+                        writer.write(line + "\n");
+                        writer.close();
+                        reader.close();
                     }
-                    writer.write(line + "\n");
                 }
             }
-            writer.close();
-            reader.close();
         } catch (IOException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }

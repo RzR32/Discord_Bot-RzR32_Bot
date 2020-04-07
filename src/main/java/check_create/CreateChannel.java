@@ -18,8 +18,8 @@ public class CreateChannel {
      */
     public void createchannel(Guild guild, Category cat, String channel_name, String channel_id_name, String channel_type) {
         if (PropertiesFile.readsPropertiesFile(">" + channel_id_name + "_on").equals("true")) {
+            assert cat != null;
             if (channel_type.equals("voice")) {
-                assert cat != null;
                 for (VoiceChannel voiceChannel : cat.getVoiceChannels()) {
                     if (voiceChannel.getName().startsWith(channel_name)) {
                         LB.log(Thread.currentThread().getName(), "Channel found with the name *" + channel_name + "*", "info");
@@ -37,7 +37,6 @@ public class CreateChannel {
                     cat.createVoiceChannel(channel_name + " > 0").queue(channel1 -> PropertiesFile.writePropertiesFile(channel_id_name, channel1.getId()));
                 }
             } else {
-                assert cat != null;
                 for (TextChannel textChannel : cat.getTextChannels()) {
                     if (textChannel.getName().startsWith(channel_name)) {
                         LB.log(Thread.currentThread().getName(), "Channel found with the name *" + channel_name + "*", "info");

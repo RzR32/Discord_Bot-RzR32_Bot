@@ -1,5 +1,8 @@
 package other;
 
+import count.GamePlayingCount;
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -25,13 +28,17 @@ public class BackUp {
         add(new File("logs/"));
     }};
 
-    public void timer_backup() {
+    public void timer_backup(Guild guild) {
         Runnable runnable = () -> {
             try {
-                CreateNewBackUp();
-                ZipOldBackUp();
+                GamePlayingCount GPC = new GamePlayingCount();
+                GPC.startCounter(guild);
+
                 TimeUnit.HOURS.sleep(24);
-                timer_backup();
+
+                makeBackUp();
+
+                timer_backup(guild);
             } catch (Exception e) {
                 LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
@@ -40,7 +47,15 @@ public class BackUp {
     }
 
     /*
-    * creates a new backuu
+    make a BackUP - used to make the backup before the Guild_Ready event
+    */
+    public void makeBackUp() {
+        CreateNewBackUp();
+        ZipOldBackUp();
+    }
+
+    /*
+    creates a new backup
     */
     private void CreateNewBackUp() {
         try {
@@ -54,7 +69,7 @@ public class BackUp {
             File b_date = new File(b_backup + "/" + date_file + "/");
             boolean bool_date = b_date.mkdir();
 
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + b_date + " wurde erstellt!","info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + " > " + b_date + " wurde erstellt!", "info");
 
             for (File file_list : list) {
 
@@ -113,61 +128,69 @@ public class BackUp {
     }
 
     /*
-    * if the int "backup_count" == folder number/count > create a zip file from the old backups
+    if the int "backup_count" == folder number/count > create a zip file from the old backups
     */
-    private void ZipOldBackUp() throws Exception {
-        File backup = new File("backup/");
-        if (backup.listFiles().length > 0) {
-            boolean bool_backup = backup.mkdir();
+    private void ZipOldBackUp() {
+        try {
+            File backup = new File("backup/");
+            if (backup.listFiles().length > 0) {
+                boolean bool_backup = backup.mkdir();
 
-            int backup_count = 7;
-            int size = backup.listFiles().length;
-            int cal = size - backup_count;
+                int backup_count = 7;
+                int size = backup.listFiles().length;
+                int cal = size - backup_count;
 
-            if (cal < 1) {
-            } else {
-                if (!file_original.exists()) {
-                    file_original.createNewFile();
-                }
-                if (!file_temp.exists()) {
-                    file_temp.createNewFile();
-                }
-                if (!file_final.exists()) {
-                    file_final.createNewFile();
-                }
+                if (cal < 1) {
+                } else {
+                    if (!file_original.exists()) {
+                        file_original.createNewFile();
+                    }
+                    if (!file_temp.exists()) {
+                        file_temp.createNewFile();
+                    }
+                    if (!file_final.exists()) {
+                        file_final.createNewFile();
+                    }
 
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + ConsoleColor.cyan + " > " + ConsoleColor.reset + "Älteres Backup wurde zur ZIP verschoben!","info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + " > " + "Älteres Backup wurde zur ZIP verschoben!", "info");
 
-                File[] file = new File("backup/").listFiles();
+                    File[] file = new File("backup/").listFiles();
 
-                ArrayList<File> list = new ArrayList<>();
-                assert file != null;
-                Collections.addAll(list, file);
-                Collections.sort(list);
+                    ArrayList<File> list = new ArrayList<>();
+                    assert file != null;
+                    Collections.addAll(list, file);
+                    Collections.sort(list);
 
-                for (int x = 0; x < cal; x++) {
-                    int month_file = Integer.parseInt(list.get(x).getName().substring(5, 7));
-                    /*ZIP*/
-                    FileOutputStream fos = new FileOutputStream(file_temp.getName());
-                    ZipOutputStream zos = new ZipOutputStream(fos);
-                    zos.setMethod(ZipOutputStream.DEFLATED);
-                    zos.setLevel(5);
+                    for (int x = 0; x < cal; x++) {
+                        int month_file = Integer.parseInt(list.get(x).getName().substring(5, 7));
+                        /*
+                        ZIP
+                        */
+                        FileOutputStream fos = new FileOutputStream(file_temp.getName());
+                        ZipOutputStream zos = new ZipOutputStream(fos);
+                        zos.setMethod(ZipOutputStream.DEFLATED);
+                        zos.setLevel(5);
 
-                    ZIP_BackUp(zos, list.get(x), list.get(x).getParentFile().getName(), cal, month_file);
+                        ZIP_BackUp(zos, list.get(x), list.get(x).getParentFile().getName(), cal, month_file);
 
-                    zos.flush();
-                    fos.flush();
-                    zos.close();
-                    fos.close();
-                    /*DELETE*/
-                    deleteFolder(list.get(x));
-                }
-                boolean a = file_original.delete();
-                boolean b = file_temp.delete();
-                if (!file_original.exists() && !file_temp.exists()) {
-                    boolean c = file_final.renameTo(file_original);
+                        zos.flush();
+                        fos.flush();
+                        zos.close();
+                        fos.close();
+                        /*
+                        DELETE
+                        */
+                        deleteFolder(list.get(x));
+                    }
+                    boolean a = file_original.delete();
+                    boolean b = file_temp.delete();
+                    if (!file_original.exists() && !file_temp.exists()) {
+                        boolean c = file_final.renameTo(file_original);
+                    }
                 }
             }
+        } catch (IOException e) {
+            LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
     }
 

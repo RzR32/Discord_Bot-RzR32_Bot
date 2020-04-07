@@ -28,18 +28,21 @@ public class Main {
             LB.log(Thread.currentThread().getName(), "--------------------------------------------------", "info");
             /*
             check key in config file
-             */
+            */
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing config key..." + ConsoleColor.reset, "info");
             CheckKey ck = new CheckKey();
             ck.StartChecking();
             LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "key check, done!" + ConsoleColor.reset, "info");
             /*
             Bot Token
-             */
+            */
             if (PropertiesFile.readsPropertiesFile("TOKEN") == null || PropertiesFile.readsPropertiesFile("TOKEN").isEmpty()) {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
             }
+            /*
+            create Bot with needed GatewayIntent´s...
+            */
             JDABuilder.create(
                     PropertiesFile.readsPropertiesFile("TOKEN"),
                     //GatewayIntent.DIRECT_MESSAGE_REACTIONS,
@@ -54,11 +57,15 @@ public class Main {
                     GatewayIntent.GUILD_MESSAGES,
                     GatewayIntent.GUILD_PRESENCES,
                     GatewayIntent.GUILD_VOICE_STATES)
-
                     /*
-                     * import listener
-                     * other
-                     */
+                    set Flag´s
+                    */
+                    .setIdle(true)
+                    .setActivity(Activity.listening(">help"))
+                    /*
+                    import listener
+                    other
+                    */
                     .addEventListeners(new Games_from_Member())
                     .addEventListeners(new Guild_Ready())
                     .addEventListeners(new JDA_Events())
@@ -67,15 +74,15 @@ public class Main {
                     .addEventListeners(new Name_Change())
                     .addEventListeners(new Status_from_Member())
                     /*
-                     * guild listener
-                     */
+                    guild listener
+                    */
                     .addEventListeners(new _Category())
                     .addEventListeners(new _Role())
                     .addEventListeners(new _TextChannel())
                     .addEventListeners(new _VoiceChannel())
                     /*
-                     * commands
-                     */
+                    commands
+                    */
                     .addEventListeners(new Blacklist_Command())
                     .addEventListeners(new DEactivate_Commands())
                     .addEventListeners(new DeleteMessage_Command())
@@ -83,20 +90,17 @@ public class Main {
                     .addEventListeners(new League_Command())
                     .addEventListeners(new Member_Commands())
                     .addEventListeners(new Owner_Commands())
+
                     /*
-                     * set status/activity
-                     */
-                    .setActivity(Activity.listening(">help"))
-                    /*
-                     * build the bot
-                     */
+                    build the bot
+                    */
                     .build();
 
             /*
-            create Backup
+            make a backup (dont start the time yet)
             */
             BackUp BU = new BackUp();
-            BU.timer_backup();
+            BU.makeBackUp();
 
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");

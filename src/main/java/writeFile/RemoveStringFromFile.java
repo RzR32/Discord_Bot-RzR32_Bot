@@ -25,7 +25,7 @@ public class RemoveStringFromFile {
             List<String> lines = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
             /*
             clear file
-             */
+            */
             if (!lines.isEmpty()) {
                 FileWriter writer1 = new FileWriter(file, false);
                 PrintWriter writer2 = new PrintWriter(writer1, false);
@@ -36,7 +36,7 @@ public class RemoveStringFromFile {
             }
             /*
             write file new > WITH the old but remove ONE line
-             */
+            */
             FileWriter writer3 = new FileWriter(file, false);
             for (String string : lines) {
                 if (!string.equalsIgnoreCase(line)) {
@@ -46,7 +46,7 @@ public class RemoveStringFromFile {
                         Member member = guild.getMemberById(line);
                         User user = member.getUser();
                         LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LIST for GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
-                                " > " + member.getEffectiveName() + ConsoleColor.reset + ConsoleColor.red + " ist nun nicht mehr in der Liste" + ConsoleColor.reset, "info");
+                                " > " + member.getEffectiveName() + ConsoleColor.reset + ConsoleColor.Bred + " ist nun nicht mehr in der Liste" + ConsoleColor.reset, "info");
                         user.openPrivateChannel().queue(privateChannel ->
                                 privateChannel.sendMessage("Hiermit wird bestätigt, dass du von der 'Zustimmung' entfernt wurdest! :grinning:").queue());
                         guild.removeRoleFromMember(member, guild.getRolesByName("GameRole", false).get(0)).queue();
@@ -60,7 +60,6 @@ public class RemoveStringFromFile {
                             }
                         } catch (IndexOutOfBoundsException e) {
                             writer3.close();
-                            System.out.print("");
                         }
                     }
                 }

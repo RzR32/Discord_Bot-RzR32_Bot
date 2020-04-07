@@ -29,7 +29,7 @@ public class Agreement_Message {
                 String channelmention = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
                 /*
                 first message
-                 */
+                */
                 guild.getTextChannelById(channel.getId()).sendMessage(new EmbedBuilder().setTitle("Zustimmung").setColor(Color.GREEN).setDescription(
                         "Wenn du dieser Nachricht eine Reaktion hinzufügst, dann bist du damit einverstanden, " +
                                 "das der Bot deine gespielten Spiele 'speichert' und dir als Rolle hinzufügt damit man diese 'Erwähnen' kann :wink: \n" +
@@ -38,8 +38,8 @@ public class Agreement_Message {
                     message.addReaction("\uD83D\uDC4D").queue();
                 });
                 /*
-                second mesage
-                 */
+                second message
+                */
                 guild.getTextChannelById(channel.getId()).sendMessage("```\n" +
                         "- da ich den Bot noch nicht richtig testen konnte, könnten Fehler auftreten\n" +
                         "(was ich aber nicht hoffe)\n" +
@@ -49,7 +49,7 @@ public class Agreement_Message {
                         "```").queue();
                 /*
                 third message
-                 */
+                */
                 guild.getTextChannelById(channel.getId()).sendFile(file).queue();
                 if (guild.getRolesByName("GameRole", false).get(0) != null) {
                 }

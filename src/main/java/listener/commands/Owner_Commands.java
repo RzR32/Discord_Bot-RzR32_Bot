@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import other.CheckGameOnWebsite;
 import other.LogBack;
 import writeFile.RemoveStringFromFile;
 
@@ -36,9 +37,9 @@ public class Owner_Commands extends ListenerAdapter {
         if (event.isFromType(ChannelType.TEXT)) {
             if (!event.getAuthor().isBot()) {
                 String[] argArray = event.getMessage().getContentRaw().split(" ");
-                    /*
-                    help for owner
-                     */
+                /*
+                help for owner
+                */
                 if (argArray[0].equalsIgnoreCase(">help+")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                         event.getChannel().sendMessage(new EmbedBuilder().setTitle("HELP for Owner").setColor(Color.YELLOW).setDescription("" +
@@ -57,6 +58,10 @@ public class Owner_Commands extends ListenerAdapter {
                                 "> >del <game>\n" +
                                 "\n" +
                                 "> >delete-bot (!Need to be confirm!!)\n" +
+                                "\n" +
+                                "> >checkweb <game>\n" +
+                                "\n" +
+                                "> >edit <messageID to edit> <new game name\n" +
                                 "\n").build()).queue();
                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                     } else {
@@ -64,9 +69,9 @@ public class Owner_Commands extends ListenerAdapter {
                         event.getMessage().addReaction("\u274C").queue();
                     }
 
-                        /*
-                        set the twitchname
-                         */
+                /*
+                set the twitchname
+                */
                 } else if (argArray[0].equalsIgnoreCase(">twitch")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                         try {
@@ -91,9 +96,9 @@ public class Owner_Commands extends ListenerAdapter {
                         event.getMessage().addReaction("\u274C").queue();
                     }
 
-                        /*
-                        set *first-startup* to false
-                         */
+                /*
+                set *first-startup* to false
+                */
                 } else if (argArray[0].equalsIgnoreCase(">ready")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                         PropertiesFile.writePropertiesFile("first-startup", "false");
@@ -108,11 +113,11 @@ public class Owner_Commands extends ListenerAdapter {
                         event.getMessage().addReaction("\u274C").queue();
                     }
 
-                        /*
-                        > remove game from file
-                        > delete the gamerole (if created)
-                        > delete the ONE message in #games
-                         */
+                /*
+                > remove game from file
+                > delete the gamerole (if created)
+                > delete the ONE message in #games
+                */
                 } else if (argArray[0].equalsIgnoreCase(">del")) {
                     try {
                         if (argArray[1] == null) {
@@ -132,12 +137,12 @@ public class Owner_Commands extends ListenerAdapter {
                                         String liststring = String.join(" ", list);
                                         /*
                                         remove game from file
-                                         */
+                                        */
                                         RemoveStringFromFile RSFF = new RemoveStringFromFile();
                                         RSFF.remove(event.getGuild(), "games", liststring);
                                         /*
                                         delete the gamerole
-                                         */
+                                        */
                                         for (Role role : event.getGuild().getRoles()) {
                                             try {
                                                 List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
@@ -153,7 +158,7 @@ public class Owner_Commands extends ListenerAdapter {
                                         }
                                         /*
                                         delete the ONE message in #games
-                                         */
+                                        */
                                         for (Message message : event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
                                             if (message.getEmbeds().get(0).getTitle().equalsIgnoreCase(liststring)) {
                                                 message.delete().queue();
@@ -162,7 +167,7 @@ public class Owner_Commands extends ListenerAdapter {
                                         }
                                         /*
                                         call gamecounter
-                                         */
+                                        */
                                         Counter c = new Counter();
                                         c.getint(event.getGuild(), "gamecount");
                                         LB.log(Thread.currentThread().getName(), "Das Spiel *" + liststring + "* wurde aus der Liste entfernt!", "info");
@@ -177,9 +182,9 @@ public class Owner_Commands extends ListenerAdapter {
                     } catch (ArrayIndexOutOfBoundsException e) {
                         event.getChannel().sendMessage("Hey, you forgot the game name!").queue();
                     }
-                    /*
-                    delete the bot - need a second confirm (!)
-                     */
+                /*
+                delete the bot - need a second confirm (!)
+                */
                 } else if (argArray[0].equalsIgnoreCase(">delete-bot")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
                         if (!bool_timer) {
@@ -187,6 +192,77 @@ public class Owner_Commands extends ListenerAdapter {
                         } else {
                             event.getMessage().addReaction("\uD83D\uDC4D").queue();
                             bool_is_confirmed = true;
+                        }
+                    } else {
+                        event.getMessage().addReaction("\u274C").queue();
+                    }
+
+                /*
+                debug command for CheckGameOnWebsite
+                */
+                } else if (argArray[0].equalsIgnoreCase(">checkweb")) {
+                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                        CheckGameOnWebsite GIS = new CheckGameOnWebsite();
+                        if (argArray[1] != null) {
+                            /*
+                            compine all arguments
+                            */
+                            ArrayList<String> list = new ArrayList<>();
+                            for (int x = 0; x < argArray.length; x++) {
+                                list.add(argArray[x]);
+                                if (list.size() == argArray.length) {
+                                    list.remove(argArray[0]);
+                                    if (list.isEmpty()) {
+                                        return;
+                                    }
+                                }
+                            }
+                            String game_name = String.join(" ", list);
+
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setTitle(game_name).setDescription(
+                                    "Steam: " + GIS.Steam(game_name) + "\n" +
+                                            "EpicGames: " + GIS.EpicGames(game_name) + "\n" +
+                                            "Blizzard: " + GIS.Blizzard(game_name) + "\n" +
+                                            "Origin: " + GIS.Origin(game_name) + "\n" +
+                                            "Uplay: " + GIS.Uplay(game_name));
+                            event.getChannel().sendMessage(builder.build()).queue();
+                        }
+                    } else {
+                        event.getMessage().addReaction("\u274C").queue();
+                    }
+
+                /*
+                edit embed message
+                */
+                } else if (argArray[0].equalsIgnoreCase(">edit")) {
+                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                        String MessageID = argArray[1];
+                        if (argArray[1] != null) {
+                            /*
+                            compine all arguments
+                            */
+                            ArrayList<String> list = new ArrayList<>();
+                            for (int x = 0; x < argArray.length; x++) {
+                                list.add(argArray[x]);
+                                if (list.size() == argArray.length) {
+                                    list.remove(argArray[0]);
+                                    list.remove(argArray[1]);
+                                    if (list.isEmpty()) {
+                                        return;
+                                    }
+                                }
+                            }
+                            String game_name = String.join(" ", list);
+
+                            EmbedBuilder builder = new EmbedBuilder();
+
+                            for (Message message : event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+                                if (message.getId().equals(MessageID)) {
+                                    message.editMessage(builder.setDescription(message.getEmbeds().get(0).getDescription()).setColor(message.getEmbeds().get(0).getColor()).setTitle(game_name).build()).queue();
+                                    break;
+                                }
+                            }
                         }
                     } else {
                         event.getMessage().addReaction("\u274C").queue();
@@ -227,11 +303,11 @@ public class Owner_Commands extends ListenerAdapter {
     private void final_delete_the_Bot(Guild guild) {
         /*
         set *first-startup* to true (counter will be disabled with this)
-         */
+        */
         PropertiesFile.writePropertiesFile("first-startup", "true");
         /*
         delete the gamerole´s
-         */
+        */
         for (Role role : guild.getRoles()) {
             try {
                 List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
@@ -245,7 +321,7 @@ public class Owner_Commands extends ListenerAdapter {
         }
         /*
         delete all bot created category, with their channels
-         */
+        */
         try {
             ArrayList<String> list_category = new ArrayList<>();
             list_category.add(PropertiesFile.readsPropertiesFile("maincount"));
@@ -262,7 +338,7 @@ public class Owner_Commands extends ListenerAdapter {
         }
         /*
         delete all folder & .txt files, also clear the config.prop (without the TOKEN AND again the *first-startup* key)
-         */
+        */
         ArrayList<String> list_token = new ArrayList<>();
         list_token.add(PropertiesFile.readsPropertiesFile("TOKEN"));
         ArrayList<File> list_file = new ArrayList<>();
@@ -287,7 +363,7 @@ public class Owner_Commands extends ListenerAdapter {
         }
         /*
         stop the bot
-         */
+        */
         System.exit(0);
     }
 }

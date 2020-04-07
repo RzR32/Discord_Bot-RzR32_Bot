@@ -52,7 +52,7 @@ public class GameRole_Command extends ListenerAdapter {
 
                         try {
                             /*
-                             * gamerole commands to add / remove a game for the user
+                            gamerole commands to add / remove a game for the user
                              */
                             if (!event.getMember().getUser().isBot()) {
                                 if (argArray[0].equalsIgnoreCase(">gamerole") || (argArray[0].equalsIgnoreCase(">gr"))) {
@@ -65,7 +65,7 @@ public class GameRole_Command extends ListenerAdapter {
                                         }
 
                                         /*
-                                         * compine all arguments
+                                        compine all arguments
                                          */
                                         ArrayList<String> list = new ArrayList<>();
 
@@ -154,9 +154,9 @@ public class GameRole_Command extends ListenerAdapter {
             for (Role role : guild.getRoles()) {
                 if (role.getName().equalsIgnoreCase(Game)) {
 
-            /*
-            add or remove it
-             */
+                    /*
+                    add or remove it
+                     */
                     if (operator.equalsIgnoreCase("add")) {
 
                         if (!member.getRoles().toString().contains(Game)) {

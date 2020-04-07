@@ -5,13 +5,14 @@ import check_create.CheckChannel;
 import config.CheckFiles_Folder;
 import config.PropertiesFile;
 import count.Counter;
-import count.GamePlayingCount;
+import listener.member.Games_from_Member;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import other.BackUp;
 import other.ConsoleColor;
 import other.LogBack;
 import other.Pause;
@@ -28,7 +29,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Verbunden!" + ConsoleColor.reset, "info");
         /*
         check files/folder
-         */
+        */
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing files/folder..." + ConsoleColor.reset, "info");
         CheckFiles_Folder C_Files = new CheckFiles_Folder();
         C_Files.checkingFiles();
@@ -36,8 +37,8 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
         /*
-         * check *StartUp* key in files...
-         */
+        check *StartUp* key in files...
+        */
         if (PropertiesFile.readsPropertiesFile("first-startup").equals("true")) {
             for (Member member : event.getGuild().getMembers()) {
                 if (member.isOwner()) {
@@ -64,42 +65,50 @@ public class Guild_Ready extends ListenerAdapter {
 
         /*
         check the category
-         */
+        */
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for Category´s..." + ConsoleColor.reset, "info");
         CheckCategory C_Category = new CheckCategory();
         C_Category.StartChecking(event.getGuild());
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "category check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        P.pause(Thread.currentThread(), pause_int);
+        P.pause(pause_int);
 
         /*
         check for counter channel
-         */
+        */
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for counter Channel´s..." + ConsoleColor.reset, "info");
         Counter c = new Counter();
         c.StartCounter(event.getGuild());
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "counter Channel check, done!!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        P.pause(Thread.currentThread(), pause_int);
+        P.pause(pause_int);
 
         /*
         check the other channel
-         */
+        */
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for other Channel´s..." + ConsoleColor.reset, "info");
         CheckChannel C_Channel = new CheckChannel();
         C_Channel.StartChecking(event.getGuild());
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "other Channel check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
-        P.pause(Thread.currentThread(), pause_int);
+        P.pause(pause_int);
 
         /*
-        GamePlayingCount
-         */
-        GamePlayingCount GPC = new GamePlayingCount();
-        GPC.startCounter(event.getGuild());
+        check for all activ user activity´s
+        */
+        Games_from_Member GfM = new Games_from_Member();
+        GfM.checkAllMembersActivity(event.getGuild());
+
+        /*
+        start the BackUp timer
+        (also call GPC)
+        */
+        BackUp BU = new BackUp();
+        BU.timer_backup(event.getGuild());
+
         LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Bot gestartet!" + ConsoleColor.reset, "info");
     }
 

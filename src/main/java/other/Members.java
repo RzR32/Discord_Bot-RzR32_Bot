@@ -19,7 +19,7 @@ public class Members {
 
     /*
     check if some member is new (if the bot was offline)
-     */
+    */
     public void Member_CheckMembersOnGuild(Guild guild) {
         try {
             C_Channel.checkingChannel(guild, "logs");
@@ -30,12 +30,12 @@ public class Members {
             for (Member member : guild.getMembers()) {
                 if (!lines.toString().contains(member.getUser().getId())) {
                     if (member.getNickname() == null) {
-                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + member.getUser().getName() +
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + " > " + ConsoleColor.cyan + member.getUser().getName() +
                                 ConsoleColor.Bgreen + " wurde zur Liste hinzugefügt!" + ConsoleColor.reset, "info");
                         String m = member.getUser().getId() + " █ " + member.getUser().getName() + " █ <no nickname>";
                         writer.write(m + "\n");
                     } else {
-                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + member.getUser().getName() +
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + " > " + ConsoleColor.cyan + member.getUser().getName() +
                                 ConsoleColor.reset + " | " + ConsoleColor.cyan + member.getNickname() + ConsoleColor.Bgreen + " wurde zur Liste hinzugefügt!" + ConsoleColor.reset, "info");
                         String m1 = member.getUser().getId() + " █ " + member.getUser().getName() + " █ " + member.getNickname();
                         writer.write(m1 + "\n");
@@ -58,7 +58,9 @@ public class Members {
             List<String> lines = Files.readAllLines(Paths.get("config/members.txt"), StandardCharsets.UTF_8);
             List<Member> members = guild.getMembers();
 
-            /*clear file*/
+            /*
+            clear file
+            */
             if (!lines.isEmpty()) {
                 FileWriter writer1 = new FileWriter("config/members.txt", StandardCharsets.UTF_8, false);
                 PrintWriter writer2 = new PrintWriter(writer1, false);
@@ -68,7 +70,9 @@ public class Members {
                 return;
             }
 
-            /*write file new > WITH the old but remove ONE line*/
+            /*
+            write file new > WITH the old but remove ONE line
+            */
             FileWriter writer3 = new FileWriter("config/members.txt", StandardCharsets.UTF_8, false);
 
             for (String string : lines) {
@@ -79,18 +83,24 @@ public class Members {
                 user_name = user_name.substring(user_name.indexOf("█") + 1);
                 user_name = user_name.substring(0, user_name.indexOf("█")).trim();
 
-                /*check, if member ID is in the list*/
+                /*
+                check, if member ID is in the list
+                */
                 if (members.toString().contains(UserID_fromFile)) {
-                    /*check if member has nickname*/
+                    /*
+                    check if member has nickname
+                    */
                     if (MemberID.getNickname() == null) {
                         user_nickname = " <no nickname>";
                     } else {
                         user_nickname = MemberID.getNickname();
                     }
 
-                    /*check if member has ANOTHER name*/
+                    /*
+                    check if member has ANOTHER name
+                    */
                     if (!MemberID.getUser().getName().equals(user_name)) {
-                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NAMECHANGE" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " hat sein Namen geändert zu " + ConsoleColor.reset + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NAMECHANGE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + user_name + ConsoleColor.reset + " hat sein Namen geändert zu " + ConsoleColor.reset + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
                         if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                             String channel = PropertiesFile.readsPropertiesFile("logs");
                             guild.getTextChannelById(channel).sendMessage("NameChange: **" + user_name + "** hat sein Namen geändert zu **" + MemberID.getEffectiveName() + "**").queue();
@@ -98,11 +108,13 @@ public class Members {
 
                     } else {
 
-                        /*check if member has ANOTHER nickname*/
+                        /*
+                        check if member has ANOTHER nickname
+                        */
                         if (user_nickname.equals(" <no nickname>")) {
                             if (!string.substring(string.lastIndexOf("█") + 1).equals(user_nickname)) {
                                 String trim = string.substring(string.lastIndexOf("█") + 1).trim();
-                                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " hat sein Nickname entfernt (" + ConsoleColor.cyan + trim + ConsoleColor.reset + ")" + ConsoleColor.reset, "info");
+                                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + " > " + ConsoleColor.cyan + user_name + ConsoleColor.reset + " hat sein Nickname entfernt (" + ConsoleColor.cyan + trim + ConsoleColor.reset + ")" + ConsoleColor.reset, "info");
                                 if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                                     String channel = PropertiesFile.readsPropertiesFile("logs");
                                     guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** hat sein Nickname entfernt (**" + trim + "**)").queue();
@@ -111,7 +123,7 @@ public class Members {
                         } else {
                             if (!lines.toString().contains(MemberID.getEffectiveName())) {
                                 if (!MemberID.getEffectiveName().equals(user_name)) {
-                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + ConsoleColor.cyan + " > " + user_name + ConsoleColor.reset + " heißt nun " + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
+                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "NICKNAME" + ConsoleColor.reset + " > " + ConsoleColor.cyan + user_name + ConsoleColor.reset + " heißt nun " + ConsoleColor.cyan + MemberID.getEffectiveName() + ConsoleColor.reset, "info");
                                     if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                                         String channel = PropertiesFile.readsPropertiesFile("logs");
                                         guild.getTextChannelById(channel).sendMessage("NickNameChange: **" + user_name + "** heißt nun **" + MemberID.getEffectiveName() + "**").queue();
@@ -121,7 +133,9 @@ public class Members {
                         }
                     }
 
-                    /*write file*/
+                    /*
+                    write file
+                    */
                     if (MemberID.getNickname() == null) {
                         writer3.write(MemberID.getUser().getId() + " █ " + MemberID.getUser().getName() + " █ <no nickname>\n");
                     } else {
@@ -131,7 +145,7 @@ public class Members {
                     String s_between = string;
                     s_between = s_between.substring(s_between.indexOf("█") + 1);
                     s_between = s_between.substring(0, s_between.indexOf("█"));
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + ConsoleColor.cyan + " > " + s_between + ConsoleColor.Bred + " wurde aus der Liste entfernt!" + ConsoleColor.reset, "info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "MEMBERS" + ConsoleColor.reset + " > " + ConsoleColor.cyan + s_between + ConsoleColor.Bred + " wurde aus der Liste entfernt!" + ConsoleColor.reset, "info");
                     sendMessage(guild, string, "verlassen!");
                 }
             }
@@ -141,7 +155,9 @@ public class Members {
         }
     }
 
-    /*sendmessage for join/leave*/
+    /*
+    sendmessage for join/leave
+    */
     private void sendMessage(Guild guild, String s, String type) {
         C_Channel.checkingChannel(guild, "logs");
         int x = s.length() - 15; //no nickname int
@@ -166,17 +182,17 @@ public class Members {
                 if (!guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs")).toString().isEmpty()) {
                 }
             } catch (NullPointerException e) {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + ConsoleColor.cyan + " > " + out + ConsoleColor.reset + " hat den Server " +
+                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + " hat den Server " +
                         type + ConsoleColor.reset, "info");
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backgreen + ConsoleColor.red + "ERROR: Channel *logs* doesnt exist on this Server! (wrong id)" + ConsoleColor.reset, "error");
+                LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + ConsoleColor.red + "ERROR: Channel *logs* doesnt exist on this Server! (wrong id)" + ConsoleColor.reset, "error");
                 return;
             }
         }
 
         if (type.equals("verlassen!")) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + ConsoleColor.cyan + " > " + out + ConsoleColor.reset + ConsoleColor.red + " hat den Server verlassen!" + ConsoleColor.reset, "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bred + " hat den Server verlassen!" + ConsoleColor.reset, "info");
         } else if (type.equals("betreten!")) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + ConsoleColor.cyan + " > " + out + ConsoleColor.reset + ConsoleColor.green + " hat den Server betreten!" + ConsoleColor.reset, "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bgreen + " hat den Server betreten!" + ConsoleColor.reset, "info");
         }
         guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs")).sendMessage("Guild > " + out + " hat den Server " + type).queue();
     }

@@ -25,7 +25,9 @@ public class TwitchFollowerCount extends Thread {
             try {
                 TimeUnit.MINUTES.sleep(30);
 
-                /*also a timer for Members - Check Member name*/
+                /*
+                also a timer for Members - Check Member name
+                */
                 Members m = new Members();
                 m.Member_CheckMemberOnFile(guild);
 
@@ -44,23 +46,23 @@ public class TwitchFollowerCount extends Thread {
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String line;
                 if ((line = in.readLine()) != null) {
-                /*
-                check category
-                 */
+                    /*
+                    Check Category
+                    */
                     CheckCategory C_Category = new CheckCategory();
                     C_Category.checkingCategory(guild, "streamcategory");
-                /*
-                check channel
-                 */
+                    /*
+                    Check Channel
+                    */
                     CheckChannel C_CheckChannel = new CheckChannel();
                     C_CheckChannel.checkingChannel(guild, id);
-                /*
-                size
-                 */
+                    /*
+                    size
+                    */
                     int size = Integer.parseInt(line);
-                /*
-                go to counter
-                 */
+                    /*
+                    go to counter
+                    */
                     Counter c = new Counter();
                     c.change(guild, channel, id, size);
                     timer_twitch_member(guild);
@@ -69,7 +71,7 @@ public class TwitchFollowerCount extends Thread {
         } catch (IOException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         } catch (NumberFormatException e) {
-            LB.log(Thread.currentThread().getName(), "No Twitchname set, can be ignored", "warn");
+            LB.log(Thread.currentThread().getName(), "No Twitchname set, can be ignored (if not needed)", "warn");
         }
     }
 }

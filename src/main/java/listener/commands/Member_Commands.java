@@ -80,18 +80,18 @@ public class Member_Commands extends ListenerAdapter {
 
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                    /*
-                                    PING COMMAND
-                                     */
+                                /*
+                                PING COMMAND
+                                */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">ping")) {
                                     event.getChannel().sendMessage("Pong!").queue();
 
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                    /*
-                                    AMG COMMAND
-                                    (Add My Game)
-                                     */
+                                /*
+                                AMG COMMAND
+                                (Add My Game)
+                                */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">amg")) {
                                     if (!event.getMember().getActivities().isEmpty()) {
                                         Activity game = event.getMember().getActivities().get(0);
@@ -118,16 +118,16 @@ public class Member_Commands extends ListenerAdapter {
                                         }
                                     }
 
-                                    /*
-                                    CREDITS COMMAND
-                                     */
+                                /*
+                                CREDITS COMMAND
+                                */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">credits")) {
                                     event.getChannel().sendMessage("Dieser Bot wurde erstellt von RzR32\nmit der Hilfe von HannesGames").queue();
                                     event.getMessage().addReaction("\uD83D\uDC4D").queue();
 
-                                    /*
-                                    PRINT OUT, IF THE MEMBER IS IN THE GAMELIST
-                                     */
+                                /*
+                                PRINT OUT, IF THE MEMBER IS IN THE GAMELIST
+                                */
                                 } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">gamelist")) {
                                     try {
                                         List<String> lines = Files.readAllLines(Paths.get("config/list.txt"), StandardCharsets.UTF_8);
@@ -140,42 +140,54 @@ public class Member_Commands extends ListenerAdapter {
                                         LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                                     }
 
-                                    /*
-                                    USER INFO
-                                     */
-                            } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">userinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ui")) {
+                                /*
+                                USER INFO
+                                */
+                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">userinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ui")) {
                                     EmbedBuilder builder = new EmbedBuilder();
-                                    /*Title*/
+
                                     builder.setTitle("USER INFO " + event.getMember().getEffectiveName());
-                                    /*Color*/
                                     builder.setColor(event.getMember().getColorRaw());
-                                    /*Create Date*/
+                                    /*
+                                    Create Date
+                                    */
                                     OffsetDateTime create = event.getMember().getTimeCreated();
                                     builder.getDescriptionBuilder().append("User Acc Create Date: " + create.getDayOfMonth() + "." + create.getMonthValue() + "." + create.getYear() + "\n");
-                                    /*JOIN DATE*/
+                                    /*
+                                    JOIN DATE
+                                    */
                                     OffsetDateTime join = event.getMember().getTimeJoined();
                                     builder.getDescriptionBuilder().append("User Join Date on this Server: " + join.getDayOfMonth() + "." + join.getMonthValue() + "." + join.getYear() + "\n");
-                                    /*USERID*/
+                                    /*
+                                    USERID
+                                    */
                                     builder.getDescriptionBuilder().append("UserID: " + event.getMember().getId() + "\n");
-                                    /*UserName*/
+                                    /*
+                                    UserName
+                                    */
                                     builder.getDescriptionBuilder().append("UserName: " + event.getMember().getUser().getName() + "\n");
-                                    /*NickName - if set*/
+                                    /*
+                                    NickName - if set
+                                    */
                                     if (event.getMember().getNickname() != null) {
                                         builder.getDescriptionBuilder().append("NickName: " + event.getMember().getNickname() + "\n");
                                     }
-                                    /*Roles*/
+                                    /*
+                                    Roles
+                                    */
                                     builder.getDescriptionBuilder().append("Roles: ");
                                     for (Role role : event.getMember().getRoles()) {
                                         builder.getDescriptionBuilder().append("'" + role.getName() + "' ");
                                     }
                                     builder.getDescriptionBuilder().append("\n");
-                                    /*Activities*/
+                                    /*
+                                    Activities
+                                    */
                                     if (!event.getMember().getActivities().isEmpty()) {
                                         builder.getDescriptionBuilder().append("Activities: " + event.getMember().getActivities() + "\n");
                                     } else {
                                         builder.getDescriptionBuilder().append("Activities: 'untätig'\n");
                                     }
-                                    /*Message send*/
                                     int message_count = 0;
                                     for (TextChannel textChannel : event.getGuild().getTextChannels()) {
                                         for (Message message : textChannel.getIterableHistory()) {
@@ -185,36 +197,32 @@ public class Member_Commands extends ListenerAdapter {
                                         }
                                     }
                                     builder.getDescriptionBuilder().append("Message count: " + message_count + "\n");
-                                    /*build & send builder*/
                                     event.getChannel().sendMessage(builder.build()).queue();
 
-                                    /*
-                                    Roles INFO
-                                     */
-                            } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">rolesinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ri")) {
-                                EmbedBuilder builder = new EmbedBuilder();
-                                /*Title*/
-                                builder.setTitle("ROLES INFO");
-                                /*Roles*/
-                                for (Role role : event.getGuild().getRoles()) {
-                                    int role_count = 0;
-                                    for (Member member : event.getGuild().getMembers()) {
-                                        if (role.getName().equals("@everyone")) {
-                                            break;
+                                /*
+                                Roles INFO
+                                */
+                                } else if (event.getMessage().getContentRaw().equalsIgnoreCase(">rolesinfo") || event.getMessage().getContentRaw().equalsIgnoreCase(">ri")) {
+                                    EmbedBuilder builder = new EmbedBuilder();
+                                    builder.setTitle("ROLES INFO");
+                                    for (Role role : event.getGuild().getRoles()) {
+                                        int role_count = 0;
+                                        for (Member member : event.getGuild().getMembers()) {
+                                            if (role.getName().equals("@everyone")) {
+                                                break;
+                                            }
+                                            if (member.getRoles().toString().contains(role.getName()))
+                                                role_count++;
                                         }
-                                        if (member.getRoles().toString().contains(role.getName()))
-                                            role_count++;
+                                        if (role.getName().equals("@everyone")) {
+                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + event.getGuild().getMembers().size() + " Member haben diese Rolle\n");
+                                        } else {
+                                            builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + role_count + " Member haben diese Rolle\n");
+                                        }
                                     }
-                                    if (role.getName().equals("@everyone")) {
-                                        builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + event.getGuild().getMembers().size() + " Member haben diese Rolle\n");
-                                    } else {
-                                        builder.getDescriptionBuilder().append("Name: " + role.getName() + " | ID: " + role.getId() + " | " + role_count + " Member haben diese Rolle\n");
-                                    }
+                                    builder.getDescriptionBuilder().append("\n");
+                                    event.getChannel().sendMessage(builder.build()).queue();
                                 }
-                                builder.getDescriptionBuilder().append("\n");
-                                /*build & send builder*/
-                                event.getChannel().sendMessage(builder.build()).queue();
-                            }
 
                             } else {
                                 event.getMessage().delete().queue();

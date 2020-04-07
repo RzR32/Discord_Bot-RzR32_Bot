@@ -31,7 +31,7 @@ public class League_Command extends ListenerAdapter {
                             String[] argArray = event.getMessage().getContentRaw().split(" ");
                             if (argArray[0].equals(">league")) {
                                 /*
-                                 * compine all arguments
+                                compine all arguments
                                  */
                                 ArrayList<String> list_name = new ArrayList<>();
 
@@ -44,11 +44,17 @@ public class League_Command extends ListenerAdapter {
                                     String inputline;
                                     String SUBstring;
 
-                                    /*list for solo/duo*/
+                                    /*
+                                    list for solo/duo
+                                    */
                                     List<String> list_1 = new ArrayList<>();
-                                    /*list for flexi*/
+                                    /*
+                                    list for flexi
+                                    */
                                     List<String> list_2 = new ArrayList<>();
-                                    /*list for summoner details*/
+                                    /*
+                                    list for summoner details
+                                    */
                                     List<String> list_3 = new ArrayList<>();
 
                                     URL url = new URL("https://euw.op.gg/summoner/userName=" + username.replace(" ", "+"));
@@ -59,37 +65,51 @@ public class League_Command extends ListenerAdapter {
                                     BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                                     while ((inputline = br.readLine()) != null) {
 
-                                        /*Summoner Icon*/
+                                        /*
+                                        Summoner Icon
+                                        */
                                         if (inputline.contains("ProfileImage")) {
                                             SUBstring = inputline.trim().substring(12);
                                             SUBstring = SUBstring.substring(0, SUBstring.indexOf(".jpg") + 4);
                                             list_3.add("URL" + "https://" + SUBstring.replace(";", "&"));
 
-                                            /*Summoner Level*/
+                                        /*
+                                        Summoner Level
+                                        */
                                         } else if (inputline.contains("<span class=\"Level tip\" title=\"Level\">")) {
                                             SUBstring = inputline.trim().substring(38);
                                             SUBstring = SUBstring.substring(0, SUBstring.length() - 7);
                                             list_3.add("Summoner Name > " + username);
                                             list_3.add("Summoner Level > " + SUBstring);
 
-                                            /*last update*/
+                                        /*
+                                        last update
+                                        */
                                         } else if (inputline.contains("Last updated: <span class=' _timeago _timeCount'")) {
-                                            /*get only the year*/
+                                            /*
+                                            get only the year
+                                            */
                                             String year;
                                             year = inputline.trim().substring(108);
                                             year = year.substring(0, year.length() - 22);
 
-                                            /*get only the month*/
+                                            /*
+                                            get only the month
+                                            */
                                             String month;
                                             month = inputline.trim().substring(113);
                                             month = month.substring(0, month.length() - 19);
 
-                                            /*get only the date*/
+                                            /*
+                                            get only the date
+                                            */
                                             String date;
                                             date = inputline.trim().substring(116);
                                             date = date.substring(0, date.length() - 16);
 
-                                            /*get only the hour*/
+                                            /*
+                                            get only the hour
+                                            */
                                             String hour;
                                             hour = inputline.trim().substring(119);
                                             hour = hour.substring(0, hour.length() - 13);
@@ -103,20 +123,26 @@ public class League_Command extends ListenerAdapter {
                                                 i_hour = i_hour - 8;
                                             }
 
-                                            /*get minute & seconds*/
+                                            /*
+                                            get minute & seconds
+                                            */
                                             String resttime;
                                             resttime = inputline.trim().substring(122);
                                             resttime = resttime.substring(0, resttime.length() - 7);
 
                                             list_3.add("Last Update (on op.gg) > " + i_date + "-" + month + "-" + year + " | " + i_hour + ":" + resttime);
 
-                                            /*URL for Solo/Duo Image*/
+                                        /*
+                                        URL for Solo/Duo Image
+                                        */
                                         } else if (inputline.contains("<div class=\"Medal")) {
                                             SUBstring = br.readLine().trim().substring(12);
                                             SUBstring = SUBstring.substring(0, SUBstring.indexOf(".png") + 4);
                                             list_1.add("URL" + "https://" + SUBstring.replace(";", "&"));
 
-                                            /*Solo/Duo*/
+                                        /*
+                                        Solo/Duo
+                                        */
                                         } else if (inputline.contains("<div class=\"TierRank unranked")) {
                                             list_1.add("Unranked");
                                         } else if (inputline.contains("<div class=\"TierRank\"")) {
@@ -154,13 +180,17 @@ public class League_Command extends ListenerAdapter {
                                             list_1.add(win + "/" + lose);
                                             list_1.add(ratio);
 
-                                            /*URL for Flexi Image*/
+                                        /*
+                                        URL for Flexi Image
+                                        */
                                         } else if (inputline.contains("<div class=\"sub-tier\">")) {
                                             SUBstring = br.readLine().trim().substring(12);
                                             SUBstring = SUBstring.substring(0, SUBstring.indexOf(".png") + 4);
                                             list_2.add("URL" + "https://" + SUBstring.replace(";", "&"));
 
-                                            /*Flexi*/
+                                        /*
+                                        Flexi
+                                        */
                                         } else if (inputline.contains("<div class=\"sub-tier__rank-tier unranked\">")) {
                                             list_2.add("Unranked");
                                         } else if (inputline.contains("<div class=\"sub-tier__rank-tier \">")) {
@@ -194,8 +224,7 @@ public class League_Command extends ListenerAdapter {
 
                                     /*
                                     Finish, now create the builder
-                                     */
-
+                                    */
                                     if (list_1.isEmpty()) {
                                         event.getChannel().sendMessage(event.getMember().getAsMention() + ", Summoner *" + username + "* not found! (only EUW)").queue();
                                         return;
@@ -205,7 +234,9 @@ public class League_Command extends ListenerAdapter {
                                     EmbedBuilder builder_2 = new EmbedBuilder().setTitle("League of Legends, " + username + " (FlexiQ)");
                                     EmbedBuilder builder_3 = new EmbedBuilder().setTitle("League of Legends, " + username + " (Summoner)");
 
-                                    /*URL for OP.GG*/
+                                    /*
+                                    URL for OP.GG
+                                    */
                                     String iconurl = "https://static-s.aa-cdn.net/img/ios/605722237/0ccfe17ce50eef3ab49494737efb17d2";
 
                                     for (String string : list_3) {

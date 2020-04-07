@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Counter {
 
@@ -35,26 +36,26 @@ public class Counter {
     public void StartCounter(Guild guild) {
         for (String id : list_ID) {
             Pause P = new Pause();
-            P.pause(Thread.currentThread(), 250);
+            P.pause(250);
             getint(guild, id);
         }
     }
 
     public void getint(Guild guild, String id) {
         if (PropertiesFile.readsPropertiesFile(">" + id + "_on").equals("true")) {
-        /*
-        check category
-         */
+            /*
+            check category
+             */
             CheckCategory C_Category = new CheckCategory();
             C_Category.StartChecking(guild);
-        /*
-        check channel
-         */
+            /*
+            check channel
+             */
             CheckChannel C_CheckChannel = new CheckChannel();
             C_CheckChannel.checkingChannel(guild, id);
-        /*
-        size
-         */
+            /*
+            size
+             */
             String channel = null;
             String category = null;
             int size = 0;
@@ -98,9 +99,6 @@ public class Counter {
                             return;
                         }
                     }
-                    /*
-                    do gamerolecount
-                     */
                     getint(guild, "gamerolecount");
                     GameRoleCount(guild, size);
                     break;
@@ -166,7 +164,7 @@ public class Counter {
         little pause to securely save the channel id by create channel
          */
         Pause P = new Pause();
-        P.pause(Thread.currentThread(), 1000);
+        P.pause(1000);
         /*
         string for new channel name
          */
@@ -185,13 +183,13 @@ public class Counter {
         String farbe;
         if (size == string3) {
             wert = "unverändert";
-            farbe = ConsoleColor.green;
+            farbe = ConsoleColor.backBgreen;
         } else {
             wert = "verändert";
-            farbe = ConsoleColor.red;
-            guild.getVoiceChannelById(PropertiesFile.readsPropertiesFile(id)).getManager().setName(nameIsize).queue();
+            farbe = ConsoleColor.backBred;
+            Objects.requireNonNull(guild.getVoiceChannelById(PropertiesFile.readsPropertiesFile(id))).getManager().setName(nameIsize).queue();
         }
-        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + channel + " > " + ConsoleColor.Byellow + "Guild = " + size +
-                " │ Counter = " + string3 + " - " + ConsoleColor.bold + farbe + wert + ConsoleColor.reset, "info");
+        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + channel + ConsoleColor.reset + " > " + ConsoleColor.Byellow + "Guild = " + size +
+                " │ Counter = " + string3 + " - " + ConsoleColor.reset + ConsoleColor.black + ConsoleColor.bold + farbe + wert + ConsoleColor.reset, "info");
     }
 }

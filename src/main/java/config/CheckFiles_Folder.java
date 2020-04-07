@@ -30,7 +30,6 @@ public class CheckFiles_Folder {
         folder
          */
         folder.add(new File("config/blacklist/"));
-
         /*
         check files
          */
@@ -46,7 +45,6 @@ public class CheckFiles_Folder {
                 }
             }
         }
-
         /*
         check Folder
          */

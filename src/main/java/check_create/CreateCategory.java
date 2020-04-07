@@ -77,7 +77,6 @@ public class CreateCategory {
                 category.getGuild().createVoiceChannel("VoiceChannelCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount"))).setPosition(6).queue(channel ->
                         PropertiesFile.writePropertiesFile("voicechannelcount", channel.getId()));
             }
-
         });
     }
 

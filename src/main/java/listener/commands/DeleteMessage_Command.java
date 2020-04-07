@@ -59,11 +59,15 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                     return;
                                 }
                                 if (!bool_timer) {
-                                    /*check if argArray contains -c AND -t*/
+                                    /*
+                                    check if argArray contains -c AND -t
+                                    */
                                     if (Arrays.toString(argArray).contains("-c") && Arrays.toString(argArray).contains("-t")) {
                                         event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: You can´t search in category AND textchannel!").queue();
                                         event.getMessage().addReaction("\u274C").queue();
-                                        /*check if argArray contains -c AND -t*/
+                                        /*
+                                        check if argArray contains -c AND -t
+                                        */
                                     } else if (Arrays.toString(argArray).contains("-r") && Arrays.toString(argArray).contains("-u")) {
                                         event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: You can´t search in role AND user!").queue();
                                         event.getMessage().addReaction("\u274C").queue();
@@ -74,7 +78,9 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                                 if (var > 0) {
                                                     for (int x = 0; x < list.size(); x++) {
                                                         if (argArray[var - 1].equalsIgnoreCase(list.get(x))) {
-                                                            /*set first all to null*/
+                                                            /*
+                                                            set first all to null
+                                                            */
                                                             String category = null;
                                                             String textchannel = null;
                                                             String date = null;
@@ -83,7 +89,9 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                                             String number = null;
                                                             String string = null;
 
-                                                            /*set all to var*/
+                                                            /*
+                                                            set all to var
+                                                            */
                                                             if (x == 0) {
                                                                 if (event.getGuild().getCategoryById(argArray[var]) != null) {
                                                                     category = argArray[var];
@@ -105,15 +113,15 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                                                         int m = Integer.parseInt(argArray[var].substring(3, 5));
                                                                         int y = Integer.parseInt(argArray[var].substring(6, 8));
                                                                         if (d > 31 || m > 12) {
-                                                                            System.err.println("Error: one of your number is to big");
+                                                                            event.getChannel().sendMessage("Error: one of your number is to big!").queue();
                                                                             return;
                                                                         }
                                                                     } catch (NumberFormatException e) {
-                                                                        System.err.println("Error: input is not a int!");
+                                                                        event.getChannel().sendMessage("Error: input is not a int!").queue();
                                                                         return;
                                                                     }
                                                                 } else {
-                                                                    System.err.println("Error: Right format is *DD-MM-YY*!");
+                                                                    event.getChannel().sendMessage("Error: Right format is *DD-MM-YY*!").queue();
                                                                     return;
                                                                 }
                                                                 date = argArray[var];
@@ -137,7 +145,9 @@ public class DeleteMessage_Command extends ListenerAdapter {
                                                             } else if (x == 6) {
                                                                 string = argArray[var];
                                                             }
-                                                            /*put string into the hashmap, with the right position*/
+                                                            /*
+                                                            put string into the hashmap, with the right position
+                                                            */
                                                             if (category != null) {
                                                                 list_out.put(0, category);
                                                             }
@@ -232,15 +242,21 @@ public class DeleteMessage_Command extends ListenerAdapter {
             string = string_long.get(6);
         }
 
-        /*ALL textchannel in ONE specific category*/
+        /*
+        ALL textchannel in ONE specific category
+        */
         if (category != null) {
             for (TextChannel channel : guild.getCategoryById(category.getId()).getTextChannels()) {
                 list_target.add(channel.getId());
             }
-            /*ONE specific textchannel*/
+            /*
+            ONE specific textchannel
+            */
         } else if (textChannel != null) {
             list_target.add(textChannel.getId());
-            /*list_del > list of ALL textchannel´s*/
+            /*
+            list_del > list of ALL textchannel´s
+            */
         } else {
             for (TextChannel channel : guild.getTextChannels()) {
                 list_target.add(channel.getId());
@@ -250,7 +266,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
         for (String target : list_target) {
             if (cmd.equals("delete")) {
                 Pause P = new Pause();
-                P.pause(Thread.currentThread(), 5000);
+                P.pause(5000);
             }
 
             if (number != null && date != null) {

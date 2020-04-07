@@ -29,8 +29,8 @@ public class CheckChannel {
     public void checkingChannel(Guild guild, String channel) {
         if (PropertiesFile.readsPropertiesFile(">" + channel + "_on").equals("true")) {
             String id = PropertiesFile.readsPropertiesFile(channel);
-            String channel_type = null;
-            String category = null;
+            String channel_type;
+            String category;
 
             if (list_ID.contains(channel)) {
                 channel_type = "text";
@@ -64,9 +64,7 @@ public class CheckChannel {
                         gamecategory = guild.getCategoryById(PropertiesFile.readsPropertiesFile("gamecategory"));
                     }
                     switch (channel) {
-                        /*
-                        VOICE
-                         */
+                        /*Voice (channel)*/
                         case "categorycount":
                             s = "CategoryCount";
                             cat = maincount_ID;
@@ -99,9 +97,7 @@ public class CheckChannel {
                             s = "TwitchFollower";
                             cat = stream_ID;
                             break;
-                            /*
-                            TEXT
-                             */
+                            /*Text (channel)*/
                         case "games":
                         case "logs":
                         case "playingcount":
@@ -113,7 +109,7 @@ public class CheckChannel {
                     CreateChannel C_Channel = new CreateChannel();
                     C_Channel.createchannel(guild, cat, s, channel, channel_type);
                 } else {
-                    GuildChannel counter_channel = null;
+                    GuildChannel counter_channel;
                     if (channel_type.equals("voice")) {
                         counter_channel = guild.getVoiceChannelById(id);
                     } else {

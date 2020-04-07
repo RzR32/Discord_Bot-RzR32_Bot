@@ -2,7 +2,7 @@ package other;
 
 public class Pause {
 
-    public void pause(Thread thread, int time) {
+    public void pause(int time) {
         LogBack LB = new LogBack();
         try {
             Thread.sleep(time);

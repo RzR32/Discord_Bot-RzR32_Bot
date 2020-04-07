@@ -49,6 +49,7 @@ public class CheckCategory {
                 }
                 LB.log(Thread.currentThread().getName(), "Create new category *" + s + "*", "info");
                 CreateCategory c = new CreateCategory();
+                assert s != null;
                 switch (s) {
                     case "ServerStats":
                         c.MainCount(guild);
