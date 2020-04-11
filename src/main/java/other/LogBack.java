@@ -49,6 +49,9 @@ public class LogBack {
                     }
                     writer.close();
                 } catch (IOException e) {
+                    if (e.getMessage().equals("Input length = 1")) {
+                        return;
+                    }
                     log(Thread.currentThread().getName(), e.getMessage(), "error");
                 }
             }

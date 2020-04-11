@@ -51,9 +51,11 @@ public class Games_from_Member extends ListenerAdapter {
 
     public void checkAllMembersActivity(Guild guild) {
         for (Member member : guild.getMembers()) {
-            if (member.getActivities().size() > 0) {
-                for (Activity activity : member.getActivities()) {
-                    Forwarded(guild, "start", activity.getType(), member, activity);
+            if (guild.getSelfMember() != member) {
+                if (member.getActivities().size() > 0) {
+                    for (Activity activity : member.getActivities()) {
+                        Forwarded(guild, "start", activity.getType(), member, activity);
+                    }
                 }
             }
         }

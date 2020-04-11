@@ -16,18 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeleteMessage_Command extends ListenerAdapter {
 
-    LogBack LB = new LogBack();
-
-    AtomicInteger count = new AtomicInteger();
-
-    private boolean bool_timer = false;
-    private boolean bool_is_confirmed = false;
-
-    private TextChannel main_channel = null;
-
-    private static HashMap<Integer, String> list_out = new HashMap<>();
-    private static List<String> list_target = new ArrayList<>();
-    private static ArrayList<String> list = new ArrayList<>() {{
+    private static final HashMap<Integer, String> list_out = new HashMap<>();
+    private static final List<String> list_target = new ArrayList<>();
+    private static final ArrayList<String> list = new ArrayList<>() {{
         add("-c");
         add("-t");
         add("-d");
@@ -36,6 +27,11 @@ public class DeleteMessage_Command extends ListenerAdapter {
         add("-n");
         add("-s");
     }};
+    LogBack LB = new LogBack();
+    AtomicInteger count = new AtomicInteger();
+    private boolean bool_timer = false;
+    private boolean bool_is_confirmed = false;
+    private TextChannel main_channel = null;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {

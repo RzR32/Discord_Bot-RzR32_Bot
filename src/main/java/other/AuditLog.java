@@ -11,7 +11,7 @@ public class AuditLog {
 
     static LogBack LB = new LogBack();
 
-    private HashMap<String, String> last_ID = new HashMap<>();
+    private final HashMap<String, String> last_ID = new HashMap<>();
 
     //TODO > invitelink
 

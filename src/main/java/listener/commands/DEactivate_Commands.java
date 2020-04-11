@@ -17,9 +17,8 @@ import java.util.List;
 
 public class DEactivate_Commands extends ListenerAdapter {
 
+    private final File file = new File("config/config.prop");
     LogBack LB = new LogBack();
-
-    private File file = new File("config/config.prop");
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {

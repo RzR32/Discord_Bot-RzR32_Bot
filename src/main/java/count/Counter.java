@@ -9,6 +9,8 @@ import other.ConsoleColor;
 import other.LogBack;
 import other.Members;
 import other.Pause;
+import twitch.FollowerCount;
+import twitch.User;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -20,9 +22,7 @@ import java.util.Objects;
 
 public class Counter {
 
-    LogBack LB = new LogBack();
-
-    private static ArrayList<String> list_ID = new ArrayList<>() {{
+    private static final ArrayList<String> list_ID = new ArrayList<>() {{
         add("membercount");
         add("rolecount");
         add("gamerolecount");
@@ -32,6 +32,7 @@ public class Counter {
         add("gamecount");
         add("twitchcount");
     }};
+    LogBack LB = new LogBack();
 
     public void StartCounter(Guild guild) {
         for (String id : list_ID) {
@@ -139,9 +140,16 @@ public class Counter {
                         LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                     }
                 case "twitchcount":
-                    TwitchFollowerCount tfc = new TwitchFollowerCount();
-                    tfc.TwitchFollower(guild);
-                    return;
+                    User U = new User();
+                    FollowerCount FC = new FollowerCount();
+
+                    /*re-call the counter*/
+                    FC.timer_twitch_member(guild);
+
+                    channel = "TwitchFollower";
+                    size = FC.getFollowerCount(U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname")));
+                    category = "streamcategory";
+                    break;
             }
             if (PropertiesFile.readsPropertiesFile(">" + category + "_on").equals("true")) {
                 change(guild, channel, id, size);
