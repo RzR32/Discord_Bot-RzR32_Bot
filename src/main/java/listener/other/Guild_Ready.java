@@ -5,7 +5,6 @@ import check_create.CheckChannel;
 import config.CheckFiles_Folder;
 import config.PropertiesFile;
 import count.Counter;
-import listener.member.Games_from_Member;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -19,10 +18,9 @@ import other.Pause;
 
 public class Guild_Ready extends ListenerAdapter {
 
+    private final int pause_int = 2500;
     LogBack LB = new LogBack();
     Pause P = new Pause();
-
-    private int pause_int = 2500;
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
@@ -95,12 +93,6 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
         P.pause(pause_int);
-
-        /*
-        check for all activ user activity´s
-        */
-        Games_from_Member GfM = new Games_from_Member();
-        GfM.checkAllMembersActivity(event.getGuild());
 
         /*
         start the BackUp timer

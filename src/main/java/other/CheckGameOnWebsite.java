@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class CheckGameOnWebsite {
-    
+
     private String format_string_1(String string) {
         String string_format = string.replaceAll(" ", "-");
         string_format = string_format.replaceAll("'", "");

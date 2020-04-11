@@ -18,8 +18,8 @@ public class Status_from_Member extends ListenerAdapter {
         /*
         new status - color and string set
         */
-        String s_mid_new = null;
-        String s_mid_color_new = null;
+        String s_mid_new;
+        String s_mid_color_new;
         if (event.getNewOnlineStatus() == OnlineStatus.ONLINE) {
             s_mid_color_new = ConsoleColor.green;
             s_mid_new = "online";
@@ -32,13 +32,16 @@ public class Status_from_Member extends ListenerAdapter {
         } else if (event.getNewOnlineStatus() == OnlineStatus.OFFLINE) {
             s_mid_color_new = ConsoleColor.Bblack;
             s_mid_new = "offline";
+        } else {
+            s_mid_color_new = ConsoleColor.reset;
+            s_mid_new = "error";
         }
 
         /*
         old status - color and string set
         */
-        String s_mid_old = null;
-        String s_mid_color_old = null;
+        String s_mid_old;
+        String s_mid_color_old;
         if (event.getOldOnlineStatus() == OnlineStatus.ONLINE) {
             s_mid_color_old = ConsoleColor.green;
             s_mid_old = "online";
@@ -51,6 +54,9 @@ public class Status_from_Member extends ListenerAdapter {
         } else if (event.getOldOnlineStatus() == OnlineStatus.OFFLINE) {
             s_mid_color_old = ConsoleColor.Bblack;
             s_mid_old = "offline";
+        } else {
+            s_mid_color_old = ConsoleColor.reset;
+            s_mid_old = "error";
         }
         String username = event.getMember().getEffectiveName();
 

@@ -13,7 +13,6 @@
 > * count
 >> + Counter
 >> + GamePlayingCount
->> + TwitchFollowerCount
 > ---
 > * listener
 >> - commands
@@ -46,10 +45,17 @@
 >> + Agreement_Message
 >> + AuditLog
 >> + BackUp
+>> + CheckGameOnWebsite
 >> + ConsoleColor
 >> + LogBack
 >> + Members
 >> + Pause
+> ---
+> - twitch
+>> + Clip
+>> + FollowerCount
+>> + MakeRequest
+>> + User
 > ---
 > - writeFile
 >> + RemoveStringFromFile

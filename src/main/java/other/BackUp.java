@@ -17,16 +17,63 @@ import java.util.zip.ZipOutputStream;
 
 public class BackUp {
 
-    LogBack LB = new LogBack();
-
-    private File file_original = new File("backup.zip");
-    private File file_temp = new File("backup_temp.zip");
-    private File file_final = new File("backup_final.zip");
-
-    private static ArrayList<File> list = new ArrayList<>() {{
+    private static final ArrayList<File> list = new ArrayList<>() {{
         add(new File("config/"));
         add(new File("logs/"));
     }};
+    private final File file_original = new File("backup.zip");
+    private final File file_temp = new File("backup_temp.zip");
+    private final File file_final = new File("backup_final.zip");
+    LogBack LB = new LogBack();
+
+    static void readZip(ZipOutputStream outStream, String targetFile) {
+        try {
+            ZipInputStream inStream = new ZipInputStream(new FileInputStream(targetFile));
+
+            byte[] buffer = new byte[1024];
+            int len;
+
+            for (ZipEntry e; (e = inStream.getNextEntry()) != null; ) {
+                outStream.putNextEntry(e);
+                while ((len = inStream.read(buffer)) > 0) {
+                    outStream.write(buffer, 0, len);
+                }
+            }
+            inStream.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    static String month(int month_file) {
+        if (month_file == 1) {
+            return "January";
+        } else if (month_file == 2) {
+            return "February";
+        } else if (month_file == 3) {
+            return "March";
+        } else if (month_file == 4) {
+            return "April";
+        } else if (month_file == 5) {
+            return "May";
+        } else if (month_file == 6) {
+            return "June";
+        } else if (month_file == 7) {
+            return "July";
+        } else if (month_file == 8) {
+            return "August";
+        } else if (month_file == 9) {
+            return "September";
+        } else if (month_file == 10) {
+            return "October";
+        } else if (month_file == 11) {
+            return "November";
+        } else if (month_file == 12) {
+            return "December";
+        } else {
+            return "error";
+        }
+    }
 
     public void timer_backup(Guild guild) {
         Runnable runnable = () -> {
@@ -238,25 +285,6 @@ public class BackUp {
         }
     }
 
-    static void readZip(ZipOutputStream outStream, String targetFile) {
-        try {
-            ZipInputStream inStream = new ZipInputStream(new FileInputStream(targetFile));
-
-            byte[] buffer = new byte[1024];
-            int len;
-
-            for (ZipEntry e; (e = inStream.getNextEntry()) != null; ) {
-                outStream.putNextEntry(e);
-                while ((len = inStream.read(buffer)) > 0) {
-                    outStream.write(buffer, 0, len);
-                }
-            }
-            inStream.close();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
     private void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if (files != null) {
@@ -269,35 +297,5 @@ public class BackUp {
             }
         }
         folder.delete();
-    }
-
-    static String month(int month_file) {
-        if (month_file == 1) {
-            return "January";
-        } else if (month_file == 2) {
-            return "February";
-        } else if (month_file == 3) {
-            return "March";
-        } else if (month_file == 4) {
-            return "April";
-        } else if (month_file == 5) {
-            return "May";
-        } else if (month_file == 6) {
-            return "June";
-        } else if (month_file == 7) {
-            return "July";
-        } else if (month_file == 8) {
-            return "August";
-        } else if (month_file == 9) {
-            return "September";
-        } else if (month_file == 10) {
-            return "October";
-        } else if (month_file == 11) {
-            return "November";
-        } else if (month_file == 12) {
-            return "December";
-        } else {
-            return "error";
-        }
     }
 }

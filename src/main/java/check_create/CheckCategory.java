@@ -9,13 +9,12 @@ import java.util.ArrayList;
 
 public class CheckCategory {
 
-    LogBack LB = new LogBack();
-
-    private static ArrayList<String> list_ID = new ArrayList<>() {{
+    private static final ArrayList<String> list_ID = new ArrayList<>() {{
         add("maincount");
         add("streamcategory");
         add("gamecategory");
     }};
+    LogBack LB = new LogBack();
 
     public void StartChecking(Guild guild) {
         for (String category : list_ID) {

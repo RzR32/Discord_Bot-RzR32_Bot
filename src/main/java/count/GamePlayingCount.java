@@ -3,6 +3,8 @@ package count;
 import check_create.CheckCategory;
 import check_create.CheckChannel;
 import config.PropertiesFile;
+import listener.member.Games_from_Member;
+import listener.member.Status_from_Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
@@ -18,16 +20,12 @@ import java.util.Objects;
 
 public class GamePlayingCount {
 
+    private final String channel_id = PropertiesFile.readsPropertiesFile("playingcount");
     LogBack LB = new LogBack();
-
     Pause P = new Pause();
-
-    private String channel_id = PropertiesFile.readsPropertiesFile("playingcount");
-
-    private boolean b_deleting = false;
-
     CheckCategory C_Category = new CheckCategory();
     CheckChannel C_Channel = new CheckChannel();
+    private boolean b_deleting = false;
 
     public void startCounter(Guild guild) {
         if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
@@ -41,21 +39,47 @@ public class GamePlayingCount {
     */
     private void DeleteMessages(Guild guild) {
         try {
+            /*
+            remove listener
+            */
+            if (guild.getJDA().getEventManager().getRegisteredListeners().contains("Games_from_Member")) {
+                guild.getJDA().removeEventListener(new Games_from_Member());
+            }
+            if (guild.getJDA().getEventManager().getRegisteredListeners().contains("Status_from_Member")) {
+                guild.getJDA().removeEventListener(new Status_from_Member());
+            }
             b_deleting = true;
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Delete old Message´s...", "info");
+
             C_Category.checkingCategory(guild, "gamecategory");
             C_Channel.checkingChannel(guild, "playingcount");
+
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Delete old Message´s...", "info");
+
             TextChannel channel = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("playingcount"));
             for (Message message : channel.getIterableHistory()) {
                 message.delete().complete();
             }
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
+
             P.pause(1000);
+
             b_deleting = false;
+
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Done, Count Games...", "info");
+
             MessageBotGame(guild);
             CountOfflineMember(guild);
             CountNotPlayingGames(guild);
             CountPlayingGames(guild);
+
+            /*
+            add listener
+            */
+            if (!guild.getJDA().getEventManager().getRegisteredListeners().contains("Games_from_Member")) {
+                guild.getJDA().addEventListener(new Games_from_Member());
+            }
+            if (!guild.getJDA().getEventManager().getRegisteredListeners().contains("Status_from_Member")) {
+                guild.getJDA().addEventListener(new Status_from_Member());
+            }
             LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Finish!", "info");
         } catch (ErrorResponseException ignored) {
         }
@@ -221,50 +245,94 @@ public class GamePlayingCount {
                     }
                 }
             }
+            checkforDoubleMessage(guild.getTextChannelById(channel_id));
+
+            /*
+            check for all active user activity´s
+             */
+            Games_from_Member GfM = new Games_from_Member();
+            GfM.checkAllMembersActivity(guild);
         } else {
             P.pause(10000);
             CountPlayingGames(guild);
         }
     }
 
-    public void ForwardPlayingGame(Guild guild, Activity activity) {
+    private void checkforDoubleMessage(TextChannel channel) {
         try {
-            if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
-                Color color;
-                String Color;
-                boolean bool_title;
-
-                if (activity.getType().equals(Activity.ActivityType.STREAMING)) {
-                    Color = "stream";
-                    color = new Color(255, 0, 255);
-                } else if (activity.getType().equals(Activity.ActivityType.LISTENING)) {
-                    Color = "listen";
-                    color = new Color(0, 255, 0);
-                } else if (activity.getType().equals(Activity.ActivityType.WATCHING)) {
-                    Color = "watch";
-                    color = new Color(255, 255, 0);
-                } else if (activity.getType().equals(Activity.ActivityType.DEFAULT)) {
-                    Color = "default";
-                    color = new Color(0, 240, 255);
-                } else {
-                    Color = "custom";
-                    color = new Color(255, 251, 255);
-                }
-
-                for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
-                    if (Color.equals("stream")) {
-                        bool_title = message.getEmbeds().get(0).getTitle().equals("Stream");
-                    } else {
-                        bool_title = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
-                    }
-                    if (bool_title) {
-                        _Message(guild, activity, color, Color, message);
-                        return;
+            for (Message message : channel.getIterableHistory()) {
+                String message_title = message.getEmbeds().get(0).getTitle();
+                int int_message_found_count = 0;
+                for (Message message_check_first : channel.getIterableHistory()) {
+                    if (message_check_first.getEmbeds().get(0).getTitle().equalsIgnoreCase(message_title)) {
+                        int_message_found_count++;
                     }
                 }
-                _Message(guild, activity, color, Color, null);
+                /*
+                if the message was found more as one time, delete the other!
+                */
+                if (int_message_found_count > 1) {
+                    for (Message message_check_second : channel.getIterableHistory()) {
+                        if (int_message_found_count <= 1) {
+                            return;
+                        }
+                        if (message_check_second.getEmbeds().get(0).getTitle().equalsIgnoreCase(message_title)) {
+                            try {
+                                message_check_second.delete().queue();
+                            } catch (ErrorResponseException ignored) {
+                            }
+                            int_message_found_count--;
+                        }
+                    }
+                }
             }
-        } catch (Exception ignored) {
+        } catch (ErrorResponseException ignored) {
+        }
+    }
+
+    public void ForwardPlayingGame(Guild guild, Activity activity) {
+        if (!b_deleting) {
+            try {
+                if (PropertiesFile.readsPropertiesFile(">playingcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
+                    Color color;
+                    String Color;
+                    boolean bool_title;
+
+                    if (activity.getType().equals(Activity.ActivityType.STREAMING)) {
+                        Color = "stream";
+                        color = new Color(255, 0, 255);
+                    } else if (activity.getType().equals(Activity.ActivityType.LISTENING)) {
+                        Color = "listen";
+                        color = new Color(0, 255, 0);
+                    } else if (activity.getType().equals(Activity.ActivityType.WATCHING)) {
+                        Color = "watch";
+                        color = new Color(255, 255, 0);
+                    } else if (activity.getType().equals(Activity.ActivityType.DEFAULT)) {
+                        Color = "default";
+                        color = new Color(0, 240, 255);
+                    } else {
+                        Color = "custom";
+                        color = new Color(255, 251, 255);
+                    }
+
+                    for (Message message : Objects.requireNonNull(guild.getTextChannelById(channel_id)).getIterableHistory()) {
+                        if (Color.equals("stream")) {
+                            bool_title = message.getEmbeds().get(0).getTitle().equals("Stream");
+                        } else {
+                            bool_title = message.getEmbeds().get(0).getTitle().equalsIgnoreCase(activity.getName());
+                        }
+                        if (bool_title) {
+                            _Message(guild, activity, color, Color, message);
+                            return;
+                        }
+                    }
+                    _Message(guild, activity, color, Color, null);
+                }
+            } catch (Exception ignored) {
+            }
+        } else {
+            P.pause(10000);
+            ForwardPlayingGame(guild, activity);
         }
     }
 
@@ -547,7 +615,10 @@ public class GamePlayingCount {
                                 channel.sendMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
                             }
                         } catch (NullPointerException e1) {
-                            channel.sendMessage(builder.build()).queue();
+                            try {
+                                channel.sendMessage(builder.build()).queue();
+                            } catch (ErrorResponseException ignored) {
+                            }
                         }
                     }
                 }
@@ -572,7 +643,10 @@ public class GamePlayingCount {
                                 message.editMessage(builder.setThumbnail(message.getEmbeds().get(0).getThumbnail().getUrl()).build()).complete();
                             }
                         } catch (NullPointerException e1) {
-                            message.editMessage(builder.build()).queue();
+                            try {
+                                message.editMessage(builder.build()).queue();
+                            } catch (ErrorResponseException ignored) {
+                            }
                         }
                     }
                 }
@@ -580,44 +654,11 @@ public class GamePlayingCount {
         } catch (ErrorResponseException ignored) {
         }
         CountNotPlayingGames(guild);
-        checkforDoubleMessage(channel);
         list_string_detail.clear();
         list_integer_detail.clear();
         list_string_state.clear();
         list_integer_state.clear();
         list_string_largeimg.clear();
         list_integer_largeimg.clear();
-    }
-
-    private void checkforDoubleMessage(TextChannel channel) {
-        try {
-            for (Message message : channel.getIterableHistory()) {
-                String message_title = message.getEmbeds().get(0).getTitle();
-                int int_message_found_count = 0;
-                for (Message message_check : channel.getIterableHistory()) {
-                    if (message_check.getEmbeds().get(0).getTitle().equals(message_title)) {
-                        int_message_found_count++;
-                    }
-                }
-                /*
-                if the message was found more as one time, delete the other!
-                */
-                if (int_message_found_count > 1) {
-                    for (Message message_check : channel.getIterableHistory()) {
-                        if (int_message_found_count == 1) {
-                            return;
-                        }
-                        if (message_check.getEmbeds().get(0).getTitle().equals(message_title)) {
-                            try {
-                                message_check.delete().queue();
-                            } catch (ErrorResponseException ignored) {
-                            }
-                            int_message_found_count--;
-                        }
-                    }
-                }
-            }
-        } catch (ErrorResponseException ignored) {
-        }
     }
 }

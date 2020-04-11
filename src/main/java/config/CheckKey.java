@@ -12,10 +12,7 @@ import java.util.List;
 
 public class CheckKey {
 
-    LogBack LB = new LogBack();
-
-
-    private static ArrayList<String> list = new ArrayList<>() {{
+    private static final ArrayList<String> list = new ArrayList<>() {{
         add("TOKEN");
         add("first-startup");
         /*
@@ -85,7 +82,9 @@ public class CheckKey {
         add(">bot-zustimmung_on");
 
         add("agreement");
+        add("Twitch_ClientID");
     }};
+    LogBack LB = new LogBack();
 
     public void StartChecking() {
         for (String category : list) {

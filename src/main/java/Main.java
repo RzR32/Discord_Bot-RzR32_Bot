@@ -5,10 +5,8 @@ import listener.guild._Category;
 import listener.guild._Role;
 import listener.guild._TextChannel;
 import listener.guild._VoiceChannel;
-import listener.member.Games_from_Member;
 import listener.member.Member_join_leave;
 import listener.member.Name_Change;
-import listener.member.Status_from_Member;
 import listener.other.Guild_Ready;
 import listener.other.JDA_Events;
 import listener.other.Message_Reaction;
@@ -66,13 +64,11 @@ public class Main {
                     import listener
                     other
                     */
-                    .addEventListeners(new Games_from_Member())
                     .addEventListeners(new Guild_Ready())
                     .addEventListeners(new JDA_Events())
                     .addEventListeners(new Member_join_leave())
                     .addEventListeners(new Message_Reaction())
                     .addEventListeners(new Name_Change())
-                    .addEventListeners(new Status_from_Member())
                     /*
                     guild listener
                     */
@@ -90,12 +86,10 @@ public class Main {
                     .addEventListeners(new League_Command())
                     .addEventListeners(new Member_Commands())
                     .addEventListeners(new Owner_Commands())
-
                     /*
                     build the bot
                     */
                     .build();
-
             /*
             make a backup (dont start the time yet)
             */

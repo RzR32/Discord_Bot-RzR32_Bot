@@ -9,7 +9,7 @@ public class PropertiesFile {
      * Copyright (c) 2019 K-EY
      */
 
-    private static File file = new File("config/config.prop");
+    private static final File file = new File("config/config.prop");
 
     /**
      * Writes Properties in a .prop(erties) file

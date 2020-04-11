@@ -10,15 +10,14 @@ import java.util.ArrayList;
 
 public class CheckChannel {
 
-    LogBack LB = new LogBack();
-
-    private static ArrayList<String> list_ID = new ArrayList<>() {{
+    private static final ArrayList<String> list_ID = new ArrayList<>() {{
         add("games");
         add("logs");
         add("playingcount");
         add("bot-channel");
         add("bot-zustimmung");
     }};
+    LogBack LB = new LogBack();
 
     public void StartChecking(Guild guild) {
         for (String channel : list_ID) {
@@ -97,7 +96,7 @@ public class CheckChannel {
                             s = "TwitchFollower";
                             cat = stream_ID;
                             break;
-                            /*Text (channel)*/
+                        /*Text (channel)*/
                         case "games":
                         case "logs":
                         case "playingcount":
