@@ -38,6 +38,7 @@ public class Main {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
             }
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             /*
             create Bot with needed GatewayIntent´s...
             */
@@ -96,7 +97,6 @@ public class Main {
             BackUp BU = new BackUp();
             BU.makeBackUp();
 
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Bot wird gestartet..." + ConsoleColor.reset, "info");
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");
         } catch (Exception e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
