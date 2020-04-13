@@ -17,7 +17,14 @@ public class FollowerCount {
     public void timer_twitch_member(Guild guild) {
         Runnable runnable = () -> {
             try {
-                TimeUnit.MINUTES.sleep(30);
+                /*
+                check for clips
+                */
+                Clip C = new Clip();
+                C.ClipMessage(guild);
+
+                TimeUnit.MINUTES.sleep(5);
+
                 //also triggerd once at start (counter)
                 Members m = new Members();
                 m.Member_CheckMemberOnFile(guild);
@@ -41,8 +48,6 @@ public class FollowerCount {
                     /*
                     check for clips
                     */
-                    Clip C = new Clip();
-                    C.ClipMessage(guild);
                 }
             } catch (NumberFormatException e) {
                 LB.log(Thread.currentThread().getName(), "No Twitchname set, can be ignored (if not needed)", "warn");
