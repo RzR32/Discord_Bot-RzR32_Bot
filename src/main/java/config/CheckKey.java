@@ -13,11 +13,14 @@ import java.util.List;
 public class CheckKey {
 
     private static final ArrayList<String> list = new ArrayList<>() {{
+        /*
+        Token´s
+        */
         add("TOKEN");
-        add("first-startup");
+        add("Twitch_ClientID");
         /*
         Category
-         */
+        */
         add("maincount");
         add(">maincount_on");
 
@@ -29,16 +32,19 @@ public class CheckKey {
         /*
         Twitch
         (if stream is enabled)
-         */
+        */
         add("twitchname");
         add(">twitchname_on");
+
+        add("clips_number");
+        add("clips_period");
 
         add("twitchcount");
         add(">twitchcount_on");
         /*
         Counter - Guild
         (if main is enabled)
-         */
+        */
         add("membercount");
         add(">membercount_on");
 
@@ -59,13 +65,13 @@ public class CheckKey {
         /*
         Counter - Other
         (if game is enabled)
-         */
+        */
         add("gamecount");
         add(">gamecount_on");
 
         add("playingcount");
         add(">playingcount_on");
-        /* - */
+
         add("games");
         add(">games_on");
 
@@ -74,15 +80,17 @@ public class CheckKey {
         /*
         Bot
         (if game is enabled)
-         */
+        */
         add("bot-channel");
         add(">bot-channel_on");
 
         add("bot-zustimmung");
         add(">bot-zustimmung_on");
-
+        /*
+        other
+        */
         add("agreement");
-        add("Twitch_ClientID");
+        add("first-startup");
     }};
     LogBack LB = new LogBack();
 
