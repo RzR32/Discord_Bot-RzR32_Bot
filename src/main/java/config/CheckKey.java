@@ -36,11 +36,20 @@ public class CheckKey {
         add("twitchname");
         add(">twitchname_on");
 
+        add("twitchcount");
+        add(">twitchcount_on");
+
+        add(">clips_on");
+        add(">videos_on");
+
         add("clips_number");
         add("clips_period");
 
-        add("twitchcount");
-        add(">twitchcount_on");
+        add("videos_number");
+        add("videos_archice_true?");
+
+        add("videos_uplaod_true?");
+        add("videos_highlight_true?");
         /*
         Counter - Guild
         (if main is enabled)
