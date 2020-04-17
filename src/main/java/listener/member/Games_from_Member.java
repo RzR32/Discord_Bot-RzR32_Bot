@@ -182,7 +182,7 @@ public class Games_from_Member extends ListenerAdapter {
     /*
     edit existing message, to add new thinks > like thumbnail, Shop URL
     */
-    private void EditMessagesFromGames(Guild guild, Activity activity) {
+    public void EditMessagesFromGames(Guild guild, Activity activity) {
         try {
             CheckGameOnWebsite GIS = new CheckGameOnWebsite();
 
