@@ -3,6 +3,7 @@ package listener.commands;
 import config.PropertiesFile;
 import count.Counter;
 import count.GamePlayingCount;
+import listener.member.Games_from_Member;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -11,6 +12,8 @@ import other.CheckGameOnWebsite;
 import other.LogBack;
 import writeFile.RemoveStringFromFile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,6 +40,7 @@ public class Owner_Commands extends ListenerAdapter {
         if (event.isFromType(ChannelType.TEXT)) {
             if (!event.getAuthor().isBot()) {
                 String[] argArray = event.getMessage().getContentRaw().split(" ");
+
                 /*
                 help for owner
                 */
@@ -61,7 +65,13 @@ public class Owner_Commands extends ListenerAdapter {
                                 "\n" +
                                 "> >checkweb <game>\n" +
                                 "\n" +
-                                "> >edit <messageID to edit> <new game name\n" +
+                                "> >edit <messageID to edit> <new game name>\n" +
+                                "\n" +
+                                "> >checkgame <game name>\n" +
+                                "\n" +
+                                "> >moveall <channelID from move> <channelID to move>\n" +
+                                "> __or__\n" +
+                                "> >moveall <channelID to move> (Sender Voicechannel is then first id)" +
                                 "\n").build()).queue();
                         event.getMessage().addReaction("\uD83D\uDC4D").queue();
                     } else {
@@ -222,10 +232,10 @@ public class Owner_Commands extends ListenerAdapter {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setTitle(game_name).setDescription(
                                     "Steam: " + GIS.Steam(game_name) + "\n" +
-                                            "EpicGames: " + GIS.EpicGames(game_name) + "\n" +
-                                            "Blizzard: " + GIS.Blizzard(game_name) + "\n" +
-                                            "Origin: " + GIS.Origin(game_name) + "\n" +
-                                            "Uplay: " + GIS.Uplay(game_name));
+                                    "EpicGames: " + GIS.EpicGames(game_name) + "\n" +
+                                    "Blizzard: " + GIS.Blizzard(game_name) + "\n" +
+                                    "Origin: " + GIS.Origin(game_name) + "\n" +
+                                    "Uplay: " + GIS.Uplay(game_name));
                             event.getChannel().sendMessage(builder.build()).queue();
                         }
                     } else {
@@ -267,10 +277,114 @@ public class Owner_Commands extends ListenerAdapter {
                     } else {
                         event.getMessage().addReaction("\u274C").queue();
                     }
+
+                /*
+                check game
+                */
+                } else if (argArray[0].equalsIgnoreCase(">checkgame")) {
+                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                        if (argArray[1] != null) {
+                            /*
+                            compine all arguments
+                            */
+                            ArrayList<String> list = new ArrayList<>();
+                            for (int x = 0; x < argArray.length; x++) {
+                                list.add(argArray[x]);
+                                if (list.size() == argArray.length) {
+                                    //remove command thing
+                                    list.remove(argArray[0]);
+                                    if (list.isEmpty()) {
+                                        return;
+                                    }
+                                }
+                            }
+                            String game_name = String.join(" ", list);
+                            Games_from_Member GfM = new Games_from_Member();
+                            Activity act = new Activity() {
+                                @Override
+                                public boolean isRich() {
+                                    return false;
+                                }
+
+                                @Nullable
+                                @Override
+                                public RichPresence asRichPresence() {
+                                    return null;
+                                }
+
+                                @Nonnull
+                                @Override
+                                public String getName() {
+                                    return game_name;
+                                }
+
+                                @Nullable
+                                @Override
+                                public String getUrl() {
+                                    return null;
+                                }
+
+                                @Nonnull
+                                @Override
+                                public ActivityType getType() {
+                                    return ActivityType.DEFAULT;
+                                }
+
+                                @Nullable
+                                @Override
+                                public Timestamps getTimestamps() {
+                                    return null;
+                                }
+
+                                @Nullable
+                                @Override
+                                public Emoji getEmoji() {
+                                    return null;
+                                }
+                            };
+                            GfM.EditMessagesFromGames(event.getGuild(), act);
+                        }
+                    } else {
+                        event.getMessage().addReaction("\u274C").queue();
+                    }
+
+                /*
+                move all user in one channel to another
+                 */
+                } else if (argArray[0].equalsIgnoreCase(">moveall")) {
+                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
+                        if (argArray.length == 3) {
+                            VoiceChannel voiceChannel_from = event.getGuild().getVoiceChannelById(argArray[1]);
+                            VoiceChannel voiceChannel_to = event.getGuild().getVoiceChannelById(argArray[2]);
+                            assert voiceChannel_from != null;
+                            for (Member member : voiceChannel_from.getMembers()) {
+                                event.getGuild().moveVoiceMember(member, voiceChannel_to).queue();
+                            }
+                        } else if (argArray.length == 2) {
+                            VoiceChannel voiceChannel_from = event.getMember().getVoiceState().getChannel();
+                            VoiceChannel voiceChannel_to = event.getGuild().getVoiceChannelById(argArray[1]);
+                            assert voiceChannel_from != null;
+                            for (Member member : voiceChannel_from.getMembers()) {
+                                event.getGuild().moveVoiceMember(member, voiceChannel_to).queue();
+                            }
+                        } else {
+                            event.getChannel().sendMessage("Error: Wrong Input,\n" +
+                                    ">moveall <channelID from move> <channelID to move>\n" +
+                                    ">moveall <channelID to move> - **you** need to be in a Voicechannel").queue();
+                        }
+                    } else {
+                        event.getMessage().addReaction("\u274C").queue();
+                    }
+
+                /*
+                PLACEHOLDER - new command
+                */
                 }
             }
         }
     }
+
+    /*------------------------------*/
 
     private void timer_ownercommands(Guild guild, Message message, int x) {
         final int f_x = x - 1;
