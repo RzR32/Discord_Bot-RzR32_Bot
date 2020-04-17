@@ -20,6 +20,11 @@ public class FollowerCount {
                 /*
                 check for clips
                 */
+                Videos V = new Videos();
+                V.VideoMessage(guild);
+                /*
+                check for clips
+                */
                 Clip C = new Clip();
                 C.ClipMessage(guild);
 
@@ -64,7 +69,6 @@ public class FollowerCount {
         String[] list = r.doRequest("channels/" + userid);
 
         int count = 0;
-
         for (String string : list) {
             if (string.contains("followers")) {
                 count = Integer.parseInt(string.substring(12));

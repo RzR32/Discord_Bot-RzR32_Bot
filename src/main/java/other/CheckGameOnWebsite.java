@@ -32,6 +32,9 @@ public class CheckGameOnWebsite {
         string_format = string_format.replaceAll("@", "");
         string_format = string_format.replaceAll("®", "");
         string_format = string_format.replaceAll("™", "");
+        string_format = string_format.replaceAll("&amp;", "__");
+        string_format = string_format.replaceAll("&", "__");
+        string_format = string_format.replaceAll(":", "_");
         return (string_format);
     }
 
@@ -46,7 +49,7 @@ public class CheckGameOnWebsite {
 
             while ((inputline_STEAM = br_STEAM.readLine()) != null) {
                 if (inputline_STEAM.contains("<a href=\"https://store.steampowered.com/app/")) {
-                    website_game_STEAM = inputline_STEAM.substring(11);
+                    website_game_STEAM = inputline_STEAM.trim().substring(9);
                     website_game_STEAM = website_game_STEAM.substring(0, website_game_STEAM.indexOf("\""));
 
                     br_STEAM.readLine();
@@ -56,14 +59,14 @@ public class CheckGameOnWebsite {
                     game_name_on_website_STEAM = br_STEAM.readLine().trim().substring(20);
                     game_name_on_website_STEAM = game_name_on_website_STEAM.substring(0, game_name_on_website_STEAM.length() - 7);
                     if (game.length() >= format_string_3(game_name_on_website_STEAM).length() / 2) {
-                        if (format_string_3(game_name_on_website_STEAM).contains(game)) {
+                        if (format_string_3(game_name_on_website_STEAM).contains(format_string_3(game))) {
+                            break;
                         } else {
                             website_game_STEAM = null;
                         }
                     } else {
                         website_game_STEAM = null;
                     }
-                    break;
                 }
             }
         } catch (IOException e) {

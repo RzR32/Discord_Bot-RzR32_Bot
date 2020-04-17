@@ -12,13 +12,14 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 public class Clip {
 
     /*
     check if message is already in guild, if not create new
     */
     public void ClipMessage(Guild guild) {
-        if (PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
+        if (PropertiesFile.readsPropertiesFile(">clips_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
             /*
             Check Category
             */
@@ -30,11 +31,11 @@ public class Clip {
             CheckChannel C_CheckChannel = new CheckChannel();
             C_CheckChannel.checkingChannel(guild, "twitchcount");
 
-            MakeRequest r = new MakeRequest();
+            MakeRequest mr = new MakeRequest();
 
             String period = PropertiesFile.readsPropertiesFile("clips_period");
             if (!period.equals("day") && !period.equals("week") && !period.equals("month") && !period.equals("all")) {
-                System.err.println("Error: clips_period has a wrong String, day, week, month or all!");
+                System.err.println("Error: clips_period has a wrong String; day, week, month or all!");
                 return;
             }
 
@@ -44,27 +45,31 @@ public class Clip {
                 return;
             }
 
-            String[] list_source = r.doRequest("clips/top?channel=" + PropertiesFile.readsPropertiesFile("twitchname") + "&period=" + period + "&limit=" + clips_number);
+            String[] list_source = mr.doRequest("clips/top?channel=" + PropertiesFile.readsPropertiesFile("twitchname") + "&period=" + period + "&limit=" + clips_number);
+
+            if (list_source == null) {
+                return;
+            }
 
             /*split the one Array to ten*/
             ArrayList<String> list = new ArrayList<>();
 
             /*convert Array to list*/
             String[] list_temp = Arrays.toString(list_source).split("slug");
-            int x = 0;
+            int int_position_in_list = 0;
             for (String string : list_temp) {
-                if (!string.equals("[{\"clips\":[{\"")) {
-                    list.add(x, "{\"slug" + string);
-                    x++;
-                    if (x == clips_number + 1) {
+                if (!string.contains("[{\"clips\":[{\"")) {
+                    list.add(int_position_in_list, "{\"slug" + string);
+                    int_position_in_list++;
+                    if (int_position_in_list == clips_number) {
                         break;
                     }
                 }
             }
 
             /*count backwards - for newest*/
-            for (int y = x - 2; y >= 0; y--) {
-                String[] out = list.get(y).split(",");
+            for (int int_position_reverse_in_list = int_position_in_list; int_position_reverse_in_list > 0; int_position_reverse_in_list--) {
+                String[] out = list.get(int_position_reverse_in_list - 1).split(",");
 
                 /*check if user has "new" clips*/
                 if (!checkClips(out)) {
@@ -101,7 +106,7 @@ public class Clip {
     private String getSlug(String[] strings) {
         String out = null;
         for (String string : strings) {
-            if (string.contains("{\"slug")) {
+            if (string.contains("slug")) {
                 out = "https://clips.twitch.tv/" + string.replace("\"", "").substring(6);
                 break;
             }

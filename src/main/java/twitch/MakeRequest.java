@@ -38,11 +38,8 @@ public class MakeRequest {
 
             list = out.split(",");
         } catch (IOException e) {
-            if (e.getMessage().contains("400")) {
-                LB.log(Thread.currentThread().getName(), "Error: Server response 400, maybe Client_ID is wrong or missing!", "error");
-            } else {
-                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
-            }
+            LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
+            list = null;
         }
         return list;
     }

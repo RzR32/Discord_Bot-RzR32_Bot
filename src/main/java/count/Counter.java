@@ -148,6 +148,9 @@ public class Counter {
 
                     channel = "TwitchFollower";
                     size = FC.getFollowerCount(U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname")));
+                    if (size == 0) {
+                        return;
+                    }
                     category = "streamcategory";
                     break;
             }

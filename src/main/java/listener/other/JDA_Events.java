@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
 import other.LogBack;
 
+import java.util.List;
+
 public class JDA_Events extends ListenerAdapter {
 
     LogBack LB = new LogBack();
@@ -23,6 +25,10 @@ public class JDA_Events extends ListenerAdapter {
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
+        List list = event.getJDA().getEventManager().getRegisteredListeners();
+        for (Object string : list) {
+            event.getJDA().getEventManager().unregister(string);
+        }
         LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Verbindung wiederhergestellt! (Reconnected)" + ConsoleColor.reset, "info");
     }
 }
