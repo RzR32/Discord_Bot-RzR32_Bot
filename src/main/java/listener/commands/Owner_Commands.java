@@ -212,7 +212,6 @@ public class Owner_Commands extends ListenerAdapter {
                 */
                 } else if (argArray[0].equalsIgnoreCase(">checkweb")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
-                        CheckGameOnWebsite GIS = new CheckGameOnWebsite();
                         if (argArray[1] != null) {
                             /*
                             compine all arguments
@@ -229,13 +228,62 @@ public class Owner_Commands extends ListenerAdapter {
                             }
                             String game_name = String.join(" ", list);
 
-                            EmbedBuilder builder = new EmbedBuilder();
-                            builder.setTitle(game_name).setDescription(
-                                    "Steam: " + GIS.Steam(game_name) + "\n" +
-                                    "EpicGames: " + GIS.EpicGames(game_name) + "\n" +
-                                    "Blizzard: " + GIS.Blizzard(game_name) + "\n" +
-                                    "Origin: " + GIS.Origin(game_name) + "\n" +
-                                    "Uplay: " + GIS.Uplay(game_name));
+                            CheckGameOnWebsite GIS = new CheckGameOnWebsite();
+                            EmbedBuilder builder = new EmbedBuilder().setTitle(game_name);
+
+                            String _steam = GIS.Steam(game_name);
+                            String _epic = GIS.EpicGames(game_name);
+                            String _blizzard = GIS.Blizzard(game_name);
+                            String _origin = GIS.Origin(game_name);
+                            String _uplay = GIS.Uplay(game_name);
+
+                            builder.appendDescription("\n");
+
+                            if (_steam.contains("null")) {
+                                _steam = GIS.Steam(game_name.replaceAll(":", ""));
+                                if (!_steam.contains("null")) {
+                                    builder.appendDescription(_steam + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_steam + "\n");
+                            }
+
+                            if (_epic.contains("null")) {
+                                _epic = GIS.EpicGames(game_name.replaceAll(":", ""));
+                                if (!_epic.contains("null")) {
+                                    builder.appendDescription(_epic + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_epic + "\n");
+                            }
+
+                            if (_blizzard.contains("null")) {
+                                _blizzard = GIS.Blizzard(game_name.replaceAll(":", ""));
+                                if (!_blizzard.contains("null")) {
+                                    builder.appendDescription(_blizzard + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_blizzard + "\n");
+                            }
+
+                            if (_origin.contains("null")) {
+                                _origin = GIS.Origin(game_name.replaceAll(":", ""));
+                                if (!_origin.contains("null")) {
+                                    builder.appendDescription(_origin + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_origin + "\n");
+                            }
+
+                            if (_uplay.contains("null")) {
+                                _uplay = GIS.Uplay(game_name.replaceAll(":", ""));
+                                if (!_uplay.contains("null")) {
+                                    builder.appendDescription(_uplay + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_uplay + "\n");
+                            }
+
                             event.getChannel().sendMessage(builder.build()).queue();
                         }
                     } else {

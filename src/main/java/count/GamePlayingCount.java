@@ -571,27 +571,55 @@ public class GamePlayingCount {
             */
             CheckGameOnWebsite GIS = new CheckGameOnWebsite();
 
-            String _steam = GIS.Steam(A_game.getName());
-            String _epic = GIS.EpicGames(A_game.getName());
-            String _blizzard = GIS.Blizzard(A_game.getName());
-            String _origin = GIS.Origin(A_game.getName());
-            String _uplay = GIS.Uplay(A_game.getName());
-
             builder.appendDescription("\n");
 
-            if (!_steam.contains("null")) {
+            String _steam = GIS.Steam(A_game.getName());
+            if (_steam.contains("null")) {
+                _steam = GIS.Steam(A_game.getName().replaceAll(":", ""));
+                if (!_steam.contains("null")) {
+                    builder.appendDescription(_steam + "\n");
+                }
+            } else {
                 builder.appendDescription(_steam + "\n");
             }
-            if (!_epic.contains("null")) {
+
+            String _epic = GIS.EpicGames(A_game.getName());
+            if (_epic.contains("null")) {
+                _epic = GIS.EpicGames(A_game.getName().replaceAll(":", ""));
+                if (!_epic.contains("null")) {
+                    builder.appendDescription(_epic + "\n");
+                }
+            } else {
                 builder.appendDescription(_epic + "\n");
             }
-            if (!_blizzard.contains("null")) {
+
+            String _blizzard = GIS.Blizzard(A_game.getName());
+            if (_blizzard.contains("null")) {
+                _blizzard = GIS.Blizzard(A_game.getName().replaceAll(":", ""));
+                if (!_blizzard.contains("null")) {
+                    builder.appendDescription(_blizzard + "\n");
+                }
+            } else {
                 builder.appendDescription(_blizzard + "\n");
             }
-            if (!_origin.contains("null")) {
+
+            String _origin = GIS.Origin(A_game.getName());
+            if (_origin.contains("null")) {
+                _origin = GIS.Origin(A_game.getName().replaceAll(":", ""));
+                if (!_origin.contains("null")) {
+                    builder.appendDescription(_origin + "\n");
+                }
+            } else {
                 builder.appendDescription(_origin + "\n");
             }
-            if (!_uplay.contains("null")) {
+
+            String _uplay = GIS.Uplay(A_game.getName());
+            if (_uplay.contains("null")) {
+                _uplay = GIS.Uplay(A_game.getName().replaceAll(":", ""));
+                if (!_uplay.contains("null")) {
+                    builder.appendDescription(_uplay + "\n");
+                }
+            } else {
                 builder.appendDescription(_uplay + "\n");
             }
         }
