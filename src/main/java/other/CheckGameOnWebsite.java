@@ -8,66 +8,40 @@ import java.net.URLConnection;
 
 public class CheckGameOnWebsite {
 
-    private String format_string_1(String string) {
-        String string_format = string.replaceAll(" ", "-");
-        string_format = string_format.replaceAll("'", "");
-        string_format = string_format.replaceAll("@", "");
-        string_format = string_format.replaceAll("®", "");
-        string_format = string_format.replaceAll("™", "");
-        string_format = string_format.toLowerCase();
-        return (string_format);
-    }
-
-    private String format_string_2(String string) {
-        String string_format = string.replaceAll(" ", "_");
-        string_format = string_format.replaceAll("'", "");
-        string_format = string_format.replaceAll("@", "");
-        string_format = string_format.replaceAll("®", "");
-        string_format = string_format.replaceAll("™", "");
-        return (string_format);
-    }
-
-    private String format_string_3(String string) {
-        String string_format = string.replaceAll("'", "");
-        string_format = string_format.replaceAll("@", "");
-        string_format = string_format.replaceAll("®", "");
-        string_format = string_format.replaceAll("™", "");
-        string_format = string_format.replaceAll("&amp;", "__");
-        string_format = string_format.replaceAll("&", "__");
-        string_format = string_format.replaceAll(":", "_");
-        return (string_format);
+    private String format_string(String string) {
+        return string
+                .replaceAll(" ", "_")
+                .replaceAll("&", "%26")
+                //.replaceAll("®", "")
+                .replaceAll("\\u00AE", "")
+                //.replaceAll("™", "")
+                .replaceAll("\\u2122", "")
+                .replaceAll("�", "")
+                ;
     }
 
     public String Steam(String game) {
+        String game_format = format_string(game);
         String inputline_STEAM;
         String website_game_STEAM = null;
-        String game_name_on_website_STEAM;
         try {
-            URL url_STEAM = new URL("https://store.steampowered.com/search/?term=" + game);
+            URL url_STEAM = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
             URLConnection conn_STEAM = url_STEAM.openConnection();
             BufferedReader br_STEAM = new BufferedReader(new InputStreamReader(conn_STEAM.getInputStream()));
 
+            boolean game_found_STEAM = false;
+
             while ((inputline_STEAM = br_STEAM.readLine()) != null) {
-                if (inputline_STEAM.contains("<a href=\"https://store.steampowered.com/app/")) {
-                    website_game_STEAM = inputline_STEAM.trim().substring(9);
-                    website_game_STEAM = website_game_STEAM.substring(0, website_game_STEAM.indexOf("\""));
-
-                    br_STEAM.readLine();
-                    br_STEAM.readLine();
-                    br_STEAM.readLine();
-
-                    game_name_on_website_STEAM = br_STEAM.readLine().trim().substring(20);
-                    game_name_on_website_STEAM = game_name_on_website_STEAM.substring(0, game_name_on_website_STEAM.length() - 7);
-                    if (game.length() >= format_string_3(game_name_on_website_STEAM).length() / 2) {
-                        if (format_string_3(game_name_on_website_STEAM).contains(format_string_3(game))) {
-                            break;
-                        } else {
-                            website_game_STEAM = null;
-                        }
-                    } else {
-                        website_game_STEAM = null;
-                    }
+                if (inputline_STEAM.contains("href=\"https://store.steampowered.com/app/")) {
+                    website_game_STEAM = inputline_STEAM.substring(inputline_STEAM.indexOf("href=") + 6);
+                    website_game_STEAM = website_game_STEAM.substring(0, website_game_STEAM.length() - 17);
+                    game_found_STEAM = true;
+                    break;
                 }
+            }
+            if (game_found_STEAM) {
+            } else {
+                website_game_STEAM = null;
             }
         } catch (IOException e) {
             website_game_STEAM = null;
@@ -76,23 +50,25 @@ public class CheckGameOnWebsite {
     }
 
     public String EpicGames(String game) {
-        String game_format = format_string_1(game);
+        String game_format = format_string(game);
         String inputline_EPIC;
-        String website_game_EPIC = "https://www.epicgames.com/store/de/product/" + game_format + "/home";
+        String website_game_EPIC = null;
         try {
-            URL url_EPIC = new URL("https://www.pcgamingwiki.com/wiki/" + format_string_2(game));
+            URL url_EPIC = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
             URLConnection conn_EPIC = url_EPIC.openConnection();
             BufferedReader br_EPIC = new BufferedReader(new InputStreamReader(conn_EPIC.getInputStream()));
 
-            boolean game_found = false;
+            boolean game_found_EPIC = false;
 
             while ((inputline_EPIC = br_EPIC.readLine()) != null) {
                 if (inputline_EPIC.contains("href=\"https://store.epicgames.com/")) {
-                    game_found = true;
+                    website_game_EPIC = inputline_EPIC.substring(inputline_EPIC.indexOf("href=") + 6);
+                    website_game_EPIC = website_game_EPIC.substring(0, website_game_EPIC.length() - 27);
+                    game_found_EPIC = true;
                     break;
                 }
             }
-            if (game_found) {
+            if (game_found_EPIC) {
             } else {
                 website_game_EPIC = null;
             }
@@ -103,20 +79,26 @@ public class CheckGameOnWebsite {
     }
 
     public String Blizzard(String game) {
-        String game_format = format_string_1(game);
+        String game_format = format_string(game);
         String inputline_BLIZZARD;
-        String website_game_BLIZZARD = "https://eu.shop.battle.net/de-de/product/" + game_format;
+        String website_game_BLIZZARD = null;
         try {
-            URL url_BLIZZARD = new URL("https://eu.battle.net/support/de/");
+            URL url_BLIZZARD = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
             URLConnection conn_BLIZZARD = url_BLIZZARD.openConnection();
             BufferedReader br_BLIZZARD = new BufferedReader(new InputStreamReader(conn_BLIZZARD.getInputStream()));
 
+            boolean game_found_BLIZZARD = false;
             while ((inputline_BLIZZARD = br_BLIZZARD.readLine()) != null) {
-                if (inputline_BLIZZARD.contains(game)) {
+                if (inputline_BLIZZARD.contains("href=\"https://shop.battle.net/product/")) {
+                    website_game_BLIZZARD = inputline_BLIZZARD.substring(inputline_BLIZZARD.indexOf("href=") + 6);
+                    website_game_BLIZZARD = website_game_BLIZZARD.substring(0, website_game_BLIZZARD.length() - 21);
+                    game_found_BLIZZARD = true;
                     break;
-                } else if (inputline_BLIZZARD.contains("</html>")) {
-                    website_game_BLIZZARD = null;
                 }
+            }
+            if (game_found_BLIZZARD) {
+            } else {
+                website_game_BLIZZARD = null;
             }
         } catch (IOException e) {
             website_game_BLIZZARD = null;
@@ -125,10 +107,11 @@ public class CheckGameOnWebsite {
     }
 
     public String Origin(String game) {
+        String game_format = format_string(game);
         String inputline_ORIGIN;
         String website_game_ORIGIN = null;
         try {
-            URL url_ORIGIN = new URL("https://www.pcgamingwiki.com/wiki/" + format_string_2(game));
+            URL url_ORIGIN = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
             URLConnection conn_ORIGIN = url_ORIGIN.openConnection();
             BufferedReader br_ORIGIN = new BufferedReader(new InputStreamReader(conn_ORIGIN.getInputStream()));
 
@@ -153,10 +136,11 @@ public class CheckGameOnWebsite {
     }
 
     public String Uplay(String game) {
+        String game_format = format_string(game);
         String inputline_UPLAY;
         String website_game_UPLAY = null;
         try {
-            URL url_UPLAY = new URL("https://www.pcgamingwiki.com/wiki/" + format_string_2(game));
+            URL url_UPLAY = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
             URLConnection conn_UPLAY = url_UPLAY.openConnection();
             BufferedReader br_UPLAY = new BufferedReader(new InputStreamReader(conn_UPLAY.getInputStream()));
 
