@@ -194,25 +194,25 @@ public class CheckGameOnWebsite {
         return "[Uplay](" + website_game_UPLAY + ")";
     }
 
-    public String Offical(String game) {
+    public String Official(String game) {
         String game_format = format_string(game);
-        String inputline_OFFICAL;
-        String website_game_OFFICAL = null;
+        String inputline_OFFICIAL;
+        String website_game_OFFICIAL = null;
         try {
-            URL url_OFFICAL = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
-            URLConnection conn_OFFICAL = url_OFFICAL.openConnection();
-            BufferedReader br_OFFICAL = new BufferedReader(new InputStreamReader(conn_OFFICAL.getInputStream()));
+            URL url_OFFICIAL = new URL("https://www.pcgamingwiki.com/wiki/" + game_format);
+            URLConnection conn_OFFICIAL = url_OFFICIAL.openConnection();
+            BufferedReader br_OFFICIAL = new BufferedReader(new InputStreamReader(conn_OFFICIAL.getInputStream()));
 
-            while ((inputline_OFFICAL = br_OFFICAL.readLine()) != null) {
-                if (inputline_OFFICAL.contains("Official website")) {
-                    website_game_OFFICAL = inputline_OFFICAL.substring(inputline_OFFICAL.indexOf("href=") + 6);
-                    website_game_OFFICAL = website_game_OFFICAL.substring(0, website_game_OFFICAL.length() - 27);
+            while ((inputline_OFFICIAL = br_OFFICIAL.readLine()) != null) {
+                if (inputline_OFFICIAL.contains("Official website")) {
+                    website_game_OFFICIAL = inputline_OFFICIAL.substring(inputline_OFFICIAL.indexOf("href=") + 6);
+                    website_game_OFFICIAL = website_game_OFFICIAL.substring(0, website_game_OFFICIAL.length() - 27);
                     break;
                 }
             }
         } catch (IOException e) {
-            website_game_OFFICAL = null;
+            website_game_OFFICIAL = null;
         }
-        return "[Offical](" + website_game_OFFICAL + ")";
+        return "[Official](" + website_game_OFFICIAL + ")";
     }
 }

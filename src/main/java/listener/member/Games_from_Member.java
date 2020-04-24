@@ -201,7 +201,7 @@ public class Games_from_Member extends ListenerAdapter {
                     String _blizzard = GIS.Blizzard(activity.getName());
                     String _origin = GIS.Origin(activity.getName());
                     String _uplay = GIS.Uplay(activity.getName());
-                    String _offical = GIS.Offical(activity.getName());
+                    String _official = GIS.Official(activity.getName());
 
                     if (!_steam.contains("null")) {
                         if (_steam.contains("pcgamingwiki")) {
@@ -229,8 +229,8 @@ public class Games_from_Member extends ListenerAdapter {
                         new_lines[4] = _uplay;
                     }
 
-                    if (!_offical.contains("null")) {
-                        new_lines[5] = _offical;
+                    if (!_official.contains("null")) {
+                        new_lines[5] = _official;
                     }
 
                     for (String string : new_lines) {

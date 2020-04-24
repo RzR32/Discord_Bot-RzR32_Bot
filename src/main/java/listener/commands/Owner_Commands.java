@@ -288,14 +288,14 @@ public class Owner_Commands extends ListenerAdapter {
                                 builder.appendDescription(_uplay + "\n");
                             }
 
-                            String _offical = GIS.Offical(game_name);
-                            if (_offical.contains("null")) {
-                                _offical = GIS.Offical(game_name.replaceAll(":", ""));
-                                if (!_offical.contains("null")) {
-                                    builder.appendDescription(_offical + "\n");
+                            String _official = GIS.Official(game_name);
+                            if (_official.contains("null")) {
+                                _official = GIS.Official(game_name.replaceAll(":", ""));
+                                if (!_official.contains("null")) {
+                                    builder.appendDescription(_official + "\n");
                                 }
                             } else {
-                                builder.appendDescription(_offical + "\n");
+                                builder.appendDescription(_official + "\n");
                             }
 
                             event.getChannel().sendMessage(builder.build()).queue();
