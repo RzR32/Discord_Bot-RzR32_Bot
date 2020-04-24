@@ -66,7 +66,7 @@ public class AuditLog {
                     list.add(name);
 
                 } else {
-                    System.err.println("Error, AuditLog");
+                    System.err.println("Error, AuditLog: " + entry.getReason()); //Error if user change channel settings, like slot
                     return;
                 }
 
@@ -78,7 +78,7 @@ public class AuditLog {
                     } else {
                         return;
                     }
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "AuditLog" + ConsoleColor.reset + " > " + ConsoleColor.cyan + entry.getUser().getName() + ConsoleColor.Bblue + " hat " + suffix + " " + type + " *" + name + "* " + color + art + ConsoleColor.reset + " | " + list.toString(), "info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "AuditLog" + ConsoleColor.reset + " > " + ConsoleColor.cyan + entry.getUser().getName() + ConsoleColor.Bcyan + " hat " + suffix + " " + type + " *" + name + "* " + color + art + ConsoleColor.reset + " | " + list.toString(), "info");
                     if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
                         String channel = PropertiesFile.readsPropertiesFile("logs");
                         guild.getTextChannelById(channel).sendMessage(message).queue();

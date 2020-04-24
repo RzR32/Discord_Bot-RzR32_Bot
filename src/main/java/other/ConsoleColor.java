@@ -24,7 +24,7 @@ public class ConsoleColor {
     public static final String Byellow = "\u001b[33;1m";        //  counter text color
     public static final String Bblue = "\u001b[34;1m";          //  text for activity
     public static final String Bmagenta = "\u001b[35;1m";       //  text for status
-    public static final String Bcyan = "\u001b[36;1m";          //  not in use
+    public static final String Bcyan = "\u001b[36;1m";          //  console Auditlog
     public static final String Bwhite = "\u001b[37;1m";         //  text at the start
     /*the "back" means background                               */
     public static final String backblack = "\u001b[40m";        //  not in use
