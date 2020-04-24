@@ -208,7 +208,7 @@ public class Owner_Commands extends ListenerAdapter {
                     }
 
                 /*
-                debug command for CheckGameOnWebsite
+                command for CheckGameOnWebsite to check game on website´s manually
                 */
                 } else if (argArray[0].equalsIgnoreCase(">checkweb")) {
                     if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
@@ -231,23 +231,24 @@ public class Owner_Commands extends ListenerAdapter {
                             CheckGameOnWebsite GIS = new CheckGameOnWebsite();
                             EmbedBuilder builder = new EmbedBuilder().setTitle(game_name);
 
-                            String _steam = GIS.Steam(game_name);
-                            String _epic = GIS.EpicGames(game_name);
-                            String _blizzard = GIS.Blizzard(game_name);
-                            String _origin = GIS.Origin(game_name);
-                            String _uplay = GIS.Uplay(game_name);
-
                             builder.appendDescription("\n");
 
-                            if (_steam.contains("null")) {
-                                _steam = GIS.Steam(game_name.replaceAll(":", ""));
-                                if (!_steam.contains("null")) {
+                            String _steam = GIS.Steam(game_name);
+                            if (!_steam.contains("null")) {
+                                if (_steam.contains("pcgamingwiki")) {
+                                    _steam = _steam.substring(_steam.lastIndexOf("(") + 1);
+                                    _steam = _steam.substring(0, _steam.length() - 1);
+                                    String _steam_1 = GIS.Steam(_steam);
+
+                                    if (!_steam_1.contains("null")) {
+                                        builder.appendDescription(_steam_1 + "\n");
+                                    }
+                                } else {
                                     builder.appendDescription(_steam + "\n");
                                 }
-                            } else {
-                                builder.appendDescription(_steam + "\n");
                             }
 
+                            String _epic = GIS.EpicGames(game_name);
                             if (_epic.contains("null")) {
                                 _epic = GIS.EpicGames(game_name.replaceAll(":", ""));
                                 if (!_epic.contains("null")) {
@@ -257,6 +258,7 @@ public class Owner_Commands extends ListenerAdapter {
                                 builder.appendDescription(_epic + "\n");
                             }
 
+                            String _blizzard = GIS.Blizzard(game_name);
                             if (_blizzard.contains("null")) {
                                 _blizzard = GIS.Blizzard(game_name.replaceAll(":", ""));
                                 if (!_blizzard.contains("null")) {
@@ -266,6 +268,7 @@ public class Owner_Commands extends ListenerAdapter {
                                 builder.appendDescription(_blizzard + "\n");
                             }
 
+                            String _origin = GIS.Origin(game_name);
                             if (_origin.contains("null")) {
                                 _origin = GIS.Origin(game_name.replaceAll(":", ""));
                                 if (!_origin.contains("null")) {
@@ -275,6 +278,7 @@ public class Owner_Commands extends ListenerAdapter {
                                 builder.appendDescription(_origin + "\n");
                             }
 
+                            String _uplay = GIS.Uplay(game_name);
                             if (_uplay.contains("null")) {
                                 _uplay = GIS.Uplay(game_name.replaceAll(":", ""));
                                 if (!_uplay.contains("null")) {
@@ -282,6 +286,16 @@ public class Owner_Commands extends ListenerAdapter {
                                 }
                             } else {
                                 builder.appendDescription(_uplay + "\n");
+                            }
+
+                            String _offical = GIS.Offical(game_name);
+                            if (_offical.contains("null")) {
+                                _offical = GIS.Offical(game_name.replaceAll(":", ""));
+                                if (!_offical.contains("null")) {
+                                    builder.appendDescription(_offical + "\n");
+                                }
+                            } else {
+                                builder.appendDescription(_offical + "\n");
                             }
 
                             event.getChannel().sendMessage(builder.build()).queue();

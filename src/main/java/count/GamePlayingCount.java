@@ -574,13 +574,18 @@ public class GamePlayingCount {
             builder.appendDescription("\n");
 
             String _steam = GIS.Steam(A_game.getName());
-            if (_steam.contains("null")) {
-                _steam = GIS.Steam(A_game.getName().replaceAll(":", ""));
-                if (!_steam.contains("null")) {
+            if (!_steam.contains("null")) {
+                if (_steam.contains("pcgamingwiki")) {
+                    _steam = _steam.substring(_steam.lastIndexOf("(") + 1);
+                    _steam = _steam.substring(0, _steam.length() - 1);
+                    String _steam_1 = GIS.Steam(_steam);
+
+                    if (!_steam_1.contains("null")) {
+                        builder.appendDescription(_steam_1 + "\n");
+                    }
+                } else {
                     builder.appendDescription(_steam + "\n");
                 }
-            } else {
-                builder.appendDescription(_steam + "\n");
             }
 
             String _epic = GIS.EpicGames(A_game.getName());
@@ -621,6 +626,16 @@ public class GamePlayingCount {
                 }
             } else {
                 builder.appendDescription(_uplay + "\n");
+            }
+
+            String _offical = GIS.Offical(A_game.getName());
+            if (_offical.contains("null")) {
+                _offical = GIS.Offical(A_game.getName().replaceAll(":", ""));
+                if (!_offical.contains("null")) {
+                    builder.appendDescription(_offical + "\n");
+                }
+            } else {
+                builder.appendDescription(_offical + "\n");
             }
         }
         /*

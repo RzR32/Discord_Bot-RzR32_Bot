@@ -194,16 +194,27 @@ public class Games_from_Member extends ListenerAdapter {
 
                     String[] lines = mes.getDescription().split("\\r?\\n");
                     builder.setDescription(lines[0] + "\n\n");
-                    String[] new_lines = {"null", "null", "null", "null", "null"};
+                    String[] new_lines = {"null", "null", "null", "null", "null", "null"};
 
                     String _steam = GIS.Steam(activity.getName());
                     String _epic = GIS.EpicGames(activity.getName());
                     String _blizzard = GIS.Blizzard(activity.getName());
                     String _origin = GIS.Origin(activity.getName());
                     String _uplay = GIS.Uplay(activity.getName());
+                    String _offical = GIS.Offical(activity.getName());
 
                     if (!_steam.contains("null")) {
-                        new_lines[0] = _steam;
+                        if (_steam.contains("pcgamingwiki")) {
+                            _steam = _steam.substring(_steam.lastIndexOf("(") + 1);
+                            _steam = _steam.substring(0, _steam.length() - 1);
+                            String _steam_1 = GIS.Steam(_steam);
+
+                            if (!_steam_1.contains("null")) {
+                                builder.appendDescription(_steam_1 + "\n");
+                            }
+                        } else {
+                            builder.appendDescription(_steam + "\n");
+                        }
                     }
                     if (!_epic.contains("null")) {
                         new_lines[1] = _epic;
@@ -216,6 +227,10 @@ public class Games_from_Member extends ListenerAdapter {
                     }
                     if (!_origin.contains("null")) {
                         new_lines[4] = _uplay;
+                    }
+
+                    if (!_offical.contains("null")) {
+                        new_lines[5] = _offical;
                     }
 
                     for (String string : new_lines) {
