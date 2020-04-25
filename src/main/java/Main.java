@@ -97,7 +97,7 @@ public class Main {
             BackUp BU = new BackUp();
             BU.makeBackUp();
 
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + "Versuche zu Verbinden..." + ConsoleColor.reset, "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Verbunden!" + ConsoleColor.reset, "info");
         } catch (Exception e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
