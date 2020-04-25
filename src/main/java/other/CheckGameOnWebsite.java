@@ -14,6 +14,7 @@ public class CheckGameOnWebsite {
                 .replaceAll("\\u2122", "") //™
                 .replaceAll("\\u00B2", "") //²
                 .replaceAll("\\u00B3", "") //³
+                .replaceAll("'", "%27")
                 ;
     }
 
@@ -35,21 +36,23 @@ public class CheckGameOnWebsite {
                 //not found
                 if (inputline_STEAM.contains("There is a page named")) {
                     String title_web = inputline_STEAM;
+                    String temp_string = null;
                     title_web = title_web.substring(title_web.indexOf("title") + 7);
                     title_web = title_web.substring(0, title_web.indexOf("\""));
                     if (game_format.contains(" ")) {
-                        game_format = game_format.substring(0, game_format.indexOf(" "));
+                        temp_string = game_format.substring(0, game_format.indexOf(" "));
                     }
                     if (title_web.contains("_")) {
                         title_web = title_web.substring(0, title_web.indexOf("_"));
                     }
-                    if (game_format.equalsIgnoreCase(title_web)) {
+                    if (temp_string.equalsIgnoreCase(title_web)) {
                         website_game_STEAM = "https://www.pcgamingwiki.com/wiki/" + title_web;
                     }
                 }
                 //not the URL from the game, just the right name
                 if (inputline_STEAM.contains("Page title matches") && inputline_STEAM.contains("href")) {
                     String new_url = inputline_STEAM;
+                    String temp_string = null;
                     if (new_url.contains("href")) {
                         new_url = new_url.substring(new_url.indexOf("href=") + 12);
                         new_url = new_url.substring(0, new_url.indexOf("\""));
@@ -58,9 +61,9 @@ public class CheckGameOnWebsite {
                             game_format = game_format.substring(0, game_format.indexOf(" "));
                         }
                         if (new_url.contains("_")) {
-                            new_url = new_url.substring(0, new_url.indexOf("_"));
+                            temp_string = new_url.substring(0, new_url.indexOf("_"));
                         }
-                        if (!game_format.equalsIgnoreCase(new_url)) {
+                        if (!temp_string.equalsIgnoreCase(new_url)) {
                             website_game_STEAM = "https://www.pcgamingwiki.com/wiki/" + new_url;
                         }
                         break;
@@ -206,7 +209,7 @@ public class CheckGameOnWebsite {
             while ((inputline_OFFICIAL = br_OFFICIAL.readLine()) != null) {
                 if (inputline_OFFICIAL.contains("Official website")) {
                     website_game_OFFICIAL = inputline_OFFICIAL.substring(inputline_OFFICIAL.indexOf("href=") + 6);
-                    website_game_OFFICIAL = website_game_OFFICIAL.substring(0, website_game_OFFICIAL.length() - 27);
+                    website_game_OFFICIAL = website_game_OFFICIAL.substring(0, website_game_OFFICIAL.indexOf("\""));
                     break;
                 }
             }

@@ -205,15 +205,15 @@ public class Games_from_Member extends ListenerAdapter {
 
                     if (!_steam.contains("null")) {
                         if (_steam.contains("pcgamingwiki")) {
-                            _steam = _steam.substring(_steam.lastIndexOf("(") + 1);
+                            _steam = _steam.substring(_steam.indexOf("(") + 1);
                             _steam = _steam.substring(0, _steam.length() - 1);
                             String _steam_1 = GIS.Steam(_steam);
 
                             if (!_steam_1.contains("null")) {
-                                builder.appendDescription(_steam_1 + "\n");
+                                new_lines[0] = _steam_1;
                             }
                         } else {
-                            builder.appendDescription(_steam + "\n");
+                            new_lines[0] = _steam;
                         }
                     }
                     if (!_epic.contains("null")) {

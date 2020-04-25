@@ -576,7 +576,7 @@ public class GamePlayingCount {
             String _steam = GIS.Steam(A_game.getName());
             if (!_steam.contains("null")) {
                 if (_steam.contains("pcgamingwiki")) {
-                    _steam = _steam.substring(_steam.lastIndexOf("(") + 1);
+                    _steam = _steam.substring(_steam.indexOf("(") + 1);
                     _steam = _steam.substring(0, _steam.length() - 1);
                     String _steam_1 = GIS.Steam(_steam);
 
