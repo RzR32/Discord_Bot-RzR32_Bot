@@ -24,7 +24,6 @@ public class Guild_Ready extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
-        LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Verbunden!" + ConsoleColor.reset, "info");
         /*
         check files/folder
         */
