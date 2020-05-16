@@ -140,17 +140,16 @@ public class Counter {
                         LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                     }
                 case "twitchcount":
-                    User U = new User();
-                    FollowerCount FC = new FollowerCount();
-
                     /*re-call the counter*/
+                    FollowerCount FC = new FollowerCount();
                     FC.timer_twitch_member(guild);
 
-                    channel = "TwitchFollower";
+                    User U = new User();
                     size = FC.getFollowerCount(U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname")));
                     if (size == 0) {
                         return;
                     }
+                    channel = "TwitchFollower";
                     category = "streamcategory";
                     break;
             }

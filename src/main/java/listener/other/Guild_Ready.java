@@ -77,7 +77,7 @@ public class Guild_Ready extends ListenerAdapter {
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for counter Channel´s..." + ConsoleColor.reset, "info");
         Counter c = new Counter();
         c.StartCounter(event.getGuild());
-        LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "counter Channel check, done!!" + ConsoleColor.reset, "info");
+        LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "counter Channel check, done!" + ConsoleColor.reset, "info");
         LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
 
         P.pause(pause_int);

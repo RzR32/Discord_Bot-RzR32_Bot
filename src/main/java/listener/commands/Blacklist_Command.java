@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import other.ConsoleColor;
 import other.LogBack;
 import writeFile.RemoveStringFromFile;
 
@@ -395,7 +396,8 @@ public class Blacklist_Command extends ListenerAdapter {
             Counter c = new Counter();
             c.getint(guild, "gamecount");
 
-            LB.log(Thread.currentThread().getName(), "Das Spiel *" + Game + "* wurde aus der Liste entfernt!", "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
+                    " > " + ConsoleColor.reset + ConsoleColor.white + "*" + Game + "*" + ConsoleColor.reset + ConsoleColor.Bred + " wurde aus der Liste entfernt!" + ConsoleColor.reset, "info");
             message.addReaction("\uD83D\uDC4D").queue();
 
             try {

@@ -14,53 +14,61 @@ public class FollowerCount {
 
     LogBack LB = new LogBack();
 
+    public int twitch_timer = 5;
+
+    boolean isRunning = false;
+
     public void timer_twitch_member(Guild guild) {
-        Runnable runnable = () -> {
-            try {
+        if (!isRunning) {
+            Runnable runnable = () -> {
+                isRunning = true;
+                try {
                 /*
                 check for clips
                 */
-                Videos V = new Videos();
-                V.VideoMessage(guild);
+                    Videos V = new Videos();
+                    V.VideoMessage(guild);
                 /*
                 check for clips
                 */
-                Clip C = new Clip();
-                C.ClipMessage(guild);
+                    Clip C = new Clip();
+                    C.ClipMessage(guild);
 
-                TimeUnit.MINUTES.sleep(5);
+                    TimeUnit.MINUTES.sleep(twitch_timer);
 
-                //also triggerd once at start (counter)
-                Members m = new Members();
-                m.Member_CheckMemberOnFile(guild);
+                    //also triggerd once at start (counter)
+                    Members m = new Members();
+                    m.Member_CheckMemberOnFile(guild);
 
-                if (PropertiesFile.readsPropertiesFile(">twitchcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
+                    if (PropertiesFile.readsPropertiesFile(">twitchcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
                     /*
                     Check Category
                     */
-                    CheckCategory C_Category = new CheckCategory();
-                    C_Category.checkingCategory(guild, "streamcategory");
+                        CheckCategory C_Category = new CheckCategory();
+                        C_Category.checkingCategory(guild, "streamcategory");
                     /*
                     Check Channel
                     */
-                    CheckChannel C_CheckChannel = new CheckChannel();
-                    C_CheckChannel.checkingChannel(guild, "twitchcount");
+                        CheckChannel C_CheckChannel = new CheckChannel();
+                        C_CheckChannel.checkingChannel(guild, "twitchcount");
                     /*
                     Do the Counter
                     */
-                    Counter c = new Counter();
-                    c.getint(guild, "twitchcount");
+                        Counter c = new Counter();
+                        c.getint(guild, "twitchcount");
                     /*
                     check for clips
                     */
+                        isRunning = false;
+                    }
+                } catch (NumberFormatException e) {
+                    LB.log(Thread.currentThread().getName(), "No Twitchname set, can be ignored (if not needed)", "warn");
+                } catch (Exception e) {
+                    LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
                 }
-            } catch (NumberFormatException e) {
-                LB.log(Thread.currentThread().getName(), "No Twitchname set, can be ignored (if not needed)", "warn");
-            } catch (Exception e) {
-                LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
-            }
-        };
-        new Thread(runnable).start();
+            };
+            new Thread(runnable).start();
+        }
     }
 
     public int getFollowerCount(String userid) {

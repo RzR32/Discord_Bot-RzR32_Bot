@@ -19,11 +19,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Games_from_Member extends ListenerAdapter {
 
     LogBack LB = new LogBack();
+
+    private final HashMap<Member, Activity> list = new HashMap<>();
 
     public void onUserActivityStart(UserActivityStartEvent event) {
         if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
@@ -49,20 +53,11 @@ public class Games_from_Member extends ListenerAdapter {
         }
     }
 
-    public void checkAllMembersActivity(Guild guild) {
-        for (Member member : guild.getMembers()) {
-            if (guild.getSelfMember() != member) {
-                if (member.getActivities().size() > 0) {
-                    for (Activity activity : member.getActivities()) {
-                        Forwarded(guild, "start", activity.getType(), member, activity);
-                    }
-                }
-            }
-        }
-    }
 
-    private void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity game) {
+    public void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity game) {
         GamePlayingCount gamePlayingCount = new GamePlayingCount();
+
+        boolean new_act = false;
 
         String username = member.getEffectiveName();
         String game_name = game.getName();
@@ -101,25 +96,45 @@ public class Games_from_Member extends ListenerAdapter {
         String s_suffix_game = ConsoleColor.reset + ConsoleColor.white + game_name + ConsoleColor.reset;
 
         /*
-        if the string "start_end == end BUT member has activity > member still playing
-        */
-        if (member.getActivities().size() != 0 && start_end.equals("end")) {
-        /*
         if the string "start_end == end BUT member has NO activity > member dont playing
         */
-        } else if (member.getActivities().size() == 0 && start_end.equals("end")) {
+        if (member.getActivities().size() == 0 && start_end.equals("end")) {
             System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nicht mehr " + s_suffix_game);
+            list.replace(member, null);
 
+        /*
+        member still playing - check, if game is in the list
+        */
         } else if (start_end.equals("start")) {
-            if (short_type == Activity.ActivityType.DEFAULT) {
-                WriteStringToFile WSTF = new WriteStringToFile();
-                WSTF.write(guild, "games", game_name);
-                GameRole(guild, member.getId(), member, game_name);
+            if (!list.containsKey(member)) {
+                new_act = true;
+            } else {
+                for (Map.Entry<Member, Activity> entry : list.entrySet()) {
+                    Member key = entry.getKey();
+                    Activity value = entry.getValue();
+
+                    if (key.equals(member)) {
+                        /*new Activity*/
+                        if (value == null || !value.getName().equals(game.getName())) {
+                            new_act = true;
+                        }
+                        break;
+                    }
+                }
             }
-            System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nun " + s_suffix_game);
+
+            if (new_act) {
+                if (short_type == Activity.ActivityType.DEFAULT) {
+                    WriteStringToFile WSTF = new WriteStringToFile();
+                    WSTF.write(guild, "games", game_name);
+                    GameRole(guild, member.getId(), member, game_name);
+                    EditMessagesFromGames(guild, game);
+                }
+                System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nun " + s_suffix_game);
+                list.put(member, game);
+            }
+            gamePlayingCount.ForwardPlayingGame(guild, game);
         }
-        gamePlayingCount.ForwardPlayingGame(guild, game);
-        EditMessagesFromGames(guild, game);
     }
 
     /**
