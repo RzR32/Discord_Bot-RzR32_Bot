@@ -19,7 +19,7 @@ public class Clip {
     check if message is already in guild, if not create new
     */
     public void ClipMessage(Guild guild) {
-        if (PropertiesFile.readsPropertiesFile(">clips_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
+        if (PropertiesFile.readsPropertiesFile(">clips_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on", "config").equals("true")) {
             /*
             Check Category
             */
@@ -33,19 +33,19 @@ public class Clip {
 
             MakeRequest mr = new MakeRequest();
 
-            String period = PropertiesFile.readsPropertiesFile("clips_period");
+            String period = PropertiesFile.readsPropertiesFile("clips_period", "config");
             if (!period.equals("day") && !period.equals("week") && !period.equals("month") && !period.equals("all")) {
                 System.err.println("Error: clips_period has a wrong String; day, week, month or all!");
                 return;
             }
 
-            int clips_number = Integer.parseInt(PropertiesFile.readsPropertiesFile("clips_number"));
+            int clips_number = Integer.parseInt(PropertiesFile.readsPropertiesFile("clips_number", "config"));
             if (clips_number < 0 || clips_number > 100) {
                 System.err.println("Error: clips_number has a wrong int, between 0 - 100!");
                 return;
             }
 
-            String[] list_source = mr.doRequest("clips/top?channel=" + PropertiesFile.readsPropertiesFile("twitchname") + "&period=" + period + "&limit=" + clips_number);
+            String[] list_source = mr.doRequest("clips/top?channel=" + PropertiesFile.readsPropertiesFile("twitchname", "config") + "&period=" + period + "&limit=" + clips_number);
 
             if (list_source == null) {
                 return;
@@ -82,7 +82,7 @@ public class Clip {
                     String createAt = getCreateAt(out);
 
                     if (out != null) {
-                        for (TextChannel channel : guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory")).getTextChannels()) {
+                        for (TextChannel channel : guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory", "config")).getTextChannels()) {
                             if (channel.getType() == ChannelType.TEXT) {
                                 for (Message message : channel.getIterableHistory()) {
                                     if (message.getContentRaw().contains(slug)) {

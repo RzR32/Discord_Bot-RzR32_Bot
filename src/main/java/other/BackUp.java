@@ -1,6 +1,6 @@
 package other;
 
-import count.GamePlayingCount;
+import count.GamePlayingCount._main_GamePlayingCount;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.io.*;
@@ -78,8 +78,7 @@ public class BackUp {
     public void timer_backup(Guild guild) {
         Runnable runnable = () -> {
             try {
-                GamePlayingCount GPC = new GamePlayingCount();
-                GPC.startCounter(guild);
+                _main_GamePlayingCount.startCounter(guild);
 
                 TimeUnit.HOURS.sleep(24);
 
@@ -106,7 +105,7 @@ public class BackUp {
     */
     private void CreateNewBackUp() {
         try {
-            SimpleDateFormat SDF_file = new SimpleDateFormat("YYYY-MM-dd_HH-mm");
+            SimpleDateFormat SDF_file = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
             Date D_file = new Date();
             String date_file = SDF_file.format(D_file);
 
@@ -116,7 +115,7 @@ public class BackUp {
             File b_date = new File(b_backup + "/" + date_file + "/");
             boolean bool_date = b_date.mkdir();
 
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + " > " + b_date + " wurde erstellt!", "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backwhite + ConsoleColor.black + "BACKUP" + ConsoleColor.reset + " > " + b_date + " wurde erstellt!", "info");
 
             for (File file_list : list) {
 
@@ -124,7 +123,7 @@ public class BackUp {
                 boolean bool_folder = b_folder.mkdir();
 
                 for (File file : file_list.listFiles()) {
-                    if (!file.getName().contains("png")) {
+                    if (!file.getName().contains("png") && !file.getName().contains("token")) {
                         if (file.isDirectory()) {
                             File file_out = new File(b_folder + "/" + file.getName());
                             boolean b = file_out.mkdir();
@@ -199,7 +198,7 @@ public class BackUp {
                         file_final.createNewFile();
                     }
 
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "BACKUP" + ConsoleColor.reset + " > " + "Älteres Backup wurde zur ZIP verschoben!", "info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backwhite + ConsoleColor.black + "BACKUP" + ConsoleColor.reset + " > " + "\u00c4lteres Backup wurde zur ZIP verschoben!", "info");
 
                     File[] file = new File("backup/").listFiles();
 

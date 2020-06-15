@@ -23,9 +23,9 @@ public class CheckCategory {
     }
 
     public void checkingCategory(Guild guild, String category) {
-        if (PropertiesFile.readsPropertiesFile(">" + category + "_on").equals("true")) {
-            String id = PropertiesFile.readsPropertiesFile(category);
-            if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(category) == null) {
+        if (PropertiesFile.readsPropertiesFile(">" + category + "_on", "config").equals("true")) {
+            String id = PropertiesFile.readsPropertiesFile(category, "config");
+            if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(category, "config") == null) {
                 LB.log(Thread.currentThread().getName(), "ID in config file for category *" + category + "* is null, search for another or create new", "warn");
                 String s = null;
                 switch (category) {
@@ -41,7 +41,7 @@ public class CheckCategory {
                 }
                 for (Category cat : guild.getCategories()) {
                     if (cat.getName().equals(s)) {
-                        PropertiesFile.writePropertiesFile(category, cat.getId());
+                        PropertiesFile.writePropertiesFile(category, cat.getId(), "config");
                         LB.log(Thread.currentThread().getName(), "Category found with the name *" + s + "*", "info");
                         return;
                     }
@@ -64,7 +64,7 @@ public class CheckCategory {
                 Category guild_category = guild.getCategoryById(id);
                 if (guild_category == null) {
                     LB.log(Thread.currentThread().getName(), "ID for *" + category + "* is not a category | or dont exists!", "error");
-                    PropertiesFile.writePropertiesFile(category, "");
+                    PropertiesFile.writePropertiesFile(category, "", "config");
                     checkingCategory(guild, category);
                 }
             }

@@ -1,15 +1,17 @@
 package listener.member;
 
-import count.GamePlayingCount;
+import count.GamePlayingCount.CountNotPlayingGames;
+import count.GamePlayingCount.CountOfflineMember;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.ConsoleColor;
+import other.Members;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Status_from_Member extends ListenerAdapter {
+public class _Status extends ListenerAdapter {
     /**
      * logs Status of User
      */
@@ -28,7 +30,7 @@ public class Status_from_Member extends ListenerAdapter {
             s_mid_new = "abwesend";
         } else if (event.getNewOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
             s_mid_color_new = ConsoleColor.red;
-            s_mid_new = "beschäftigt";
+            s_mid_new = "besch\u00e4ftigt";
         } else if (event.getNewOnlineStatus() == OnlineStatus.OFFLINE) {
             s_mid_color_new = ConsoleColor.Bblack;
             s_mid_new = "offline";
@@ -50,7 +52,7 @@ public class Status_from_Member extends ListenerAdapter {
             s_mid_old = "abwesend";
         } else if (event.getOldOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
             s_mid_color_old = ConsoleColor.red;
-            s_mid_old = "beschäftigt";
+            s_mid_old = "besch\u00e4ftigt";
         } else if (event.getOldOnlineStatus() == OnlineStatus.OFFLINE) {
             s_mid_color_old = ConsoleColor.Bblack;
             s_mid_old = "offline";
@@ -73,8 +75,11 @@ public class Status_from_Member extends ListenerAdapter {
 
         System.out.println(s_prefix + color + " ist nun " + s_mid_color_new + s_mid_new + s_suffix_old_status + ConsoleColor.reset);
 
-        GamePlayingCount GPC = new GamePlayingCount();
-        GPC.CountOfflineMember(event.getGuild());
-        GPC.CountNotPlayingGames(event.getGuild());
+
+        CountOfflineMember._message(event.getGuild());
+        CountNotPlayingGames._message(event.getGuild());
+
+        Members m = new Members();
+        m.Member_CheckMemberOnFile(event.getGuild());
     }
 }

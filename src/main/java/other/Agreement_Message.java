@@ -26,22 +26,22 @@ public class Agreement_Message {
                 ImageIO.write(image, "png", new File("config/bild.png"));
                 File file = new File("config/bild.png");
 
-                String channelmention = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getAsMention();
+                String channelmention = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games", "config")).getAsMention();
                 /*
                 first message
                 */
                 guild.getTextChannelById(channel.getId()).sendMessage(new EmbedBuilder().setTitle("Zustimmung").setColor(Color.GREEN).setDescription(
-                        "Wenn du dieser Nachricht eine Reaktion hinzufügst, dann bist du damit einverstanden, " +
-                                "das der Bot deine gespielten Spiele 'speichert' und dir als Rolle hinzufügt damit man diese 'Erwähnen' kann :wink: \n" +
+                        "Wenn du dieser Nachricht eine Reaktion hinzuf\u00f6gst, dann bist du damit einverstanden, " +
+                                "das der Bot deine gespielten Spiele 'speichert' und dir als Rolle hinzuf\u00f6gt damit man diese 'Erw\u00e4hnen' kann :wink: \n" +
                                 "Trotz ohne Zustimmung, werden deine Spiele __ohne__ Namen in den Channel " + channelmention + " gepostet!").build()).queue(message -> {
-                    PropertiesFile.writePropertiesFile("agreement", message.getId());
+                    PropertiesFile.writePropertiesFile("agreement", message.getId(), "config");
                     message.addReaction("\uD83D\uDC4D").queue();
                 });
                 /*
                 second message
                 */
                 guild.getTextChannelById(channel.getId()).sendMessage("```\n" +
-                        "- da ich den Bot noch nicht richtig testen konnte, könnten Fehler auftreten\n" +
+                        "- da ich den Bot noch nicht richtig testen konnte, k\u00f6nnten Fehler auftreten\n" +
                         "(was ich aber nicht hoffe)\n" +
                         "- wenn eine Rolle erstellt wird, die nichts mit einem Spiel zutun hat, erlaube ich mir diese zu entfernen! (z. B. *Google Chrome*)\n" +
                         "- niemand ist verpflichtet die *Zustimmung* anzunehmen!\n" +

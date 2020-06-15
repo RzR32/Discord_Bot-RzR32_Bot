@@ -1,7 +1,7 @@
-package writeFile;
+package config._File;
 
 import config.PropertiesFile;
-import count.Counter;
+import count._main_Counter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -43,28 +43,28 @@ public class WriteStringToFile {
                             return;
                         }
                     }
-                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).sendMessage(new EmbedBuilder()
+                    guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games", "config")).sendMessage(new EmbedBuilder()
                             .setTitle(line)
                             .setColor(Color.GREEN)
                             .setDescription(new SimpleDateFormat("dd.MM.YY").format(Calendar.getInstance().getTime()) + "\n\n")
                             .build()).queue();
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LISTE" + ConsoleColor.reset + ConsoleColor.cyan +
-                            " > " + ConsoleColor.reset + ConsoleColor.white + line + ConsoleColor.reset + ConsoleColor.Bgreen + " ist nun in der Liste!" + ConsoleColor.reset, "info");
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backBblack + "LIST GAMES" + ConsoleColor.reset + ConsoleColor.cyan +
+                            " > " + ConsoleColor.reset + ConsoleColor.Bgreen + "Das Spiel " + ConsoleColor.white + "*" + line + "*" + ConsoleColor.reset + ConsoleColor.Bgreen + " ist nun in der Liste!" + ConsoleColor.reset, "info");
                     writer.write(line + "\n");
                     writer.close();
                     reader.close();
-                    Counter c = new Counter();
+                    _main_Counter c = new _main_Counter();
                     c.getint(guild, "gamecount");
 
                 } else if (extra.equals("list")) {
                     Member member = guild.getMemberById(line);
                     User user = member.getUser();
-                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LIST for GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
+                    LB.log(Thread.currentThread().getName(), ConsoleColor.backBblack + "LIST GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
                             " > " + user.getName() + ConsoleColor.reset + ConsoleColor.Bgreen + " ist nun in der Liste" + ConsoleColor.reset, "info");
                     if (!member.equals(guild.getSelfMember())) {
                         guild.addRoleToMember(member, guild.getRolesByName("GameRole", false).get(0)).queue();
                         user.openPrivateChannel().queue(privateChannel ->
-                                privateChannel.sendMessage("Hiermit wird bestätigt, dass du die 'Zustimmung' angenommen hast! :grinning:").queue());
+                                privateChannel.sendMessage("Hiermit wird best\u00e4tigt, dass du die 'Zustimmung' angenommen hast! :grinning:").queue());
                         writer.write(line + "\n");
                         writer.close();
                         reader.close();

@@ -1,6 +1,6 @@
-package config;
+package config._Check;
 
-import other.LogBack;
+import config.PropertiesFile;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,11 +13,6 @@ import java.util.List;
 public class CheckKey {
 
     private static final ArrayList<String> list = new ArrayList<>() {{
-        /*
-        Token´s
-        */
-        add("TOKEN");
-        add("Twitch_ClientID");
         /*
         Category
         */
@@ -71,6 +66,9 @@ public class CheckKey {
 
         add("voicechannelcount");
         add(">voicechannelcount_on");
+
+        add("emotecount");
+        add(">emotecount_on");
         /*
         Counter - Other
         (if game is enabled)
@@ -101,7 +99,6 @@ public class CheckKey {
         add("agreement");
         add("first-startup");
     }};
-    LogBack LB = new LogBack();
 
     public void StartChecking() {
         for (String category : list) {
@@ -110,12 +107,13 @@ public class CheckKey {
     }
 
     public void checking(String key) {
-        if (PropertiesFile.readsPropertiesFile(key) == null || PropertiesFile.readsPropertiesFile(key).isEmpty() || PropertiesFile.readsPropertiesFile(key).isBlank()) {
-            LB.log(Thread.currentThread().getName(), "Missing Key found *" + key + "* !", "warn");
-            if (key.contains("_on") || key.equals("first-startup")) {
-                PropertiesFile.writePropertiesFile(key, "true");
+        if (PropertiesFile.readsPropertiesFile(key, "config") == null || PropertiesFile.readsPropertiesFile(key, "config").isEmpty() || PropertiesFile.readsPropertiesFile(key, "config").isBlank()) {
+            if (key.contains(">logs_on")) {
+                PropertiesFile.writePropertiesFile(key, "false", "config");
+            } else if (key.contains("_on") || key.equals("first-startup")) {
+                PropertiesFile.writePropertiesFile(key, "true", "config");
             } else {
-                PropertiesFile.writePropertiesFile(key, "");
+                PropertiesFile.writePropertiesFile(key, "", "config");
             }
         }
         SortKey();

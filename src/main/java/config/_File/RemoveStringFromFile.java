@@ -1,4 +1,4 @@
-package writeFile;
+package config._File;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -45,10 +45,10 @@ public class RemoveStringFromFile {
                     if (extra.equals("list")) {
                         Member member = guild.getMemberById(line);
                         User user = member.getUser();
-                        LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "LIST for GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
+                        LB.log(Thread.currentThread().getName(), ConsoleColor.backBblack + "LIST GAMEROLE" + ConsoleColor.reset + ConsoleColor.cyan +
                                 " > " + member.getEffectiveName() + ConsoleColor.reset + ConsoleColor.Bred + " ist nun nicht mehr in der Liste" + ConsoleColor.reset, "info");
                         user.openPrivateChannel().queue(privateChannel ->
-                                privateChannel.sendMessage("Hiermit wird bestätigt, dass du von der 'Zustimmung' entfernt wurdest! :grinning:").queue());
+                                privateChannel.sendMessage("Hiermit wird best\u00e4tigt, dass du von der 'Zustimmung' entfernt wurdest! :grinning:").queue());
                         guild.removeRoleFromMember(member, guild.getRolesByName("GameRole", false).get(0)).queue();
                         //remove all gameroles
                         try {

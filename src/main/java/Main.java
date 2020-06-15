@@ -1,12 +1,10 @@
-import config.CheckKey;
 import config.PropertiesFile;
-import listener.commands.*;
-import listener.guild._Category;
-import listener.guild._Role;
-import listener.guild._TextChannel;
-import listener.guild._VoiceChannel;
-import listener.member.Member_join_leave;
-import listener.member.Name_Change;
+import config._Check.CheckKey;
+import listener.guild.*;
+import listener.member._Activity;
+import listener.member._Join_Leave;
+import listener.member._NameChange;
+import listener.member._Status;
 import listener.other.Guild_Ready;
 import listener.other.JDA_Events;
 import listener.other.Message_Reaction;
@@ -34,7 +32,7 @@ public class Main {
             /*
             Bot Token
             */
-            if (PropertiesFile.readsPropertiesFile("TOKEN") == null || PropertiesFile.readsPropertiesFile("TOKEN").isEmpty()) {
+            if (PropertiesFile.readsPropertiesFile("TOKEN", "discordtoken") == null || PropertiesFile.readsPropertiesFile("TOKEN", "discordtoken").isEmpty()) {
                 LB.log(Thread.currentThread().getName(), "No Token found to start the Bot!", "error");
                 return;
             }
@@ -43,7 +41,7 @@ public class Main {
             create Bot with needed GatewayIntent´s...
             */
             JDABuilder.create(
-                    PropertiesFile.readsPropertiesFile("TOKEN"),
+                    PropertiesFile.readsPropertiesFile("TOKEN", "discordtoken"),
                     //GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                     //GatewayIntent.DIRECT_MESSAGE_TYPING,
                     GatewayIntent.DIRECT_MESSAGES,
@@ -60,16 +58,15 @@ public class Main {
                     set Flag´s
                     */
                     .setIdle(true)
+                    .setRelativeRateLimit(false)
                     .setActivity(Activity.listening(">help"))
                     /*
-                    import listener
-                    other
+                    IMPORT Listener
+
+                    commands listener
                     */
-                    .addEventListeners(new Guild_Ready())
-                    .addEventListeners(new JDA_Events())
-                    .addEventListeners(new Member_join_leave())
-                    .addEventListeners(new Message_Reaction())
-                    .addEventListeners(new Name_Change())
+                    .addEventListeners(new listener.commands.member._main_member())
+                    .addEventListeners(new listener.commands.owner._main_owner())
                     /*
                     guild listener
                     */
@@ -77,16 +74,20 @@ public class Main {
                     .addEventListeners(new _Role())
                     .addEventListeners(new _TextChannel())
                     .addEventListeners(new _VoiceChannel())
+                    .addEventListeners(new _Emote())
                     /*
-                    commands
+                    member listener
                     */
-                    .addEventListeners(new Blacklist_Command())
-                    .addEventListeners(new DEactivate_Commands())
-                    .addEventListeners(new DeleteMessage_Command())
-                    .addEventListeners(new GameRole_Command())
-                    .addEventListeners(new League_Command())
-                    .addEventListeners(new Member_Commands())
-                    .addEventListeners(new Owner_Commands())
+                    .addEventListeners(new _Activity())
+                    .addEventListeners(new _Join_Leave())
+                    .addEventListeners(new _NameChange())
+                    .addEventListeners(new _Status())
+                    /*
+                    other listener
+                     */
+                    .addEventListeners(new Guild_Ready())
+                    .addEventListeners(new JDA_Events())
+                    .addEventListeners(new Message_Reaction())
                     /*
                     build the bot
                     */

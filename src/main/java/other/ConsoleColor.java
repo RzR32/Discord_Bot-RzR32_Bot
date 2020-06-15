@@ -15,7 +15,7 @@ public class ConsoleColor {
     public static final String yellow = "\u001b[33m";           //  status - idle   | and use in some method so it looks like LogBack
     public static final String blue = "\u001b[34m";             //  not in use
     public static final String magenta = "\u001b[35m";          //  not in use
-    public static final String cyan = "\u001b[36m";             //  member
+    public static final String cyan = "\u001b[36m";             //  member (the name)
     public static final String white = "\u001b[37m";            //  activity | old status
     /*the "B" means Bright                                      */
     public static final String Bblack = "\u001b[30;1m";         //  member status - offline
@@ -27,16 +27,16 @@ public class ConsoleColor {
     public static final String Bcyan = "\u001b[36;1m";          //  console Auditlog
     public static final String Bwhite = "\u001b[37;1m";         //  text at the start
     /*the "back" means background                               */
-    public static final String backblack = "\u001b[40m";        //  not in use
+    public static final String backblack = "\u001b[40m";        //  text in the front (caps) - Guild, Members, Namechange
     public static final String backred = "\u001b[41m";          //  delete AuditLog
     public static final String backgreen = "\u001b[42m";        //  create AuditLog
     public static final String backyellow = "\u001b[43m";       //  update AuditLog
-    public static final String backblue = "\u001b[44m";         //  text in the front (caps)
-    public static final String backmagenta = "\u001b[45m";      //  not in use
-    public static final String backcyan = "\u001b[46m";         //  not in use
-    public static final String backwhite = "\u001b[47m";        //  not in use
+    public static final String backblue = "\u001b[44m";         //  text in the front (caps) - PrivateChat, Activity, Status, AuditLog
+    public static final String backmagenta = "\u001b[45m";      //  text in the front (caps) - TwitchFollowerCount
+    public static final String backcyan = "\u001b[46m";         //  text in the front (caps) - Other Counter
+    public static final String backwhite = "\u001b[47m";        //  text in the front (caps) - BackUp
     /*self explaining?                                          */
-    public static final String backBblack = "\u001b[40;1m";     //  not in use
+    public static final String backBblack = "\u001b[40;1m";     //  text in the front (caps) - List Games/Gamerole
     public static final String backBred = "\u001b[41;1m";       //  changed Counter
     public static final String backBgreen = "\u001b[42;1m";     //  NOT changed Counter
     public static final String backByellow = "\u001b[43;1m";    //  GamePlayingCount

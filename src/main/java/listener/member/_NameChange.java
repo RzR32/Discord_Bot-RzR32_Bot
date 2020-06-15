@@ -6,16 +6,17 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import other.Members;
 
 
-public class Name_Change extends ListenerAdapter {
+public class _NameChange extends ListenerAdapter {
 
     Members m = new Members();
 
     @Override
-    public void onUserUpdateName(UserUpdateNameEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+    public void onUserUpdateName(@NotNull UserUpdateNameEvent event) {
+        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
             for (Guild guild : event.getJDA().getGuilds()) {
                 for (Member member : guild.getMembers()) {
                     if (member.getId().equals(event.getUser().getId())) {
@@ -27,8 +28,8 @@ public class Name_Change extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+    public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
+        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
             m.Member_CheckMemberOnFile(event.getGuild());
         }
     }

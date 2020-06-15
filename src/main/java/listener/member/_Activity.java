@@ -2,16 +2,17 @@ package listener.member;
 
 import check_create.CheckChannel;
 import config.PropertiesFile;
-import count.GamePlayingCount;
+import config._File.WriteStringToFile;
+import count.GamePlayingCount.ForwardPlayingGame;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import other.CheckGameOnWebsite;
 import other.ConsoleColor;
 import other.LogBack;
-import writeFile.WriteStringToFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -23,40 +24,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Games_from_Member extends ListenerAdapter {
+public class _Activity extends ListenerAdapter {
 
+    private final HashMap<Member, List<Activity>> list = new HashMap<>();
     LogBack LB = new LogBack();
 
-    private final HashMap<Member, Activity> list = new HashMap<>();
-
-    public void onUserActivityStart(UserActivityStartEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+    public void onUserActivityStart(@NotNull UserActivityStartEvent event) {
+        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
             if (!event.getMember().getUser().isBot()) {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
 
-                Forwarded(event.getGuild(), "start", event.getNewActivity().getType(), event.getMember(), event.getNewActivity());
+                Forwarded(event.getGuild(), "start", event.getMember(), event.getNewActivity());
             }
         }
     }
 
-    public void onUserActivityEnd(UserActivityEndEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup").equals("false")) {
+    public void onUserActivityEnd(@NotNull UserActivityEndEvent event) {
+        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
             if (!event.getMember().getUser().isBot()) {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
                 C_Channel.checkingChannel(event.getGuild(), "playingcount");
 
-                Forwarded(event.getGuild(), "end", event.getOldActivity().getType(), event.getMember(), event.getOldActivity());
+                for (Activity activity : event.getMember().getActivities()) {
+                    if (activity.getName().equals(event.getOldActivity().getName())) {
+                        //the game is the same as old - return
+                        return;
+                    }
+                }
+                Forwarded(event.getGuild(), "end", event.getMember(), event.getOldActivity());
             }
         }
     }
 
-
-    public void Forwarded(Guild guild, String start_end, Activity.ActivityType short_type, Member member, Activity game) {
-        GamePlayingCount gamePlayingCount = new GamePlayingCount();
-
+    public void Forwarded(Guild guild, String start_end, Member member, Activity game) {
         boolean new_act = false;
 
         String username = member.getEffectiveName();
@@ -64,19 +67,19 @@ public class Games_from_Member extends ListenerAdapter {
         String name;
         String type;
 
-        if (short_type == Activity.ActivityType.DEFAULT) {
+        if (game.getType() == Activity.ActivityType.DEFAULT) {
             name = "GAME";
             type = "spielt";
-        } else if (short_type == Activity.ActivityType.LISTENING) {
+        } else if (game.getType() == Activity.ActivityType.LISTENING) {
             name = "LISTEN";
-            type = "hört";
-        } else if (short_type == Activity.ActivityType.STREAMING) {
+            type = "h\u00f6rt";
+        } else if (game.getType() == Activity.ActivityType.STREAMING) {
             name = "STREAM";
             type = "streamt";
-        } else if (short_type == Activity.ActivityType.WATCHING) {
+        } else if (game.getType() == Activity.ActivityType.WATCHING) {
             name = "WATCH";
             type = "schaut";
-        } else if (short_type == Activity.ActivityType.CUSTOM_STATUS) {
+        } else if (game.getType() == Activity.ActivityType.CUSTOM_STATUS) {
             name = "STATUS";
             type = "Status ist";
         } else {
@@ -95,12 +98,9 @@ public class Games_from_Member extends ListenerAdapter {
         String s_mid = " > " + ConsoleColor.cyan + username + ConsoleColor.reset + ConsoleColor.Bblue + " ";
         String s_suffix_game = ConsoleColor.reset + ConsoleColor.white + game_name + ConsoleColor.reset;
 
-        /*
-        if the string "start_end == end BUT member has NO activity > member dont playing
-        */
-        if (member.getActivities().size() == 0 && start_end.equals("end")) {
+        if (start_end.equals("end")) {
             System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nicht mehr " + s_suffix_game);
-            list.replace(member, null);
+            list.replace(member, member.getActivities());
 
         /*
         member still playing - check, if game is in the list
@@ -109,32 +109,35 @@ public class Games_from_Member extends ListenerAdapter {
             if (!list.containsKey(member)) {
                 new_act = true;
             } else {
-                for (Map.Entry<Member, Activity> entry : list.entrySet()) {
+                for (Map.Entry<Member, List<Activity>> entry : list.entrySet()) {
                     Member key = entry.getKey();
-                    Activity value = entry.getValue();
-
                     if (key.equals(member)) {
-                        /*new Activity*/
-                        if (value == null || !value.getName().equals(game.getName())) {
+                        if (entry.getValue() != null) {
+                            if (key.equals(member)) {
+                                if (!entry.getValue().toString().contains(game_name)) {
+                                    new_act = true;
+                                }
+                            }
+                        } else {
                             new_act = true;
+                            break;
                         }
-                        break;
                     }
                 }
             }
 
             if (new_act) {
-                if (short_type == Activity.ActivityType.DEFAULT) {
+                if (game.getType() == Activity.ActivityType.DEFAULT) {
                     WriteStringToFile WSTF = new WriteStringToFile();
                     WSTF.write(guild, "games", game_name);
                     GameRole(guild, member.getId(), member, game_name);
                     EditMessagesFromGames(guild, game);
                 }
                 System.out.println(s_prefix + ConsoleColor.backblue + name + ConsoleColor.reset + s_mid + type + " nun " + s_suffix_game);
-                list.put(member, game);
+                list.put(member, member.getActivities());
             }
-            gamePlayingCount.ForwardPlayingGame(guild, game);
         }
+        ForwardPlayingGame._message(guild, game);
     }
 
     /**
@@ -147,7 +150,7 @@ public class Games_from_Member extends ListenerAdapter {
      */
     public void GameRole(Guild guild, String userid, Member member, String game) {
         try {
-            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on").equals("true") && PropertiesFile.readsPropertiesFile(">games_on").equals("true")) {
+            if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 File dir = new File("config/blacklist/");
                 /*
                 Check if user is in the "agree" list
@@ -179,7 +182,7 @@ public class Games_from_Member extends ListenerAdapter {
                             if (guild.getRolesByName(game, true).get(0) != null) {
                                 if (!member.getRoles().toString().contains(game)) {
                                     guild.addRoleToMember(member, guild.getRolesByName(game, true).get(0)).queue();
-                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.white + " Ein User wurde eine Gamerole hinzugefügt", "info");
+                                    LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.white + " Ein User wurde eine Gamerole hinzugef\u00fcgt", "info");
                                 }
                             }
                         }
@@ -190,7 +193,7 @@ public class Games_from_Member extends ListenerAdapter {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         } catch (IndexOutOfBoundsException e1) {
             guild.createRole().setName(game).setMentionable(true).queue(role -> guild.addRoleToMember(member, role).queue());
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.reset + "Für das Spiel *" + game + " wurde eine Rolle erstellt", "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "GAMEROLE" + ConsoleColor.reset + " > " + ConsoleColor.cyan + ConsoleColor.reset + "F\u00fcr das Spiel *" + game + "* wurde eine Rolle erstellt", "info");
         }
     }
 
@@ -201,58 +204,18 @@ public class Games_from_Member extends ListenerAdapter {
         try {
             CheckGameOnWebsite GIS = new CheckGameOnWebsite();
 
-            for (Message message : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games")).getIterableHistory()) {
+            for (Message message : guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games", "config")).getIterableHistory()) {
                 MessageEmbed mes = message.getEmbeds().get(0);
                 if (mes.getTitle().equals(activity.getName())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setTitle(mes.getTitle()).setColor(mes.getColor());
 
-                    String[] lines = mes.getDescription().split("\\r?\\n");
-                    builder.setDescription(lines[0] + "\n\n");
-                    String[] new_lines = {"null", "null", "null", "null", "null", "null"};
-
-                    String _steam = GIS.Steam(activity.getName());
-                    String _epic = GIS.EpicGames(activity.getName());
-                    String _blizzard = GIS.Blizzard(activity.getName());
-                    String _origin = GIS.Origin(activity.getName());
-                    String _uplay = GIS.Uplay(activity.getName());
-                    String _official = GIS.Official(activity.getName());
-
-                    if (!_steam.contains("null")) {
-                        if (_steam.contains("pcgamingwiki")) {
-                            _steam = _steam.substring(_steam.indexOf("(") + 1);
-                            _steam = _steam.substring(0, _steam.length() - 1);
-                            String _steam_1 = GIS.Steam(_steam);
-
-                            if (!_steam_1.contains("null")) {
-                                new_lines[0] = _steam_1;
-                            }
-                        } else {
-                            new_lines[0] = _steam;
-                        }
-                    }
-                    if (!_epic.contains("null")) {
-                        new_lines[1] = _epic;
-                    }
-                    if (!_blizzard.contains("null")) {
-                        new_lines[2] = _blizzard;
-                    }
-                    if (!_origin.contains("null")) {
-                        new_lines[3] = _origin;
-                    }
-                    if (!_origin.contains("null")) {
-                        new_lines[4] = _uplay;
-                    }
-
-                    if (!_official.contains("null")) {
-                        new_lines[5] = _official;
-                    }
-
-                    for (String string : new_lines) {
-                        if (!string.equals("null")) {
+                    for (String string : GIS.startcheck(activity.getName())) {
+                        if (!string.contains("null")) {
                             builder.appendDescription(string + "\n");
                         }
                     }
+
                     /*
                     largeIMG
                     */

@@ -3,7 +3,7 @@ package twitch;
 import check_create.CheckCategory;
 import check_create.CheckChannel;
 import config.PropertiesFile;
-import count.Counter;
+import count._main_Counter;
 import net.dv8tion.jda.api.entities.Guild;
 import other.LogBack;
 import other.Members;
@@ -12,10 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FollowerCount {
 
-    LogBack LB = new LogBack();
-
     public int twitch_timer = 5;
-
+    LogBack LB = new LogBack();
     boolean isRunning = false;
 
     public void timer_twitch_member(Guild guild) {
@@ -40,7 +38,7 @@ public class FollowerCount {
                     Members m = new Members();
                     m.Member_CheckMemberOnFile(guild);
 
-                    if (PropertiesFile.readsPropertiesFile(">twitchcount_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
+                    if (PropertiesFile.readsPropertiesFile(">twitchcount_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on", "config").equals("true")) {
                     /*
                     Check Category
                     */
@@ -54,7 +52,7 @@ public class FollowerCount {
                     /*
                     Do the Counter
                     */
-                        Counter c = new Counter();
+                        _main_Counter c = new _main_Counter();
                         c.getint(guild, "twitchcount");
                     /*
                     check for clips

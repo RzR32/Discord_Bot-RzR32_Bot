@@ -19,7 +19,7 @@ public class Videos {
     check if message is already in guild, if not create new
     */
     public void VideoMessage(Guild guild) {
-        if (PropertiesFile.readsPropertiesFile(">videos_on").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
+        if (PropertiesFile.readsPropertiesFile(">videos_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">streamcategory_on", "config").equals("true")) {
             /*
             Check Category
             */
@@ -35,17 +35,17 @@ public class Videos {
 
             StringBuilder extra = new StringBuilder();
 
-            if (PropertiesFile.readsPropertiesFile("videos_archice_true?").equals("true")) {
+            if (PropertiesFile.readsPropertiesFile("videos_archice_true?", "config").equals("true")) {
                 extra.append("?broadcast_type=archive");
             }
-            if (PropertiesFile.readsPropertiesFile("videos_uplaod_true?").equals("true")) {
+            if (PropertiesFile.readsPropertiesFile("videos_uplaod_true?", "config").equals("true")) {
                 extra.append("?broadcast_type=uplaod");
             }
-            if (PropertiesFile.readsPropertiesFile("videos_highlight_true?").equals("true")) {
+            if (PropertiesFile.readsPropertiesFile("videos_highlight_true?", "config").equals("true")) {
                 extra.append("?broadcast_type=highlight");
             }
 
-            int videos_number = Integer.parseInt(PropertiesFile.readsPropertiesFile("videos_number"));
+            int videos_number = Integer.parseInt(PropertiesFile.readsPropertiesFile("videos_number", "config"));
             if (videos_number < 0 || videos_number > 100) {
                 System.err.println("Error: videos_number has a wrong int, between 0 - 100!");
                 return;
@@ -55,9 +55,9 @@ public class Videos {
             String[] list_source;
 
             if (extra.length() == 0) {
-                list_source = mr.doRequest("channels/" + U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname")) + "/videos?limit=" + videos_number);
+                list_source = mr.doRequest("channels/" + U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname", "config")) + "/videos?limit=" + videos_number);
             } else {
-                list_source = mr.doRequest("channels/" + U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname")) + "/videos" + extra + "&limit=" + videos_number);
+                list_source = mr.doRequest("channels/" + U.getUserbyName(PropertiesFile.readsPropertiesFile("twitchname", "config")) + "/videos" + extra + "&limit=" + videos_number);
             }
 
             if (list_source == null) {
@@ -95,7 +95,7 @@ public class Videos {
                     String createAt = getCreateAt(out);
 
                     if (out != null) {
-                        for (TextChannel channel : guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory")).getTextChannels()) {
+                        for (TextChannel channel : guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory", "config")).getTextChannels()) {
                             if (channel.getType() == ChannelType.TEXT) {
                                 for (Message message : channel.getIterableHistory()) {
                                     if (message.getContentRaw().contains(url)) {

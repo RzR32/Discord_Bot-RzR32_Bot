@@ -1,5 +1,7 @@
 package config;
 
+import config._Check.CheckKey;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -9,7 +11,7 @@ public class PropertiesFile {
      * Copyright (c) 2019 K-EY
      */
 
-    private static final File file = new File("config/config.prop");
+    private static final File file_path = new File("config");
 
     /**
      * Writes Properties in a .prop(erties) file
@@ -17,7 +19,8 @@ public class PropertiesFile {
      * @param key   category
      * @param value value for category
      */
-    public static void writePropertiesFile(String key, String value) {
+    public static void writePropertiesFile(String key, String value, String file) {
+        File file_new = new File(file_path + "/" + file + ".prop");
         /**
          * init Properties and Output stream
          */
@@ -27,8 +30,8 @@ public class PropertiesFile {
          * load already existing properties
          */
         try {
-            checkFile();
-            properties.load(new FileInputStream(file));
+            checkFile(file_new);
+            properties.load(new FileInputStream(file_new));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,7 +39,7 @@ public class PropertiesFile {
          * set output- directory and file name
          */
         try {
-            outputStream = new FileOutputStream(file);
+            outputStream = new FileOutputStream(file_new);
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         }
@@ -66,12 +69,14 @@ public class PropertiesFile {
      *
      * @return true if exist
      */
-    private static boolean checkFile() {
+    private static boolean checkFile(File file) {
         try {
             new File("config/").mkdir();
-            file.createNewFile();
+            if (!file.exists()) {
+                file.createNewFile();
+            }
         } catch (IOException e) {
-            System.err.println("Error creating " + file.toString());
+            System.err.println("Error creating " + file);
         }
         return file.isFile() && file.canWrite() && file.canRead();
     }
@@ -82,12 +87,13 @@ public class PropertiesFile {
      * @param key category for value
      * @return returns value
      */
-    public static String readsPropertiesFile(String key) {
+    public static String readsPropertiesFile(String key, String file) {
+        File file_new = new File(file_path + "/" + file + ".prop");
         Properties prop = new Properties();
         InputStream input = null;
-        checkFile();
+        checkFile(file_new);
         try {
-            input = new FileInputStream(file);
+            input = new FileInputStream(file_new);
             // load a properties file
             prop.load(input);
             // get the property value and print it out

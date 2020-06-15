@@ -1,9 +1,7 @@
-package listener.commands;
+package listener.commands.owner;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import other.LogBack;
 import other.Pause;
 
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class DeleteMessage_Command extends ListenerAdapter {
+public class delete_message {
 
     private static final HashMap<Integer, String> list_out = new HashMap<>();
     private static final List<String> list_target = new ArrayList<>();
@@ -27,185 +25,171 @@ public class DeleteMessage_Command extends ListenerAdapter {
         add("-n");
         add("-s");
     }};
-    LogBack LB = new LogBack();
-    AtomicInteger count = new AtomicInteger();
-    private boolean bool_timer = false;
-    private boolean bool_is_confirmed = false;
-    private TextChannel main_channel = null;
+    private static final LogBack LB = new LogBack();
+    private static final AtomicInteger count = new AtomicInteger();
+    private static boolean bool_timer = false;
+    private static boolean bool_is_confirmed = false;
+    private static TextChannel main_channel = null;
 
-    @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isFromType(ChannelType.TEXT)) {
-            String[] argArray = event.getMessage().getContentRaw().split(" ");
-            if (!event.getAuthor().isBot()) {
+    public static void command(Guild guild, TextChannel channel, Member member, Message message, String[] argArray) {
+        try {
+            if (argArray[1] == null) {
+            } else {
+                if (argArray[1].equals("confirm")) {
+                    if (!bool_timer) {
+                        channel.sendMessage(member.getAsMention() + " Aktuell l\u00e4uft kein Timer!").queue();
+                        return;
+                    } else {
+                        message.addReaction("\uD83D\uDC4D").queue();
+                        bool_is_confirmed = true;
+                    }
+                    return;
+                }
+                if (!bool_timer) {
+                    /*
+                    check if argArray contains -c AND -t
+                    */
+                    if (Arrays.toString(argArray).contains("-c") && Arrays.toString(argArray).contains("-t")) {
+                        channel.sendMessage(member.getAsMention() + " Error: You can´t search in category AND textchannel!").queue();
+                        message.addReaction("\u274C").queue();
+                    /*
+                    check if argArray contains -c AND -t
+                    */
+                    } else if (Arrays.toString(argArray).contains("-r") && Arrays.toString(argArray).contains("-u")) {
+                        channel.sendMessage(member.getAsMention() + " Error: You can´t search in role AND user!").queue();
+                        message.addReaction("\u274C").queue();
+                    } else {
+                        list_out.clear();
+                        for (int var = 0; var < argArray.length; var++) {
+                            if (var % 2 == 0) {
+                                if (var > 0) {
+                                    for (int x = 0; x < list.size(); x++) {
+                                        if (argArray[var - 1].equalsIgnoreCase(list.get(x))) {
+                                            /*
+                                            set first all to null
+                                            */
+                                            String category = null;
+                                            String textchannel = null;
+                                            String date = null;
+                                            String role = null;
+                                            String user = null;
+                                            String number = null;
+                                            String string = null;
 
-                if (argArray[0].equalsIgnoreCase(">dm")) {
-                    if (event.getGuild().getMember(event.getMember().getUser()).isOwner()) {
-                        try {
-                            if (argArray[1] == null) {
-                            } else {
-                                if (argArray[1].equals("confirm")) {
-                                    if (!bool_timer) {
-                                        event.getChannel().sendMessage(event.getMember().getAsMention() + " Aktuell läuft kein Timer!").queue();
-                                        return;
-                                    } else {
-                                        event.getMessage().addReaction("\uD83D\uDC4D").queue();
-                                        bool_is_confirmed = true;
-                                    }
-                                    return;
-                                }
-                                if (!bool_timer) {
-                                    /*
-                                    check if argArray contains -c AND -t
-                                    */
-                                    if (Arrays.toString(argArray).contains("-c") && Arrays.toString(argArray).contains("-t")) {
-                                        event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: You can´t search in category AND textchannel!").queue();
-                                        event.getMessage().addReaction("\u274C").queue();
-                                        /*
-                                        check if argArray contains -c AND -t
-                                        */
-                                    } else if (Arrays.toString(argArray).contains("-r") && Arrays.toString(argArray).contains("-u")) {
-                                        event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: You can´t search in role AND user!").queue();
-                                        event.getMessage().addReaction("\u274C").queue();
-                                    } else {
-                                        list_out.clear();
-                                        for (int var = 0; var < argArray.length; var++) {
-                                            if (var % 2 == 0) {
-                                                if (var > 0) {
-                                                    for (int x = 0; x < list.size(); x++) {
-                                                        if (argArray[var - 1].equalsIgnoreCase(list.get(x))) {
-                                                            /*
-                                                            set first all to null
-                                                            */
-                                                            String category = null;
-                                                            String textchannel = null;
-                                                            String date = null;
-                                                            String role = null;
-                                                            String user = null;
-                                                            String number = null;
-                                                            String string = null;
-
-                                                            /*
-                                                            set all to var
-                                                            */
-                                                            if (x == 0) {
-                                                                if (event.getGuild().getCategoryById(argArray[var]) != null) {
-                                                                    category = argArray[var];
-                                                                } else {
-                                                                    event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is not a category!").queue();
-                                                                    return;
-                                                                }
-                                                            } else if (x == 1) {
-                                                                if (event.getGuild().getTextChannelById(argArray[var]) != null) {
-                                                                    textchannel = argArray[var];
-                                                                } else {
-                                                                    event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is not a textchannel!").queue();
-                                                                    return;
-                                                                }
-                                                            } else if (x == 2) {
-                                                                if (argArray[var].length() == 8) {
-                                                                    try {
-                                                                        int d = Integer.parseInt(argArray[var].substring(0, 2));
-                                                                        int m = Integer.parseInt(argArray[var].substring(3, 5));
-                                                                        int y = Integer.parseInt(argArray[var].substring(6, 8));
-                                                                        if (d > 31 || m > 12) {
-                                                                            event.getChannel().sendMessage("Error: one of your number is to big!").queue();
-                                                                            return;
-                                                                        }
-                                                                    } catch (NumberFormatException e) {
-                                                                        event.getChannel().sendMessage("Error: input is not a int!").queue();
-                                                                        return;
-                                                                    }
-                                                                } else {
-                                                                    event.getChannel().sendMessage("Error: Right format is *DD-MM-YY*!").queue();
-                                                                    return;
-                                                                }
-                                                                date = argArray[var];
-                                                            } else if (x == 3) {
-                                                                if (event.getGuild().getRoleById(argArray[var]) != null) {
-                                                                    role = argArray[var];
-                                                                } else {
-                                                                    event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is not a role!").queue();
-                                                                    return;
-                                                                }
-                                                            } else if (x == 4) {
-                                                                if (event.getGuild().getMemberById(argArray[var]) != null) {
-                                                                    user = argArray[var];
-                                                                } else {
-                                                                    event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is not a user!").queue();
-                                                                    return;
-                                                                }
-                                                            } else if (x == 5) {
-                                                                Integer.parseInt(argArray[var]);
-                                                                number = argArray[var];
-                                                            } else if (x == 6) {
-                                                                string = argArray[var];
-                                                            }
-                                                            /*
-                                                            put string into the hashmap, with the right position
-                                                            */
-                                                            if (category != null) {
-                                                                list_out.put(0, category);
-                                                            }
-                                                            if (textchannel != null) {
-                                                                list_out.put(1, textchannel);
-                                                            }
-                                                            if (date != null) {
-                                                                list_out.put(2, date);
-                                                            }
-                                                            if (role != null) {
-                                                                list_out.put(3, role);
-                                                            }
-                                                            if (user != null) {
-                                                                list_out.put(4, user);
-                                                            }
-                                                            if (number != null) {
-                                                                list_out.put(5, number);
-                                                            }
-                                                            if (string != null) {
-                                                                list_out.put(6, string);
-                                                            }
-                                                        }
-                                                    }
+                                            /*
+                                            set all to var
+                                            */
+                                            if (x == 0) {
+                                                if (guild.getCategoryById(argArray[var]) != null) {
+                                                    category = argArray[var];
+                                                } else {
+                                                    channel.sendMessage(member.getAsMention() + " Error: The ID is not a category!").queue();
+                                                    return;
                                                 }
+                                            } else if (x == 1) {
+                                                if (guild.getTextChannelById(argArray[var]) != null) {
+                                                    textchannel = argArray[var];
+                                                } else {
+                                                    channel.sendMessage(member.getAsMention() + " Error: The ID is not a textchannel!").queue();
+                                                    return;
+                                                }
+                                            } else if (x == 2) {
+                                                if (argArray[var].length() == 8) {
+                                                    try {
+                                                        int d = Integer.parseInt(argArray[var].substring(0, 2));
+                                                        int m = Integer.parseInt(argArray[var].substring(3, 5));
+                                                        int y = Integer.parseInt(argArray[var].substring(6, 8));
+                                                        if (d > 31 || m > 12) {
+                                                            channel.sendMessage("Error: one of your number is to big!").queue();
+                                                            return;
+                                                        }
+                                                    } catch (NumberFormatException e) {
+                                                        channel.sendMessage("Error: input is not a int!").queue();
+                                                        return;
+                                                    }
+                                                } else {
+                                                    channel.sendMessage("Error: Right format is *DD-MM-YY*!").queue();
+                                                    return;
+                                                }
+                                                date = argArray[var];
+                                            } else if (x == 3) {
+                                                if (guild.getRoleById(argArray[var]) != null) {
+                                                    role = argArray[var];
+                                                } else {
+                                                    channel.sendMessage(member.getAsMention() + " Error: The ID is not a role!").queue();
+                                                    return;
+                                                }
+                                            } else if (x == 4) {
+                                                if (guild.getMemberById(argArray[var]) != null) {
+                                                    user = argArray[var];
+                                                } else {
+                                                    channel.sendMessage(member.getAsMention() + " Error: The ID is not a user!").queue();
+                                                    return;
+                                                }
+                                            } else if (x == 5) {
+                                                Integer.parseInt(argArray[var]);
+                                                number = argArray[var];
+                                            } else if (x == 6) {
+                                                string = argArray[var];
+                                            }
+                                            /*
+                                            put string into the hashmap, with the right position
+                                            */
+                                            if (category != null) {
+                                                list_out.put(0, category);
+                                            }
+                                            if (textchannel != null) {
+                                                list_out.put(1, textchannel);
+                                            }
+                                            if (date != null) {
+                                                list_out.put(2, date);
+                                            }
+                                            if (role != null) {
+                                                list_out.put(3, role);
+                                            }
+                                            if (user != null) {
+                                                list_out.put(4, user);
+                                            }
+                                            if (number != null) {
+                                                list_out.put(5, number);
+                                            }
+                                            if (string != null) {
+                                                list_out.put(6, string);
                                             }
                                         }
-                                        main_channel = event.getTextChannel();
-                                        control(event.getGuild(), list_out, "count");
                                     }
-                                } else {
-                                    event.getChannel().sendMessage("Es läuft bereits ein Timer!").queue();
                                 }
                             }
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            event.getChannel().sendMessage(new EmbedBuilder().setTitle("Message-Del").setDescription("\n" +
-                                    "```(Category)\n-c <category ID> | one category as target```" +
-                                    "```(Texchannel)\n-t <textchannel ID> | one textchannel as target```" +
-                                    "```(Date)\n-d <date> | (DD-MM-YY) | filter, all messages with this date```" +
-                                    "```(Role)\n-r <role ID> | fitler, for one role```" +
-                                    "```(User)\n -u <user ID> | filter, for one user```" +
-                                    "```(Number)\n-n <int> | filter, within x messages```" +
-                                    "```(String)\n-s <string> | filter, if message contain the string```").build()).queue();
-                        } catch (NumberFormatException e) {
-                            event.getChannel().sendMessage(event.getMember().getAsMention() + " Error: The ID is wrong, or was not found!").queue();
                         }
-                    } else {
-                        event.getChannel().sendMessage("Dieser Befehl ist nur für den Server Besitzer!").queue();
-                        event.getMessage().addReaction("\u274C").queue();
+                        main_channel = channel;
+                        control(guild, list_out, "count");
                     }
+                } else {
+                    channel.sendMessage("Es l\u00e4uft bereits ein Timer!").queue();
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            channel.sendMessage(new EmbedBuilder().setTitle("Message-Del").setDescription("\n" +
+                    "```(Category)\n-c <category ID> | one category as target```" +
+                    "```(Texchannel)\n-t <textchannel ID> | one textchannel as target```" +
+                    "```(Date)\n-d <date> | (DD-MM-YY) | filter, all messages with this date```" +
+                    "```(Role)\n-r <role ID> | fitler, for one role```" +
+                    "```(User)\n -u <user ID> | filter, for one user```" +
+                    "```(Number)\n-n <int> | filter, within x messages```" +
+                    "```(String)\n-s <string> | filter, if message contain the string```").build()).queue();
+        } catch (NumberFormatException e) {
+            channel.sendMessage(member.getAsMention() + " Error: The ID is wrong, or was not found!").queue();
         }
     }
 
     /**
      * control if all is right and if this exits on the server
      *
-     * @param guild
-     * @param string_long
-     * @param cmd
+     * @param guild       guild
+     * @param string_long string_long
+     * @param cmd         cmd
      */
-    private void control(Guild guild, HashMap<Integer, String> string_long, String cmd) {
+    private static void control(Guild guild, HashMap<Integer, String> string_long, String cmd) {
         Category category = null;
         TextChannel textChannel = null;
         String date = null;
@@ -245,14 +229,14 @@ public class DeleteMessage_Command extends ListenerAdapter {
             for (TextChannel channel : guild.getCategoryById(category.getId()).getTextChannels()) {
                 list_target.add(channel.getId());
             }
-            /*
-            ONE specific textchannel
-            */
+        /*
+        ONE specific textchannel
+        */
         } else if (textChannel != null) {
             list_target.add(textChannel.getId());
-            /*
-            list_del > list of ALL textchannel´s
-            */
+        /*
+        list_del > list of ALL textchannel´s
+        */
         } else {
             for (TextChannel channel : guild.getTextChannels()) {
                 list_target.add(channel.getId());
@@ -352,9 +336,9 @@ public class DeleteMessage_Command extends ListenerAdapter {
             if (count.get() > 0) {
                 EmbedBuilder E_builder = new EmbedBuilder();
                 if (count.get() == 1) {
-                    E_builder.setTitle("Message-del | Soll wirklich **" + count.get() + "** Nachricht gelöscht werden?");
+                    E_builder.setTitle("Message-del | Soll wirklich **" + count.get() + "** Nachricht gel\u00f6scht werden?");
                 } else {
-                    E_builder.setTitle("Message-del | Sollen wirklich **" + count.get() + "** Nachrichten gelöscht werden?");
+                    E_builder.setTitle("Message-del | Sollen wirklich **" + count.get() + "** Nachrichten gel\u00f6scht werden?");
                 }
                 if (!list_target.isEmpty()) {
                     if (list_target.size() == 1) {
@@ -395,7 +379,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
         list_target.clear();
     }
 
-    private void delete_count_Message(Guild guild, Message message, Role role, User user, String string, String cmd) {
+    private static void delete_count_Message(Guild guild, Message message, Role role, User user, String string, String cmd) {
         if (user != null) {
             if (user != null && string != null) {
                 if (message.getAuthor().getId().equals(user.getId())) {
@@ -477,7 +461,7 @@ public class DeleteMessage_Command extends ListenerAdapter {
         }
     }
 
-    private void timer_deletemessage(Message message, int x, Guild guild, HashMap<Integer, String> string_long, String cmd) {
+    private static void timer_deletemessage(Message message, int x, Guild guild, HashMap<Integer, String> string_long, String cmd) {
         final int finalX = x;
         Runnable runnable = () -> {
             if (bool_is_confirmed) {

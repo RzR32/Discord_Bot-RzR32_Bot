@@ -26,8 +26,8 @@ public class CheckChannel {
     }
 
     public void checkingChannel(Guild guild, String channel) {
-        if (PropertiesFile.readsPropertiesFile(">" + channel + "_on").equals("true")) {
-            String id = PropertiesFile.readsPropertiesFile(channel);
+        if (PropertiesFile.readsPropertiesFile(">" + channel + "_on", "config").equals("true")) {
+            String id = PropertiesFile.readsPropertiesFile(channel, "config");
             String channel_type;
             String category;
 
@@ -35,7 +35,7 @@ public class CheckChannel {
                 channel_type = "text";
                 category = "gamecategory";
             } else {
-                channel_type = "voice";
+                channel_type = "listener.commands.voice.voice";
                 if (channel.equals("gamecount")) {
                     category = "gamecategory";
                 } else if (channel.equals("twitchcount")) {
@@ -44,8 +44,8 @@ public class CheckChannel {
                     category = "maincount";
                 }
             }
-            if (PropertiesFile.readsPropertiesFile(">" + category + "_on").equals("true")) {
-                if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(channel) == null) {
+            if (PropertiesFile.readsPropertiesFile(">" + category + "_on", "config").equals("true")) {
+                if (id.isBlank() || id.isEmpty() || PropertiesFile.readsPropertiesFile(channel, "config") == null) {
                     LB.log(Thread.currentThread().getName(), "ID in config file for channel *" + channel + "* is null, search for another or create new", "warn");
                     String s = null;
                     Category cat = null;
@@ -53,14 +53,14 @@ public class CheckChannel {
                     Category stream_ID = null;
                     Category gamecategory = null;
 
-                    if (PropertiesFile.readsPropertiesFile(">maincount_on").equals("true")) {
-                        maincount_ID = guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount"));
+                    if (PropertiesFile.readsPropertiesFile(">maincount_on", "config").equals("true")) {
+                        maincount_ID = guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"));
                     }
-                    if (PropertiesFile.readsPropertiesFile(">streamcategory_on").equals("true")) {
-                        stream_ID = guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory"));
+                    if (PropertiesFile.readsPropertiesFile(">streamcategory_on", "config").equals("true")) {
+                        stream_ID = guild.getCategoryById(PropertiesFile.readsPropertiesFile("streamcategory", "config"));
                     }
-                    if (PropertiesFile.readsPropertiesFile(">gamecategory_on").equals("true")) {
-                        gamecategory = guild.getCategoryById(PropertiesFile.readsPropertiesFile("gamecategory"));
+                    if (PropertiesFile.readsPropertiesFile(">gamecategory_on", "config").equals("true")) {
+                        gamecategory = guild.getCategoryById(PropertiesFile.readsPropertiesFile("gamecategory", "config"));
                     }
                     switch (channel) {
                         /*Voice (channel)*/
@@ -88,6 +88,10 @@ public class CheckChannel {
                             s = "VoiceChannelCount";
                             cat = maincount_ID;
                             break;
+                        case "emotecount":
+                            s = "EmoteCount";
+                            cat = maincount_ID;
+                            break;
                         case "gamecount":
                             s = "GameCount";
                             cat = gamecategory;
@@ -109,14 +113,14 @@ public class CheckChannel {
                     C_Channel.createchannel(guild, cat, s, channel, channel_type);
                 } else {
                     GuildChannel counter_channel;
-                    if (channel_type.equals("voice")) {
+                    if (channel_type.equals("listener.commands.voice.voice")) {
                         counter_channel = guild.getVoiceChannelById(id);
                     } else {
                         counter_channel = guild.getTextChannelById(id);
                     }
                     if (counter_channel == null) {
                         LB.log(Thread.currentThread().getName(), "ID for *" + channel + "* is not a channel | or dont exists!", "error");
-                        PropertiesFile.writePropertiesFile(channel, "");
+                        PropertiesFile.writePropertiesFile(channel, "", "config");
                         checkingChannel(guild, channel);
                     }
                 }

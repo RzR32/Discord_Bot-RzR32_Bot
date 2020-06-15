@@ -18,9 +18,9 @@ public class AuditLog {
     public void GetEntry(Guild guild, String TargetID, String type, String name) {
         try {
             ArrayList<String> list = new ArrayList<>();
-            String suffix;
-            String art;
-            String color;
+            String suffix = null;
+            String art = null;
+            String color = null;
 
             for (AuditLogEntry entry : guild.retrieveAuditLogs()) {
 
@@ -33,7 +33,7 @@ public class AuditLog {
                 if (entry.getType().toString().contains("UPDATE")) {
                     if (entry.getType().toString().contains("MEMBER")) {
                         if (entry.getChanges().toString().contains("add")) {
-                            art = "hinzugefügt";
+                            art = "hinzugef\u00f6gt";
                             color = ConsoleColor.backgreen;
                             list.add("*" + name + "* von " + guild.getMemberById(TargetID).getEffectiveName());
 
@@ -42,9 +42,10 @@ public class AuditLog {
                             color = ConsoleColor.backred;
                             list.add("*" + name + "* von " + guild.getMemberById(TargetID).getEffectiveName());
 
-                        } else {
-                            System.err.println("Error, AuditLog");
-                            return;
+                        } else if (entry.getChanges().toString().contains("update")) {
+                            art = "aktualisiert";
+                            color = ConsoleColor.backyellow;
+                            list.add("*" + name + "* von " + guild.getMemberById(TargetID).getEffectiveName());
                         }
 
                     } else {
@@ -61,13 +62,14 @@ public class AuditLog {
                     list.add(name);
 
                 } else if (entry.getType().toString().contains("DELETE")) {
-                    art = "gelöscht";
+                    art = "gel\u00f6scht";
                     color = ConsoleColor.backred;
                     list.add(name);
 
-                } else {
-                    System.err.println("Error, AuditLog: " + entry.getReason()); //Error if user change channel settings, like slot
-                    return;
+                } else if (entry.getChanges().toString().contains("update")) {
+                    art = "aktualisiert";
+                    color = ConsoleColor.backyellow;
+                    list.add(name);
                 }
 
                 if (entry.getTargetId().equals(TargetID)) {
@@ -79,8 +81,8 @@ public class AuditLog {
                         return;
                     }
                     LB.log(Thread.currentThread().getName(), ConsoleColor.backblue + "AuditLog" + ConsoleColor.reset + " > " + ConsoleColor.cyan + entry.getUser().getName() + ConsoleColor.Bcyan + " hat " + suffix + " " + type + " *" + name + "* " + color + art + ConsoleColor.reset + " | " + list.toString(), "info");
-                    if (!PropertiesFile.readsPropertiesFile("logs").isEmpty()) {
-                        String channel = PropertiesFile.readsPropertiesFile("logs");
+                    if (!PropertiesFile.readsPropertiesFile("logs", "config").isEmpty()) {
+                        String channel = PropertiesFile.readsPropertiesFile("logs", "config");
                         guild.getTextChannelById(channel).sendMessage(message).queue();
                     }
                     return;
