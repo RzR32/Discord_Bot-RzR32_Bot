@@ -65,9 +65,9 @@ public class delete_bot {
 
     private static void final_delete_the_Bot(Guild guild) {
         /*
-        set *first-startup* to true (counter will be disabled with this)
+        set *first_startup* to true (counter will be disabled with this)
         */
-        PropertiesFile.writePropertiesFile("first-startup", "true", "config");
+        PropertiesFile.writePropertiesFile("first_startup", "true", "config");
         /*
         delete the gamerole´s
         */
@@ -101,7 +101,7 @@ public class delete_bot {
         } catch (IllegalArgumentException | NullPointerException ignored) {
         }
         /*
-        delete all folder & .txt files, also clear the config.prop (without the TOKEN AND again the *first-startup* key)
+        delete all folder & .txt files, also clear the config.prop (without the TOKEN AND again the *first_startup* key)
         */
         ArrayList<String> list_token = new ArrayList<>();
         list_token.add(PropertiesFile.readsPropertiesFile("TOKEN", "discordtoken"));
@@ -126,7 +126,7 @@ public class delete_bot {
             writer.write("");
             String s = list_token.toString().replace("[", "").replace("]", "");
             PropertiesFile.writePropertiesFile("TOKEN", s, "discordtoken");
-            PropertiesFile.writePropertiesFile("first-startup", "true", "config");
+            PropertiesFile.writePropertiesFile("first_startup", "true", "config");
         } catch (IOException ignored) {
         }
         /*

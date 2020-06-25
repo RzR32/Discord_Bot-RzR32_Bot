@@ -14,6 +14,11 @@ public class CheckKey {
 
     private static final ArrayList<String> list = new ArrayList<>() {{
         /*
+        start
+        */
+        add("first_startup");
+        add("bot_starting");
+        /*
         Category
         */
         add("maincount");
@@ -97,12 +102,12 @@ public class CheckKey {
         other
         */
         add("agreement");
-        add("first-startup");
     }};
 
     public void StartChecking() {
-        for (String category : list) {
-            checking(category);
+        PropertiesFile.writePropertiesFile("bot_starting", "true", "config");
+        for (String key : list) {
+            checking(key);
         }
     }
 
@@ -110,13 +115,12 @@ public class CheckKey {
         if (PropertiesFile.readsPropertiesFile(key, "config") == null || PropertiesFile.readsPropertiesFile(key, "config").isEmpty() || PropertiesFile.readsPropertiesFile(key, "config").isBlank()) {
             if (key.contains(">logs_on")) {
                 PropertiesFile.writePropertiesFile(key, "false", "config");
-            } else if (key.contains("_on") || key.equals("first-startup")) {
+            } else if (key.equals("bot_starting") || key.contains("_on") || key.equals("first_startup")) {
                 PropertiesFile.writePropertiesFile(key, "true", "config");
             } else {
                 PropertiesFile.writePropertiesFile(key, "", "config");
             }
         }
-        SortKey();
     }
 
     public void SortKey() {
@@ -124,22 +128,22 @@ public class CheckKey {
             List<String> lines = Files.readAllLines(Paths.get("config/config.prop"), StandardCharsets.UTF_8);
             ArrayList<String> file_list = new ArrayList<>();
             for (int x = 0; x < list.size(); x++) {
-                for (String token : lines) {
-                    if (!token.startsWith("#") && (!token.startsWith("/*"))) {
-                        if (token.startsWith(list.get(x))) {
+                for (String line : lines) {
+                    if (!line.startsWith("#")) {
+                        if (line.startsWith(list.get(x))) {
                             if (x == 0) {
-                                file_list.add("/*   Config for the Discord - Bot | Made by RzR32    */");
+                                file_list.add("#    Config for the Discord - Bot | Made by RzR32    #");
                             } else if ((x % 2) == 0) {
-                                file_list.add("/**/");
+                                file_list.add("\n");
                             }
-                            file_list.add(token);
+                            file_list.add("\n" + line);
                         }
                     }
                 }
             }
             FileWriter writer = new FileWriter("config/config.prop", false);
             for (String s : file_list) {
-                writer.write(s + "\n");
+                writer.write(s);
             }
             writer.close();
         } catch (IOException ignored) {

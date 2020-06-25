@@ -16,21 +16,21 @@ public class _VoiceChannel extends ListenerAdapter {
 
     @Override
     public void onVoiceChannelCreate(@NotNull VoiceChannelCreateEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "voicechannelcount");
         }
     }
 
     @Override
     public void onVoiceChannelDelete(@NotNull VoiceChannelDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "voicechannelcount");
         }
     }
 
     @Override
     public void onGenericVoiceChannel(@NotNull GenericVoiceChannelEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             AL.GetEntry(event.getGuild(), event.getChannel().getId(), "Voicechannel", event.getChannel().getName());
         }
     }

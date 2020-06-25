@@ -30,7 +30,7 @@ public class _Activity extends ListenerAdapter {
     LogBack LB = new LogBack();
 
     public void onUserActivityStart(@NotNull UserActivityStartEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             if (!event.getMember().getUser().isBot()) {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");
@@ -42,7 +42,7 @@ public class _Activity extends ListenerAdapter {
     }
 
     public void onUserActivityEnd(@NotNull UserActivityEndEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             if (!event.getMember().getUser().isBot()) {
                 CheckChannel C_Channel = new CheckChannel();
                 C_Channel.checkingChannel(event.getGuild(), "games");

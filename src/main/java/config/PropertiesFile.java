@@ -40,8 +40,8 @@ public class PropertiesFile {
          */
         try {
             outputStream = new FileOutputStream(file_new);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         /**
          * set first properties to enter in file
@@ -54,11 +54,20 @@ public class PropertiesFile {
          */
         try {
             properties.store(outputStream, null);
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        /*
-        RzR32 - start the *key* sorter
+        /**
+         * close output
+         */
+        try {
+            assert outputStream != null;
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
+         * RzR32 - start key sorter
          */
         CheckKey CK = new CheckKey();
         CK.SortKey();

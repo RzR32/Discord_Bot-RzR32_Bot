@@ -13,17 +13,16 @@ import other.Pause;
 
 public class _main_GamePlayingCount {
 
-    public static final String channel_id = PropertiesFile.readsPropertiesFile("playingcount", "config");
     public static final LogBack LB = new LogBack();
     public static final Pause P = new Pause();
     public static final CheckCategory C_Category = new CheckCategory();
     public static final CheckChannel C_Channel = new CheckChannel();
+    public static String channel_id = PropertiesFile.readsPropertiesFile("playingcount", "config");
     public static boolean b_deleting = false;
 
-    public static void startCounter(Guild guild) {
-        if (PropertiesFile.readsPropertiesFile(">playingcount_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on", "config").equals("true")) {
-            Runnable runnable = () -> DeleteMessages(guild);
-            new Thread(runnable).start();
+    public static void checkID() {
+        if (channel_id == null) {
+            channel_id = PropertiesFile.readsPropertiesFile("playingcount", "config");
         }
     }
 
@@ -31,6 +30,7 @@ public class _main_GamePlayingCount {
     delete all messages in the channel > then do CountPlayingCount (below)
     */
     private static void DeleteMessages(Guild guild) {
+        checkID();
         try {
             b_deleting = true;
 
@@ -39,7 +39,7 @@ public class _main_GamePlayingCount {
 
             LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Delete old Message´s...", "info");
 
-            TextChannel channel = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("playingcount", "config"));
+            TextChannel channel = guild.getTextChannelById(channel_id);
             for (Message message : channel.getIterableHistory()) {
                 try {
                     message.delete().complete();
@@ -61,6 +61,17 @@ public class _main_GamePlayingCount {
 
             LB.log(Thread.currentThread().getName(), ConsoleColor.backByellow + ConsoleColor.black + "GamePlayingCount" + ConsoleColor.reset + " > Finish!", "info");
         } catch (ErrorResponseException ignored) {
+        }
+    }
+
+    public void startCounter(Guild guild) {
+        try {
+            if (PropertiesFile.readsPropertiesFile(">playingcount_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">gamecategory_on", "config").equals("true")) {
+                Runnable runnable = () -> DeleteMessages(guild);
+                new Thread(runnable).start();
+            }
+        } catch (NullPointerException e) {
+            startCounter(guild);
         }
     }
 }

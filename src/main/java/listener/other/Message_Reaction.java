@@ -32,7 +32,7 @@ public class Message_Reaction extends ListenerAdapter {
         }
         /*settings*/
 
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             /*agreement*/
             if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement", "config"))) {
@@ -63,7 +63,7 @@ public class Message_Reaction extends ListenerAdapter {
         }
         /*settings*/
 
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             /*agreement*/
             if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 if (event.getReaction().getMessageId().equals(PropertiesFile.readsPropertiesFile("agreement", "config"))) {
@@ -81,7 +81,7 @@ public class Message_Reaction extends ListenerAdapter {
 
     @Override
     public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             /*agreement*/
             if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 String channelmention = event.getGuild().getTextChannelById(PropertiesFile.readsPropertiesFile("games", "config")).getAsMention();

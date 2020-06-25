@@ -19,28 +19,28 @@ public class _Role extends ListenerAdapter {
 
     @Override
     public void onRoleCreate(@NotNull RoleCreateEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "rolecount");
         }
     }
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "rolecount");
         }
     }
 
     @Override
     public void onGenericRole(@NotNull GenericRoleEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             AL.GetEntry(event.getGuild(), event.getRole().getId(), "Role", event.getRole().getName());
         }
     }
 
     @Override
     public void onGuildMemberRoleAdd(@NotNull GuildMemberRoleAddEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             for (Role role : event.getRoles()) {
                 AL.GetEntry(event.getGuild(), event.getMember().getId(), "Role", role.getName());
             }
@@ -49,7 +49,7 @@ public class _Role extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleRemove(@NotNull GuildMemberRoleRemoveEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             for (Role role : event.getRoles()) {
                 AL.GetEntry(event.getGuild(), event.getMember().getId(), "Role", role.getName());
             }

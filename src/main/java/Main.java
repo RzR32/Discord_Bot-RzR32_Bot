@@ -1,5 +1,4 @@
 import config.PropertiesFile;
-import config._Check.CheckKey;
 import listener.guild.*;
 import listener.member._Activity;
 import listener.member._Join_Leave;
@@ -22,13 +21,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             LB.log(Thread.currentThread().getName(), "--------------------------------------------------", "info");
-            /*
-            check key in config file
-            */
-            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing config key..." + ConsoleColor.reset, "info");
-            CheckKey ck = new CheckKey();
-            ck.StartChecking();
-            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "key check, done!" + ConsoleColor.reset, "info");
             /*
             Bot Token
             */

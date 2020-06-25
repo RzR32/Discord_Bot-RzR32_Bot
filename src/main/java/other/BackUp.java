@@ -78,14 +78,15 @@ public class BackUp {
     public void timer_backup(Guild guild) {
         Runnable runnable = () -> {
             try {
-                _main_GamePlayingCount.startCounter(guild);
+                _main_GamePlayingCount GPC = new _main_GamePlayingCount();
+                GPC.startCounter(guild);
 
                 TimeUnit.HOURS.sleep(24);
 
                 makeBackUp();
 
                 timer_backup(guild);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
             }
         };

@@ -2,17 +2,19 @@ package other;
 
 import check_create.CheckCategory;
 import check_create.CheckChannel;
+import config.PropertiesFile;
 import config._Check.CheckFiles_Folder;
 import config._Check.CheckKey;
 import count._main_Counter;
 import net.dv8tion.jda.api.entities.Guild;
+import twitch.FollowerCount;
 
 public class starting_all {
 
-    private static final LogBack LB = new LogBack();
-    private static final Pause P = new Pause();
+    private final LogBack LB = new LogBack();
+    private final Pause P = new Pause();
 
-    public static void make_start(Guild guild) {
+    public void make_start(Guild guild) {
         /*
         check files/folder
         */
@@ -66,12 +68,17 @@ public class starting_all {
         P.pause(pause_int);
 
         /*
-        start the BackUp timer
-        (also call GPC)
+        call all timer, if bot start (not restart!)
         */
-        BackUp BU = new BackUp();
-        BU.timer_backup(guild);
+        if (PropertiesFile.readsPropertiesFile("bot_starting", "config").equals("true")) {
+            BackUp BU = new BackUp();
+            BU.timer_backup(guild);
 
+            FollowerCount FC = new FollowerCount();
+            FC.timer_twitch_member(guild);
+
+            PropertiesFile.writePropertiesFile("bot_starting", "false", "config");
+        }
         LB.log(Thread.currentThread().getName(), ConsoleColor.backBmagenta + " > Bot gestartet!" + ConsoleColor.reset, "info");
     }
 }

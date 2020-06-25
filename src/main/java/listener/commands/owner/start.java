@@ -11,8 +11,9 @@ public class start {
     public static void command(Guild guild, Message message) {
         message.delete().queue();
 
-        PropertiesFile.writePropertiesFile("first-startup", "false", "config");
+        PropertiesFile.writePropertiesFile("first_startup", "false", "config");
 
-        starting_all.make_start(guild);
+        starting_all sa = new starting_all();
+        sa.make_start(guild);
     }
 }

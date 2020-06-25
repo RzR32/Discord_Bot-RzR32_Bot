@@ -16,7 +16,7 @@ public class _NameChange extends ListenerAdapter {
 
     @Override
     public void onUserUpdateName(@NotNull UserUpdateNameEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             for (Guild guild : event.getJDA().getGuilds()) {
                 for (Member member : guild.getMembers()) {
                     if (member.getId().equals(event.getUser().getId())) {
@@ -29,7 +29,7 @@ public class _NameChange extends ListenerAdapter {
 
     @Override
     public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             m.Member_CheckMemberOnFile(event.getGuild());
         }
     }

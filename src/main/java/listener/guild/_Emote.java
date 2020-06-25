@@ -16,21 +16,21 @@ public class _Emote extends ListenerAdapter {
 
     @Override
     public void onEmoteAdded(@NotNull EmoteAddedEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "emotecount");
         }
     }
 
     @Override
     public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "emotecount");
         }
     }
 
     @Override
     public void onGenericEmoteUpdate(@NotNull GenericEmoteUpdateEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             AL.GetEntry(event.getGuild(), event.getEmote().getId(), "Voicechannel", event.getEmote().getName());
         }
     }

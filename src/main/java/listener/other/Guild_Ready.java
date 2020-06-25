@@ -24,8 +24,9 @@ public class Guild_Ready extends ListenerAdapter {
         */
         boolean found_message = false;
         boolean found_list = false;
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
-            starting_all.make_start(event.getGuild());
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
+            starting_all sa = new starting_all();
+            sa.make_start(event.getGuild());
         } else {
             LB.log(Thread.currentThread().getName(), ConsoleColor.backBred + "Server: *" + event.getGuild().getId() + "*  | *" + event.getGuild().getName() + "* setup!" + ConsoleColor.reset, "warn");
         }

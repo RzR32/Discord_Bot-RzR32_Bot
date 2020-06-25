@@ -12,7 +12,7 @@ public class agreement {
 
     public static void command(Guild guild, TextChannel channel, Message message) {
         try {
-            if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+            if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
                 if (message.getContentRaw().equalsIgnoreCase(">agreement")) {
                     if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                         for (Message x_message : channel.getIterableHistory()) {

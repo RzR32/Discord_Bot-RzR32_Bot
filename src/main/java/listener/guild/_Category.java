@@ -16,21 +16,21 @@ public class _Category extends ListenerAdapter {
 
     @Override
     public void onCategoryCreate(@NotNull CategoryCreateEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "categorycount");
         }
     }
 
     @Override
     public void onCategoryDelete(@NotNull CategoryDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "categorycount");
         }
     }
 
     @Override
     public void onGenericCategory(@NotNull GenericCategoryEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             AL.GetEntry(event.getGuild(), event.getCategory().getId(), "Category", event.getCategory().getName());
         }
     }

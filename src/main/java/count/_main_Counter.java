@@ -159,8 +159,6 @@ public class _main_Counter {
                     }
                     channel = "TwitchFollower";
                     category = "streamcategory";
-
-                    FC.timer_twitch_member(guild);
                     break;
             }
             if (PropertiesFile.readsPropertiesFile(">" + category + "_on", "config").equals("true")) {

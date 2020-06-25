@@ -19,7 +19,7 @@ public class _Join_Leave extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "membercount");
 
             /*refresh the counter*/
@@ -33,7 +33,7 @@ public class _Join_Leave extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "membercount");
 
             /*refresh the counter*/

@@ -20,7 +20,7 @@ public class _main_member extends ListenerAdapter {
      */
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             if (event.isFromType(ChannelType.TEXT)) {
                 if (!event.getAuthor().isBot()) {
                     if (event.getMessage().getContentRaw().startsWith(">")) {

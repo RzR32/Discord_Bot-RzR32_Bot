@@ -16,14 +16,14 @@ public class _TextChannel extends ListenerAdapter {
 
     @Override
     public void onTextChannelCreate(@NotNull TextChannelCreateEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             c.getint(event.getGuild(), "textchannelcount");
         }
     }
 
     @Override
     public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             if (event.getChannel().getId().equals(PropertiesFile.readsPropertiesFile("bot-zustimmung", "config"))) {
                 PropertiesFile.writePropertiesFile("agreement", "", "config");
             }
@@ -33,7 +33,7 @@ public class _TextChannel extends ListenerAdapter {
 
     @Override
     public void onGenericTextChannel(@NotNull GenericTextChannelEvent event) {
-        if (PropertiesFile.readsPropertiesFile("first-startup", "config").equals("false")) {
+        if (PropertiesFile.readsPropertiesFile("first_startup", "config").equals("false")) {
             AL.GetEntry(event.getGuild(), event.getChannel().getId(), "Textchannel", event.getChannel().getName());
         }
     }
