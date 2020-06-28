@@ -2,6 +2,7 @@ package listener.commands.owner;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -113,12 +114,15 @@ public class _main_owner extends ListenerAdapter {
      */
     private boolean check_owner(Guild guild, TextChannel channel, Message message, Member member) {
         boolean owner = false;
-        if (Objects.requireNonNull(guild.getMember(member.getUser())).isOwner()) {
-            owner = true;
-            message.addReaction("\uD83D\uDC4D").queue();
-        } else {
-            channel.sendMessage("Dieser Befehl ist nur f\u00fcr den Server Besitzer!").queue();
-            message.addReaction("\u274C").queue();
+        try {
+            if (Objects.requireNonNull(guild.getMember(member.getUser())).isOwner()) {
+                owner = true;
+                message.addReaction("\uD83D\uDC4D").queue();
+            } else {
+                channel.sendMessage("Dieser Befehl ist nur f\u00fcr den Server Besitzer!").queue();
+                message.addReaction("\u274C").queue();
+            }
+        } catch (ErrorResponseException ignored) {
         }
         return owner;
     }

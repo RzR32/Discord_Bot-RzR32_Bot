@@ -3,10 +3,9 @@ package listener.commands.owner;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import other.LogBack;
+import other._stuff.LogBack;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -65,22 +64,30 @@ public class delete_bot {
 
     private static void final_delete_the_Bot(Guild guild) {
         /*
-        set *first_startup* to true (counter will be disabled with this)
+        delete owner/setup channel
         */
-        PropertiesFile.writePropertiesFile("first_startup", "true", "config");
+        for (Member member : guild.getMembers()) {
+            if (member.isOwner()) {
+                for (TextChannel textChannel : guild.getTextChannels()) {
+                    if (textChannel.getName().equals(member.getId())) {
+                        textChannel.delete().queue();
+                    }
+                }
+            }
+        }
         /*
         delete the gamerole´s
         */
-        for (Role role : guild.getRoles()) {
-            try {
-                List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+        try {
+            List<String> lines = Files.readAllLines(Paths.get("config/games.txt"), StandardCharsets.UTF_8);
+            for (Role role : guild.getRoles()) {
                 if (lines.contains(role.getName()) || role.getName().equals("GameRole")) {
                     role.delete().queue();
                     break;
                 }
-            } catch (IOException e) {
-                LB.log(Thread.currentThread().getName(), e.getMessage(), "info");
             }
+        } catch (IOException e) {
+            LB.log(Thread.currentThread().getName(), e.getMessage(), "info");
         }
         /*
         delete all bot created category, with their channels
@@ -101,37 +108,35 @@ public class delete_bot {
         } catch (IllegalArgumentException | NullPointerException ignored) {
         }
         /*
-        delete all folder & .txt files, also clear the config.prop (without the TOKEN AND again the *first_startup* key)
+        delete all files
         */
-        ArrayList<String> list_token = new ArrayList<>();
-        list_token.add(PropertiesFile.readsPropertiesFile("TOKEN", "discordtoken"));
-        ArrayList<File> list_file = new ArrayList<>();
-        list_file.add(new File("config/blacklist/" + guild.getId() + "/"));
-        list_file.add(new File("config/blacklist/"));
-        list_file.add(new File("config/"));
-        boolean b;
-        for (File directory : list_file) {
-            if (directory.exists()) {
-                File[] files = directory.listFiles();
-                for (File file : files) {
-                    b = file.delete();
-                    if (!b) {
-                        LB.log(Thread.currentThread().getName(), file.getName() + " could not be deleted!", "error");
-                    }
-                }
-            }
-        }
-        try {
-            FileWriter writer = new FileWriter(new File("config/config.prop"));
-            writer.write("");
-            String s = list_token.toString().replace("[", "").replace("]", "");
-            PropertiesFile.writePropertiesFile("TOKEN", s, "discordtoken");
-            PropertiesFile.writePropertiesFile("first_startup", "true", "config");
-        } catch (IOException ignored) {
-        }
+        File file_Config = new File("config/");
+        File[] file_directory = file_Config.listFiles();
+        getFiles(file_directory, file_Config.getAbsoluteFile());
         /*
         stop the bot
         */
         System.exit(0);
+    }
+
+    private static void getFiles(File[] directory, File folder_path) {
+        for (File name : directory) {
+            if (name.isDirectory()) {
+                getFiles(name.listFiles(), name.getAbsoluteFile());
+            } else {
+                if (!name.getName().contains("token")) {
+                    boolean f;
+                    f = name.delete();
+                    if (!f) {
+                        LB.log(Thread.currentThread().getName(), name.getName() + " (file) could not be deleted!", "error");
+                    }
+                }
+            }
+        }
+        boolean f;
+        f = folder_path.delete();
+        if (!f && !folder_path.getName().equals("config")) {
+            LB.log(Thread.currentThread().getName(), folder_path.getName() + " (folder) could not be deleted!", "error");
+        }
     }
 }
