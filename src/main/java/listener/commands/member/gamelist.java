@@ -2,7 +2,7 @@ package listener.commands.member;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import other.LogBack;
+import other._stuff.LogBack;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

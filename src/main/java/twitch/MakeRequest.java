@@ -1,7 +1,7 @@
 package twitch;
 
 import config.PropertiesFile;
-import other.LogBack;
+import other._stuff.LogBack;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;

@@ -1,9 +1,10 @@
-package check_create;
+package other._guild.check;
 
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
-import other.LogBack;
+import other._guild.create.CreateCategory;
+import other._stuff.LogBack;
 
 import java.util.ArrayList;
 

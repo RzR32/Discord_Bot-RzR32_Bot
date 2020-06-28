@@ -3,7 +3,7 @@ package listener.commands.owner;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import other.starting_all;
+import other._stuff.starting_all;
 
 public class start {
 

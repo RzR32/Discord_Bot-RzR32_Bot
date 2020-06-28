@@ -1,12 +1,12 @@
 package twitch;
 
-import check_create.CheckCategory;
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import count._main_Counter;
 import net.dv8tion.jda.api.entities.Guild;
-import other.LogBack;
-import other.Members;
+import other._guild.Members;
+import other._guild.check.CheckCategory;
+import other._guild.check.CheckChannel;
+import other._stuff.LogBack;
 
 import java.util.concurrent.TimeUnit;
 

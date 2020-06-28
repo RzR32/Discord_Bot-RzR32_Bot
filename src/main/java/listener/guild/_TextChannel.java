@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import other.AuditLog;
+import other._guild.AuditLog;
 
 public class _TextChannel extends ListenerAdapter {
 

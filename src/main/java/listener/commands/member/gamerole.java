@@ -2,7 +2,7 @@ package listener.commands.member;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import other.LogBack;
+import other._stuff.LogBack;
 
 import java.awt.*;
 import java.io.*;

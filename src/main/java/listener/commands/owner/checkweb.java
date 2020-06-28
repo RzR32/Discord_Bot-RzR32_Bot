@@ -2,7 +2,7 @@ package listener.commands.owner;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import other.CheckGameOnWebsite;
+import other._stuff.CheckGameOnWebsite;
 
 import java.util.ArrayList;
 

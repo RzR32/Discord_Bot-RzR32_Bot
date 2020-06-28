@@ -1,9 +1,11 @@
-package other;
+package other._guild;
 
 import config.PropertiesFile;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
+import other._stuff.LogBack;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,10 +29,11 @@ public class Agreement_Message {
                 File file = new File("config/bild.png");
 
                 String channelmention = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("games", "config")).getAsMention();
+                TextChannel channel_t = guild.getTextChannelById(channel.getId());
                 /*
                 first message
                 */
-                guild.getTextChannelById(channel.getId()).sendMessage(new EmbedBuilder().setTitle("Zustimmung").setColor(Color.GREEN).setDescription(
+                channel_t.sendMessage(new EmbedBuilder().setTitle("Zustimmung").setColor(Color.GREEN).setDescription(
                         "Wenn du dieser Nachricht eine Reaktion hinzuf\u00f6gst, dann bist du damit einverstanden, " +
                                 "das der Bot deine gespielten Spiele 'speichert' und dir als Rolle hinzuf\u00f6gt damit man diese 'Erw\u00e4hnen' kann :wink: \n" +
                                 "Trotz ohne Zustimmung, werden deine Spiele __ohne__ Namen in den Channel " + channelmention + " gepostet!").build()).queue(message -> {
@@ -40,7 +43,7 @@ public class Agreement_Message {
                 /*
                 second message
                 */
-                guild.getTextChannelById(channel.getId()).sendMessage("```\n" +
+                channel_t.sendMessage("```\n" +
                         "- da ich den Bot noch nicht richtig testen konnte, k\u00f6nnten Fehler auftreten\n" +
                         "(was ich aber nicht hoffe)\n" +
                         "- wenn eine Rolle erstellt wird, die nichts mit einem Spiel zutun hat, erlaube ich mir diese zu entfernen! (z. B. *Google Chrome*)\n" +
@@ -50,7 +53,7 @@ public class Agreement_Message {
                 /*
                 third message
                 */
-                guild.getTextChannelById(channel.getId()).sendFile(file).queue();
+                channel_t.sendFile(file).queue();
                 if (guild.getRolesByName("GameRole", false).get(0) != null) {
                 }
             } else {

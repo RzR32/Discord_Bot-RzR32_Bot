@@ -1,4 +1,4 @@
-package other;
+package other._stuff;
 
 import count.GamePlayingCount._main_GamePlayingCount;
 import net.dv8tion.jda.api.entities.Guild;

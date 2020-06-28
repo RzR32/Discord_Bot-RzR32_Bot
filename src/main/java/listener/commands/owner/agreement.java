@@ -4,7 +4,7 @@ import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import other.Agreement_Message;
+import other._guild.Agreement_Message;
 
 public class agreement {
 

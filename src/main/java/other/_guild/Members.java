@@ -1,9 +1,12 @@
-package other;
+package other._guild;
 
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import other._guild.check.CheckChannel;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -178,22 +181,17 @@ public class Members {
         if (PropertiesFile.readsPropertiesFile("logs", "config").isEmpty()) {
             LB.log(Thread.currentThread().getName(), "No Channel set to send 'logs' messages!", "error");
         } else {
-            try {
-                if (!guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs", "config")).toString().isEmpty()) {
-                }
-            } catch (NullPointerException e) {
-                LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + " hat den Server " +
-                        type + ConsoleColor.reset, "info");
+            TextChannel channel = guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs", "config"));
+            if (channel == null) {
                 LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + ConsoleColor.red + "ERROR: Channel *logs* doesnt exist on this Server! (wrong id)" + ConsoleColor.reset, "error");
-                return;
+            } else {
+                channel.sendMessage("Guild > " + out + " hat den Server " + type).queue();
+            }
+            if (type.equals("verlassen!")) {
+                LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bred + " hat den Server verlassen!" + ConsoleColor.reset, "info");
+            } else if (type.equals("betreten!")) {
+                LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bgreen + " hat den Server betreten!" + ConsoleColor.reset, "info");
             }
         }
-
-        if (type.equals("verlassen!")) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bred + " hat den Server verlassen!" + ConsoleColor.reset, "info");
-        } else if (type.equals("betreten!")) {
-            LB.log(Thread.currentThread().getName(), ConsoleColor.backblack + "GUILD" + ConsoleColor.reset + " > " + ConsoleColor.cyan + out + ConsoleColor.reset + ConsoleColor.Bgreen + " hat den Server betreten!" + ConsoleColor.reset, "info");
-        }
-        guild.getTextChannelById(PropertiesFile.readsPropertiesFile("logs", "config")).sendMessage("Guild > " + out + " hat den Server " + type).queue();
     }
 }

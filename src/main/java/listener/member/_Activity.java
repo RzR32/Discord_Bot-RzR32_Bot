@@ -1,6 +1,5 @@
 package listener.member;
 
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import config._File.WriteStringToFile;
 import count.GamePlayingCount.ForwardPlayingGame;
@@ -10,9 +9,10 @@ import net.dv8tion.jda.api.events.user.UserActivityEndEvent;
 import net.dv8tion.jda.api.events.user.UserActivityStartEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import other.CheckGameOnWebsite;
-import other.ConsoleColor;
-import other.LogBack;
+import other._guild.check.CheckChannel;
+import other._stuff.CheckGameOnWebsite;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

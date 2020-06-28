@@ -1,14 +1,14 @@
 package count;
 
-import check_create.CheckCategory;
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
-import other.ConsoleColor;
-import other.LogBack;
-import other.Members;
-import other.Pause;
+import other._guild.Members;
+import other._guild.check.CheckCategory;
+import other._guild.check.CheckChannel;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
+import other._stuff.Pause;
 import twitch.FollowerCount;
 import twitch.User;
 

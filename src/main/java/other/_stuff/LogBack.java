@@ -1,4 +1,4 @@
-package other;
+package other._stuff;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

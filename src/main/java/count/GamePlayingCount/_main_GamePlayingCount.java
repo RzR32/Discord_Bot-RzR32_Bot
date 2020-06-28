@@ -1,15 +1,15 @@
 package count.GamePlayingCount;
 
-import check_create.CheckCategory;
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import other.ConsoleColor;
-import other.LogBack;
-import other.Pause;
+import other._guild.check.CheckCategory;
+import other._guild.check.CheckChannel;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
+import other._stuff.Pause;
 
 public class _main_GamePlayingCount {
 

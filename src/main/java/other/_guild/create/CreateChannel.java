@@ -1,4 +1,4 @@
-package check_create;
+package other._guild.create;
 
 import config.PropertiesFile;
 import net.dv8tion.jda.api.Permission;
@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import other.Agreement_Message;
-import other.LogBack;
+import other._guild.Agreement_Message;
+import other._stuff.LogBack;
 
 public class CreateChannel {
 
@@ -19,7 +19,7 @@ public class CreateChannel {
     public void createchannel(Guild guild, Category cat, String channel_name, String channel_id_name, String channel_type) {
         if (PropertiesFile.readsPropertiesFile(">" + channel_id_name + "_on", "config").equals("true")) {
             assert cat != null;
-            if (channel_type.equals("listener.commands.voice.voice")) {
+            if (channel_type.equals("voice")) {
                 for (VoiceChannel voiceChannel : cat.getVoiceChannels()) {
                     if (voiceChannel.getName().startsWith(channel_name)) {
                         LB.log(Thread.currentThread().getName(), "Channel found with the name *" + channel_name + "*", "info");
@@ -32,10 +32,12 @@ public class CreateChannel {
                     cat.createVoiceChannel(channel_name + " > 0").queue(channel1 -> {
                         PropertiesFile.writePropertiesFile(channel_id_name, channel1.getId(), "config");
                         channel1.createPermissionOverride(guild.getPublicRole()).setAllow(Permission.VIEW_CHANNEL).setDeny(Permission.VOICE_CONNECT).queue();
+                        channel1.createPermissionOverride(guild.getSelfMember()).setAllow(Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL).queue();
                     });
                 } else {
                     cat.createVoiceChannel(channel_name + " > 0").queue(channel1 -> PropertiesFile.writePropertiesFile(channel_id_name, channel1.getId(), "config"));
                 }
+
             } else {
                 for (TextChannel textChannel : cat.getTextChannels()) {
                     if (textChannel.getName().startsWith(channel_name)) {

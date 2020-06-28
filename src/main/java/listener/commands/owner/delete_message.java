@@ -2,8 +2,8 @@ package listener.commands.owner;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import other.LogBack;
-import other.Pause;
+import other._stuff.LogBack;
+import other._stuff.Pause;
 
 import java.util.ArrayList;
 import java.util.Arrays;

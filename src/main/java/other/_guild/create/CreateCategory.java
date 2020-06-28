@@ -1,9 +1,9 @@
-package check_create;
+package other._guild.create;
 
 import config.PropertiesFile;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import other.Agreement_Message;
+import other._guild.Agreement_Message;
 
 public class CreateCategory {
 
@@ -33,49 +33,56 @@ public class CreateCategory {
             /*
             set permission
             */
-            category.createPermissionOverride(guild.getSelfMember()).setAllow(Permission.ALL_VOICE_PERMISSIONS).queue();
+            category.createPermissionOverride(guild.getSelfMember()).setAllow(Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL).queue();
             category.createPermissionOverride(guild.getPublicRole()).setAllow(Permission.VIEW_CHANNEL).setDeny(Permission.VOICE_CONNECT).queue();
             /*
-            create *membercount* channel
+            create *membercount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">membercount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("MemberCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(1).queue(channel ->
+                category.getGuild().createVoiceChannel("MemberCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(1).queue(channel ->
                         PropertiesFile.writePropertiesFile("membercount", channel.getId(), "config"));
             }
             /*
-            create *rolecount* channel
+            create *rolecount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">rolecount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("RoleCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(2).queue(channel ->
+                category.getGuild().createVoiceChannel("RoleCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(2).queue(channel ->
                         PropertiesFile.writePropertiesFile("rolecount", channel.getId(), "config"));
             }
             /*
-            create *gamerolecount* channel
+            create *gamerolecount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">gamerolecount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("GameRoleCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(3).queue(channel ->
+                category.getGuild().createVoiceChannel("GameRoleCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(3).queue(channel ->
                         PropertiesFile.writePropertiesFile("gamerolecount", channel.getId(), "config"));
             }
             /*
-            create *categorycount* channel
+            create *categorycount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">categorycount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("CategoryCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(4).queue(channel ->
+                category.getGuild().createVoiceChannel("CategoryCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(4).queue(channel ->
                         PropertiesFile.writePropertiesFile("categorycount", channel.getId(), "config"));
             }
             /*
-            create *textchannelcount* channel
+            create *textchannelcount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">textchannelcount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("TextChannelCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(5).queue(channel ->
+                category.getGuild().createVoiceChannel("TextChannelCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(5).queue(channel ->
                         PropertiesFile.writePropertiesFile("textchannelcount", channel.getId(), "config"));
             }
             /*
-            create *voicechannelcount* channel
+            create *voicechannelcount* channel - voice
             */
             if (PropertiesFile.readsPropertiesFile(">voicechannelcount_on", "config").equals("true")) {
-                category.getGuild().createVoiceChannel("VoiceChannelCount > 0").setParent(guild.getCategoryById(PropertiesFile.readsPropertiesFile("maincount", "config"))).setPosition(6).queue(channel ->
+                category.getGuild().createVoiceChannel("VoiceChannelCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(6).queue(channel ->
                         PropertiesFile.writePropertiesFile("voicechannelcount", channel.getId(), "config"));
+            }
+            /*
+            create *emotecount* channel - voice
+            */
+            if (PropertiesFile.readsPropertiesFile(">emotecount_on", "config").equals("true")) {
+                category.getGuild().createVoiceChannel("EmoteCount > 0").setParent(guild.getCategoryById(category.getId())).setPosition(7).queue(channel ->
+                        PropertiesFile.writePropertiesFile("emotecount", channel.getId(), "config"));
             }
         });
     }
@@ -89,9 +96,9 @@ public class CreateCategory {
             /*
             set permission
             */
-            category.createPermissionOverride(guild.getSelfMember()).setAllow(Permission.ALL_CHANNEL_PERMISSIONS).queue();
+            category.createPermissionOverride(guild.getSelfMember()).setAllow(Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION).queue();
             /*
-            create *game* channel
+            create *game* channel - text
             */
             if (PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 category.getGuild().createTextChannel("games").setParent(guild.getCategoryById(category.getId())).queue(channel -> {
@@ -100,7 +107,7 @@ public class CreateCategory {
                 });
             }
             /*
-            create *logs* channel
+            create *logs* channel - text
             */
             if (PropertiesFile.readsPropertiesFile(">logs_on", "config").equals("true")) {
                 category.getGuild().createTextChannel("logs").setParent(guild.getCategoryById(category.getId())).queue(channel -> {
@@ -109,7 +116,7 @@ public class CreateCategory {
                 });
             }
             /*
-            create *playingcount* channel
+            create *playingcount* channel - text
             */
             if (PropertiesFile.readsPropertiesFile(">playingcount_on", "config").equals("true")) {
                 category.getGuild().createTextChannel("playingcount").setParent(guild.getCategoryById(category.getId())).queue(channel -> {
@@ -118,14 +125,14 @@ public class CreateCategory {
                 });
             }
             /*
-            create *bot-channel* channel
+            create *bot-channel* channel - text
             */
             if (PropertiesFile.readsPropertiesFile(">bot-channel_on", "config").equals("true")) {
                 category.getGuild().createTextChannel("bot-channel").setParent(guild.getCategoryById(category.getId())).queue(channel ->
                         PropertiesFile.writePropertiesFile("bot-channel", channel.getId(), "config"));
             }
             /*
-            create *bot-zustimmung* channel
+            create *bot-zustimmung* channel - text
             */
             if (PropertiesFile.readsPropertiesFile(">bot-zustimmung_on", "config").equals("true") && PropertiesFile.readsPropertiesFile(">games_on", "config").equals("true")) {
                 category.getGuild().createTextChannel("bot-zustimmung").setParent(guild.getCategoryById(category.getId())).queue(channel -> {
@@ -134,6 +141,13 @@ public class CreateCategory {
                     Agreement_Message guildMessageReaction = new Agreement_Message();
                     guildMessageReaction.Message(guild, channel);
                 });
+            }
+            /*
+            create *gamecount* channel - voice
+            */
+            if (PropertiesFile.readsPropertiesFile(">gamecount_on", "config").equals("true")) {
+                category.getGuild().createVoiceChannel("GameCount > 0").setParent(guild.getCategoryById(category.getId())).queue(channel ->
+                        PropertiesFile.writePropertiesFile("gamecount", channel.getId(), "config"));
             }
         });
     }

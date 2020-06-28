@@ -1,4 +1,4 @@
-package other;
+package other._stuff;
 
 public class ConsoleColor {
 

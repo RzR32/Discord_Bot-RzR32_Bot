@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import other.CheckGameOnWebsite;
+import other._stuff.CheckGameOnWebsite;
 
 import java.awt.*;
 import java.util.HashMap;

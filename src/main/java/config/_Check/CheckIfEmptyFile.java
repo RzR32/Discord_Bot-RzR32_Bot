@@ -1,6 +1,6 @@
 package config._Check;
 
-import other.LogBack;
+import other._stuff.LogBack;
 
 import java.io.BufferedReader;
 import java.io.File;

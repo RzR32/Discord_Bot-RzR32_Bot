@@ -1,10 +1,11 @@
-package check_create;
+package other._guild.check;
 
 import config.PropertiesFile;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
-import other.LogBack;
+import other._guild.create.CreateChannel;
+import other._stuff.LogBack;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class CheckChannel {
                 channel_type = "text";
                 category = "gamecategory";
             } else {
-                channel_type = "listener.commands.voice.voice";
+                channel_type = "voice";
                 if (channel.equals("gamecount")) {
                     category = "gamecategory";
                 } else if (channel.equals("twitchcount")) {
@@ -113,7 +114,7 @@ public class CheckChannel {
                     C_Channel.createchannel(guild, cat, s, channel, channel_type);
                 } else {
                     GuildChannel counter_channel;
-                    if (channel_type.equals("listener.commands.voice.voice")) {
+                    if (channel_type.equals("voice")) {
                         counter_channel = guild.getVoiceChannelById(id);
                     } else {
                         counter_channel = guild.getTextChannelById(id);

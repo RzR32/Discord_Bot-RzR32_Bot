@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import other.ConsoleColor;
-import other.LogBack;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
 
 import java.awt.*;
 import java.io.*;

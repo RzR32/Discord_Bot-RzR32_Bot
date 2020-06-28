@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import other.AuditLog;
+import other._guild.AuditLog;
 
 public class _Role extends ListenerAdapter {
 

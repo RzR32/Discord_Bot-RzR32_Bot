@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import other.LogBack;
+import other._stuff.LogBack;
 
 import java.util.Objects;
 

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.emote.update.GenericEmoteUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import other.AuditLog;
+import other._guild.AuditLog;
 
 public class _Emote extends ListenerAdapter {
 

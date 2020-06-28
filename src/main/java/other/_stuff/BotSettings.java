@@ -1,7 +1,8 @@
-package other;
+package other._stuff;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class BotSettings {
             }
             new_message.append("```");
             channel.sendMessage(new_message).queue();
+        } catch (ErrorResponseException ignored) {
         } catch (IOException e) {
             LB.log(Thread.currentThread().getName(), e.getMessage(), "error");
         }
@@ -67,7 +69,7 @@ public class BotSettings {
         }
     }
 
-    /*send the config key - with reaction >>> needs Administrator rights*/
+    /*send the config key - with reaction*/
     private static void send_key(TextChannel channel, String key) {
         key = key.substring(1);
         if (key.contains("false")) {

@@ -5,8 +5,8 @@ import count.GamePlayingCount.CountOfflineMember;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import other.ConsoleColor;
-import other.Members;
+import other._guild.Members;
+import other._stuff.ConsoleColor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

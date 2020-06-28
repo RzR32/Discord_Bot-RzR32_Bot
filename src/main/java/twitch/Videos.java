@@ -1,13 +1,13 @@
 package twitch;
 
-import check_create.CheckCategory;
-import check_create.CheckChannel;
 import config.PropertiesFile;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import other._guild.check.CheckCategory;
+import other._guild.check.CheckChannel;
 
 import java.awt.*;
 import java.util.ArrayList;
