@@ -1,4 +1,6 @@
 import config.PropertiesFile;
+import config._Check.CheckFiles_Folder;
+import config._Check.CheckKey;
 import listener.guild.*;
 import listener.member._Activity;
 import listener.member._Join_Leave;
@@ -10,9 +12,9 @@ import listener.other.Message_Reaction;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import other.BackUp;
-import other.ConsoleColor;
-import other.LogBack;
+import other._stuff.BackUp;
+import other._stuff.ConsoleColor;
+import other._stuff.LogBack;
 
 public class Main {
 
@@ -20,7 +22,24 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            LB.log(Thread.currentThread().getName(), "--------------------------------------------------", "info");
+            /*
+            check files/folder
+            */
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing files/folder..." + ConsoleColor.reset, "info");
+            CheckFiles_Folder C_Files = new CheckFiles_Folder();
+            C_Files.checkingFiles();
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "file check, done!" + ConsoleColor.reset, "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
+
+            /*
+            check key´s
+            */
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "Checking for missing (config) key..." + ConsoleColor.reset, "info");
+            CheckKey CK = new CheckKey();
+            CK.StartChecking();
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "key check, done!" + ConsoleColor.reset, "info");
+            LB.log(Thread.currentThread().getName(), ConsoleColor.Bwhite + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + ConsoleColor.reset, "info");
+
             /*
             Bot Token
             */
@@ -51,7 +70,7 @@ public class Main {
                     */
                     .setIdle(true)
                     .setRelativeRateLimit(false)
-                    .setActivity(Activity.listening(">help"))
+                    .setActivity(Activity.watching("starting..."))
                     /*
                     IMPORT Listener
 
